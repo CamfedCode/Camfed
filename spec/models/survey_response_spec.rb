@@ -67,5 +67,13 @@ describe SurveyResponse do
     end
   end
   
+  describe '[]' do
+    it "should set/get a question answer" do
+      survey_response = SurveyResponse.new
+      survey_response['Name'] = 'test user'
+      survey_response['Name'].should == 'test user'
+    end
+  end
+  
 end
       

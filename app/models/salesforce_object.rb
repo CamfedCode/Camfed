@@ -1,6 +1,10 @@
 class SalesforceObject
   
   attr_accessor :field_values
+
+  def initialize
+    self.field_values = {}
+  end
   
   def create record_type, record
     binding = RForce::Binding.new 'https://www.salesforce.com/services/Soap/u/20.0'

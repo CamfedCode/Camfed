@@ -3,6 +3,10 @@ class SurveyResponse
   base_uri 'https://www.episurveyor.org'
   
   attr_accessor :id, :question_answers
+
+  def initialize
+    self.question_answers = {}
+  end
   
   def self.find_all_by_survey_id survey_id
     body = Survey.auth.merge(:surveyid => survey_id)
@@ -29,5 +33,10 @@ class SurveyResponse
   def [](question)
     question_answers[question]
   end
+
+  def []=(question, answer)
+    question_answers[question] = answer
+  end
+
   
 end
