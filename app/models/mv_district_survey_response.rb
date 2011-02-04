@@ -2,8 +2,7 @@ class MvDistrictSurveyResponse < SurveyResponse
   def sync!
     sf_objects = []
     sales_force_to_epi_surveyor_mapping.each_pair do |sales_force_object_name, mapping|
-      sales_force_object = SalesForceObject.new
-      sales_force_object.name = sales_force_object_name
+      sales_force_object = SalesforceObjectFactory.create(sales_force_object_name)
       mapping.each_pair do |field_name, question|
         sales_force_object[field_name] = self[question]
       end
