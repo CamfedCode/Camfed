@@ -14,11 +14,11 @@ class MvDistrictSurveyResponse < SurveyResponse
   def sales_force_to_epi_surveyor_mapping
     {
       'Monitoring_Visit__c' =>
-        {
-          'Date__c' => 'Date',
-          'Monitor__c' => 'Name',
-          'Visiting_structure__c' => 'Structure',
-          'School__c' => 'School'
+          {
+            'Date__c' => 'Date',
+            'Monitor__c' => 'Name',
+            'Visiting_structure__c' => 'Structure',
+            'School__c' => 'School'
         }
     }
   end

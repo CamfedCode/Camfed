@@ -13,6 +13,8 @@ group :test, :development do
   gem "rspec-rails", "~> 2.4"
 end
 
+gem 'rforce'
+
 # Use unicorn as the web server
 # gem 'unicorn'
 

@@ -1,0 +1,2 @@
+class MvSalesforceObject < SalesforceObject
+end
