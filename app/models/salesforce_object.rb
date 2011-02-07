@@ -1,17 +1,11 @@
 class SalesforceObject
+  include SalesforceQueries::InstanceMethods
+  extend SalesforceQueries::ClassMethods
   
-  attr_accessor :field_values
+  attr_accessor :id, :field_values
 
   def initialize
     self.field_values = {}
-  end
-  
-  def create record_type, record
-    binding = RForce::Binding.new 'https://www.salesforce.com/services/Soap/u/20.0'
-    binding.login 'smsohan@thoughtworks.com', 'sf2011sohanU8I2AbvULgtA2WMU6NWKSOkk'
-    
-    response = binding.create("sObject {\"xsi:type\" => \"#{record_type}\"}" => record)
-    puts response
   end
   
   def [](field_name)
@@ -22,17 +16,4 @@ class SalesforceObject
     field_values[field_name] = value
   end
   
-  
-  # def sf_test
-  #   binding = RForce::Binding.new 'https://www.salesforce.com/services/Soap/u/20.0'
-  # 
-  #   binding.login 'smsohan@thoughtworks.com', 'sf2011sohanU8I2AbvULgtA2WMU6NWKSOkk'
-  # 
-  #   answer = binding.query(:searchString => 'SELECT FirstName, LastName FROM Contact')
-  #   puts answer
-  # 
-  #   me = {:Email => 'foobar@test.com', :lastName => 'bar'}
-  #   result = binding.create('sObject {"xsi:type" => "Contact"}' => me)
-  #   puts result
-  # end
 end

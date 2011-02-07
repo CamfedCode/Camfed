@@ -1,45 +1,44 @@
-class MvSalesforceObject < SalesforceObject
-  SALES_FORCE_OBJECT_NAME='Monitoring_Visit__c'
-  
-  def binding
-    unless @binding
-      @binding = RForce::Binding.new 'https://test.salesforce.com/services/Soap/u/20.0'
-      @binding.login 'sf_sysadmin@camfed.org.dean', 'w3stbrookLidRts9sALeXQYTYhYJUvl5wc'
-    end
-    @binding
-  end
-  
-  def binding=(value)
-    @binding = value
-  end
-  
+class MvSalesforceObject < SalesforceObject  
+
   def sync!
-    field_values_hash = {:Date__c => '2011-02-07',
-                          :School__c => 'Riversdale primary school',
-                          #:Monitor__c => {:Id => -1466016902},
-                          :CPP_in_pace => true}
-    field_values_hash = replace_field_values_with_id
-    
-    response = binding.query(:searchString => "SELECT Id, name FROM School__c")
-    # 
-    # response = binding.create("sObject {\"xsi:type\" => \"#{SALES_FORCE_OBJECT_NAME}\"}" => field_values_hash)
-    puts response
+    replace_field_values_with_id
+    create!
   end
   
+  def self.object_type
+    "Monitoring_Visit__c"
+  end
   
   def replace_field_values_with_id
-    self[:School__c] = get_first_record(:Id, :School__c, "name='#{self[:School__c]}'")
-    self[:Monitor__c] = get_first_record(:Id, :Monitor__c, "name='#{self[:Monitor__c]}'")
+    self[:School__c] = MvSalesforceObject.get_first_record(:Id, :School__c, "name='#{self[:School__c]}'")
+    self[:Monitor__c] = SalesforceContact.get_first_or_create(self[:Monitor__c])
+    self[:TM__c] = SalesforceContact.get_first_or_create(self[:TM__c])
   end
   
-  def get_first_record field, object_name, conditions 
-    query = "SELECT #{field.to_s} FROM #{object_name.to_s} WHERE #{conditions}"
-    answer = binding.query(:searchString => query)
-    records = answer.queryResponse.result.records
-    record = records.is_a?(Array) ? records.first : records
-    record.send(field)
+  def fake_values
+    self.field_values = {:Date__c => '2011-02-07',
+                        :Monitor__c => 'John Doe2',
+                        :Visiting_structure__c => 'CDC',
+                        :School__c => 'Riversdale primary school',
+                        :CPP_in_place__c => 'true',
+                        :CPP_posted__c => 'true',
+                        :TM_in_place__c => 'true',
+                        :TM__c => 'John Doe2',#TODO
+                        :People_met__c => 'head teacher',
+                        :Documents_reviewed__c => 'Lesson plans;Camfed File',
+                        :SNF_received__c => 'true',
+                        :Amount__c => '5000.58',
+                        :SNF_Receipts__c => 'true',
+                        :SNF_Signatures__c => 'true',
+                        :SNF_recipients_met__c => 'true',
+                        :Number_met__c => '3',
+                        :Fee_payments_match__c => 'true',
+                        :Bank_statements__c => 'true',
+                        :SNF_verified__c => 'true',
+                        :Bursary_verified__c => 'true',
+                        :Expenses_match_records__c => 'true'
+                      }
+    sync!
   end
-  
-  
-  
+
 end
