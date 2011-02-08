@@ -1,6 +1,7 @@
 require "spec_helper"
 
 describe Survey do
+  
   describe 'init' do
     it 'should set auth' do
       expected_auth = { :username => 'Camfedtest@gmail.com', :accesstoken => 'YUc8UfyeOm3W9GqNSJYs' }
@@ -11,7 +12,6 @@ describe Survey do
       expected_headers = {'Content-Type' => 'application/x-www-form-urlencoded'}
       assert_equal(expected_headers, Survey.headers)
     end
-
   end
   
   describe 'all' do
@@ -76,6 +76,6 @@ describe Survey do
       survey.responses
       survey.responses
     end
-    
   end
+  
 end

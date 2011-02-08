@@ -1,6 +1,7 @@
 require "spec_helper"
 
 describe SurveyResponse do
+  
   describe 'find_all_by_survey_id' do
     it 'should return empty when none found' do
       SurveyResponse.should_receive(:post).and_return(nil)
@@ -39,7 +40,6 @@ describe SurveyResponse do
       first_survey_response.should == respones.first
       second_survey_response.should == respones.last
     end
-    
   end
   
   describe '==' do
