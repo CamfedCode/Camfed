@@ -1,6 +1,12 @@
 require "spec_helper"
 
 describe MvSalesforceObject do
+
+  describe 'object_type' do
+    it 'should be Monitoring_Visit__c' do
+      MvSalesforceObject.object_type.should == 'Monitoring_Visit__c'
+    end 
+  end
   
   describe "replace_field_values_with_id" do
     describe 'the mocked get_first_record' do
