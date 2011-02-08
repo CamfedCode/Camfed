@@ -1,7 +1,9 @@
 require "spec_helper"
 require "method_hash_helper"
 
+
 describe Salesforce::Contact do
+  
   describe 'init' do
     it 'should set object type' do
       Salesforce::Contact.object_type.should == 'Contact'
@@ -14,6 +16,7 @@ describe Salesforce::Contact do
         .and_return(1)
       Salesforce::Contact.get_first_or_create('John Doe').should == 1
     end
+    
     it "should return the id of a newly created on if none found" do
       Salesforce::Contact.should_receive(:get_first_record).with(:Id, "Contact", "FirstName='John' AND LastName='Doe'")
         .and_return(nil)
@@ -24,6 +27,6 @@ describe Salesforce::Contact do
       binding.should_receive(:create).and_return(response)
       Salesforce::Contact.get_first_or_create('John Doe').should == 1
     end
-
   end
+  
 end
