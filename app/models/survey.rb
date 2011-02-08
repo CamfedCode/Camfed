@@ -44,6 +44,14 @@ class Survey
   end
   
   def sync
-    responses.each {|response| response.sync!}
+    responses.each {|response| response.sync!(mapping)}
+  end
+  
+  def mapping
+    EpiSurveyorToSalesforceMapping.find(self.name)
+  end
+  
+  def test
+    Survey.find_by_name('MV-Dist-Info4').sync
   end
 end

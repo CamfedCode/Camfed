@@ -35,21 +35,35 @@ describe SalesforceQueries do
       new_object.create!.should == 1
     end
   end
-    # 
-    # def hash_to_method_hash a_hash_or_value
-    # 
-    #   if a_hash_or_value.is_a?(Array)
-    #     return a_hash_or_value.collect{|item| hash_to_method_hash(item)}
-    #   end
-    # 
-    #   return a_hash_or_value unless a_hash_or_value.is_a?(Hash)
-    # 
-    #   method_hash = RForce::MethodHash.new
-    #   a_hash_or_value.each_pair do |key, value|
-    #     method_hash[key] = hash_to_method_hash(value)
-    #   end
-    #   method_hash
-    # end
+  
+  describe 'sanitize_values!' do
+    
+    before(:each) do
+      @sf_object = SampleSalesforceObject.new
+      @sf_object[:CPP] = ' Yes '
+      @sf_object[:CPP_placing] = ' No '
+      @sf_object[:TM_c] = ' N/A '
+      @sf_object[:Docs] = 'A|B'
+      @sf_object.sanitize_values!      
+    end
+    
+    it 'should change Yes to true' do
+      @sf_object[:CPP].should == 'true'
+    end
+
+    it 'should change No to false' do
+      @sf_object[:CPP_placing].should == 'false'
+    end
+
+    it 'should change N/A to false' do
+      @sf_object[:TM_c].should == nil
+    end
+
+    it 'should replace | with ;' do
+      @sf_object[:Docs].should == 'A;B'
+    end
+
+  end
   
 end
 

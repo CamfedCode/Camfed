@@ -17,8 +17,20 @@ describe MvSalesforceObject do
         mv_salesforce_object[:TM__c].should == "3"
       end      
     end
+  end
+  
+  describe 'sync!' do
+    before(:each) do
+      @mv_salesforce_object = MvSalesforceObject.new
+      @mv_salesforce_object['School__c'] = 'A School'
+      @mv_salesforce_object.stub!(:create!)
+      @mv_salesforce_object.stub!(:replace_field_values_with_id)
+    end
     
-    
+    it 'should symbolize keys' do
+      @mv_salesforce_object.sync!
+      @mv_salesforce_object.field_values.keys.include?(:School__c).should be true
+    end
   end
   
 end

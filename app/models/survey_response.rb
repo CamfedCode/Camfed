@@ -37,6 +37,17 @@ class SurveyResponse
   def []=(question, answer)
     question_answers[question] = answer
   end
+  
+  def sync! mapping
+    sf_objects = []
+    mapping.each_pair do |sales_force_object_name, field_mapping|
+      sales_force_object = SalesforceObjectFactory.create(sales_force_object_name)
+      field_mapping.each_pair do |field_name, question|
+        sales_force_object[field_name] = self[question]
+      end
+      sales_force_object.sync!
+    end
+  end
 
   
 end
