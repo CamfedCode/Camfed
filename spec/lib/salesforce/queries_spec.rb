@@ -1,7 +1,7 @@
 require "spec_helper"
 require "method_hash_helper"
 
-describe SalesforceQueries do
+describe Salesforce::Queries do
   
   describe 'get_first_record' do
     it 'should return the first record if there are many' do
@@ -15,7 +15,7 @@ describe SalesforceQueries do
                 )
       query = "SELECT Id FROM School__c WHERE name='School A'"
       binding = ''
-      SalesforceBinding.should_receive(:instance).and_return(binding)
+      Salesforce::Binding.should_receive(:instance).and_return(binding)
       binding.should_receive(:query).with({:searchString=>query}).and_return(answer)
       mv_salesforce_object = SampleSalesforceObject.new
       result = SampleSalesforceObject.get_first_record(:Id, :School__c, "name='School A'")
@@ -27,7 +27,7 @@ describe SalesforceQueries do
   describe 'create!' do
     it 'should call binding with the parameters to create' do
       binding = ''
-      SalesforceBinding.should_receive(:instance).and_return(binding)
+      Salesforce::Binding.should_receive(:instance).and_return(binding)
       response = method_hash_from_hash(:createResponse=>{:result=>{ :id => 1}})      
       binding.should_receive(:create).with("sObject {\"xsi:type\" => \"AnObject\"}" => {:name => 'Hi'}).and_return(response)
       new_object = SampleSalesforceObject.new
@@ -67,7 +67,7 @@ describe SalesforceQueries do
   
 end
 
-class SampleSalesforceObject < SalesforceObject
+class SampleSalesforceObject < Salesforce::Base
   def self.object_type
     "AnObject"
   end

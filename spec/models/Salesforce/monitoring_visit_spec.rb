@@ -1,20 +1,20 @@
 require "spec_helper"
 
-describe MvSalesforceObject do
+describe Salesforce::MonitoringVisit do
 
   describe 'object_type' do
     it 'should be Monitoring_Visit__c' do
-      MvSalesforceObject.object_type.should == 'Monitoring_Visit__c'
+      Salesforce::MonitoringVisit.object_type.should == 'Monitoring_Visit__c'
     end 
   end
   
   describe "replace_field_values_with_id" do
     describe 'the mocked get_first_record' do
-      mv_salesforce_object = MvSalesforceObject.new
+      mv_salesforce_object = Salesforce::MonitoringVisit.new
       it "should call lookup for school id" do
-        SalesforceContact.should_receive(:get_first_or_create).with('A Monitor').and_return("2")
-        MvSalesforceObject.should_receive(:get_first_record).with(:Id, :School__c, "name='School A'").and_return("1")
-        SalesforceContact.should_receive(:get_first_or_create).with('A TM').and_return("3")
+        Salesforce::Contact.should_receive(:get_first_or_create).with('A Monitor').and_return("2")
+        Salesforce::MonitoringVisit.should_receive(:get_first_record).with(:Id, :School__c, "name='School A'").and_return("1")
+        Salesforce::Contact.should_receive(:get_first_or_create).with('A TM').and_return("3")
 
         mv_salesforce_object.field_values = {:School__c => 'School A', :Monitor__c => "A Monitor", :TM__c =>'A TM'}
         mv_salesforce_object.replace_field_values_with_id
@@ -27,7 +27,7 @@ describe MvSalesforceObject do
   
   describe 'sync!' do
     before(:each) do
-      @mv_salesforce_object = MvSalesforceObject.new
+      @mv_salesforce_object = Salesforce::MonitoringVisit.new
       @mv_salesforce_object['School__c'] = 'A School'
       @mv_salesforce_object.stub!(:create!)
       @mv_salesforce_object.stub!(:replace_field_values_with_id)

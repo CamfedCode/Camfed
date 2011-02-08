@@ -76,12 +76,12 @@ describe SurveyResponse do
   end
   
   describe 'sync!' do
-    it "should call sync! of MvSalesforceObject" do
+    it "should call sync! of Monitoring Visit" do
       mvc_dist_response = SurveyResponse.new
       mvc_dist_response['Name'] = "test user"
       mvc_dist_response['School'] = "school a"
-      mv_salesforce_object = MvSalesforceObject.new
-      SalesforceObjectFactory.should_receive(:create).with('Monitoring_Visit__c').and_return(mv_salesforce_object)
+      mv_salesforce_object = Salesforce::MonitoringVisit.new
+      Salesforce::ObjectFactory.should_receive(:create).with('Monitoring_Visit__c').and_return(mv_salesforce_object)
       mapping = {'Monitoring_Visit__c' => {:School__c => 'School'}}
       mv_salesforce_object.should_receive(:sync!)
       mvc_dist_response.sync!(mapping)
