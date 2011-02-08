@@ -1,10 +1,4 @@
 class MvSalesforceObject < SalesforceObject  
-
-  def sync!
-    self.field_values.symbolize_keys!
-    replace_field_values_with_id
-    create!
-  end
   
   def self.object_type
     "Monitoring_Visit__c"

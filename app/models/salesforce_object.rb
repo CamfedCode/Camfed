@@ -16,4 +16,12 @@ class SalesforceObject
     field_values[field_name] = value
   end
   
+  def sync!
+    self.field_values.symbolize_keys!
+    replace_field_values_with_id
+    create!    
+  end
+  
+  def replace_field_values_with_id; end
+
 end

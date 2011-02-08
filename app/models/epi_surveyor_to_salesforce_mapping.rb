@@ -9,7 +9,6 @@ class EpiSurveyorToSalesforceMapping
   end
   
   def self.find(name)
-    puts "name=#{name} mappings keys = #{mappings.keys.join(" ")}"
     mappings[name.to_s].symbolize_keys
   end
 end

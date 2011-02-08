@@ -32,3 +32,8 @@ MV-Dist-Info4:
     CPP_posted__c: CPP_placing
     Amount__c: SNF_Amount
     TM__c: TM_Name
+  Financial_Accountability__c:
+    School__c: School
+    Notes__c: FM_FollowUp_Notes
+  Child_Protection__c:
+    School__c: School
