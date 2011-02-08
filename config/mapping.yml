@@ -22,7 +22,7 @@ MV-Dist-Info:
     Bursary_verified__c: Bank_Statement_Bursary
     Expenses_match_records__c: Bank_Statements_Match
 
-MV-Dist-Info4:
+MV-Dist-Info5:
   Monitoring_Visit__c:
     Date__c: Date
     Monitor__c: Name
@@ -35,5 +35,8 @@ MV-Dist-Info4:
   Financial_Accountability__c:
     School__c: School
     Notes__c: FM_FollowUp_Notes
-  Child_Protection__c:
+  Sturcture__c:
     School__c: School
+    Group_Name__c: MSG_Name 
+    MSG_active__c: MSG_Contact
+    Initiative__c: MSG_Activity

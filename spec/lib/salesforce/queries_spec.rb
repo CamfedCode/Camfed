@@ -24,6 +24,21 @@ describe Salesforce::Queries do
     
   end
   
+  describe 'save' do
+    it 'should call update when id is set' do
+      sf_object = SampleSalesforceObject.new
+      sf_object.should_receive(:update!)
+      sf_object.id = 1
+      sf_object.save!
+    end
+    
+    it 'should call create when id is not set' do
+      sf_object = SampleSalesforceObject.new
+      sf_object.should_receive(:create!)
+      sf_object.save!
+    end
+  end
+  
   describe 'create!' do
     it 'should call binding with the parameters to create' do
       binding = ''
@@ -33,6 +48,25 @@ describe Salesforce::Queries do
       new_object = SampleSalesforceObject.new
       new_object[:name] = 'Hi'
       new_object.create!.should == 1
+    end
+  end
+  
+  describe 'update!' do
+    it 'should throw exception when id not set' do
+      sf_object = SampleSalesforceObject.new
+      lambda {sf_object.update!}.should raise_error(ArgumentError)
+      
+    end
+    
+    it 'should call binding with the parameters to update' do
+      binding = ''
+      Salesforce::Binding.should_receive(:instance).and_return(binding)
+      response = method_hash_from_hash(:updateResponse=>{:result=>{ :id => 1}})      
+      binding.should_receive(:update).with("sObject {\"xsi:type\" => \"AnObject\"}" => {:Id => 1}).and_return(response)
+      new_object = SampleSalesforceObject.new
+      new_object.id = 1
+      new_object.update!
+      new_object.id.should == 1
     end
   end
   

@@ -5,10 +5,10 @@ module EpiSurveyor
 
     attr_accessor :id, :name, :responses
   
-    def initialize
-    
+    def test
+      Survey.find_by_name('MV-Dist-Info5').sync
     end
-
+    
     def responses
       @responses ||= SurveyResponse.find_all_by_survey_id(id)
     end
@@ -51,9 +51,6 @@ module EpiSurveyor
     def mapping
       EpiSurveyorToSalesforceMapping.find(self.name)
     end
-  
-    def test
-      Survey.find_by_name('MV-Dist-Info4').sync
-    end
+
   end
 end

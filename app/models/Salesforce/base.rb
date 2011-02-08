@@ -3,7 +3,7 @@ module Salesforce
     include Salesforce::Queries::InstanceMethods
     extend Salesforce::Queries::ClassMethods
   
-    attr_accessor :id, :field_values
+    attr_accessor :field_values
 
     def initialize
       self.field_values = {}
@@ -25,5 +25,13 @@ module Salesforce
   
     def replace_field_values_with_id; end
 
+    def id
+      self[:Id]
+    end
+    
+    def id=(value)
+      self[:Id] = value
+    end
+    
   end
 end
