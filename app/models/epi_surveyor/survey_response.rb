@@ -9,6 +9,18 @@ module EpiSurveyor
       self.question_answers = {}
     end
   
+    def ==(other)
+      other.present? && self.id == other.id
+    end
+  
+    def [](question)
+      question_answers[question]
+    end
+
+    def []=(question, answer)
+      question_answers[question] = answer
+    end
+    
     def self.find_all_by_survey_id survey_id
       body = Survey.auth.merge(:surveyid => survey_id)
       survey_data = post('/api/surveydata', :body => body, :headers => Survey.headers)
@@ -19,26 +31,14 @@ module EpiSurveyor
     
       survey_data_hashes.collect { |survey_data_hash| from_hash(survey_data_hash)}
     end
-  
-    def ==(other)
-      other.present? && self.id == other.id
-    end
-  
+
     def self.from_hash survey_data_hash
       survey_response = SurveyResponse.new
       survey_response.id = survey_data_hash['Id']
       survey_response.question_answers = survey_data_hash
       survey_response
     end
-  
-    def [](question)
-      question_answers[question]
-    end
 
-    def []=(question, answer)
-      question_answers[question] = answer
-    end
-  
     def sync! mapping
       sf_objects = []
       mapping.each_pair do |sales_force_object_name, field_mapping|
