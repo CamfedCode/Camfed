@@ -3,25 +3,52 @@ require "method_hash_helper"
 
 describe Salesforce::Queries do
   
-  describe 'get_first_record' do
+  describe 'first' do
     it 'should return the first record if there are many' do
+      answer = method_hash_from_hash(:type=>"School__c", :Id=>"1")
+      mv_salesforce_object = SampleSalesforceObject.new
+      SampleSalesforceObject.should_receive(:all).with(:Id, :School__c, "name='School A'").and_return([answer])
+      result = SampleSalesforceObject.first(:Id, :School__c, "name='School A'")
+      result.should == "1"
+    end
+    
+  end
+  
+  describe 'all' do
+    it 'should return an empty array if none matched' do
       answer = method_hash_from_hash(
-                {:queryResponse=>{:result=>{:done=>"true", :queryLocator=>nil, 
-                  :records=>[ 
-                    {:type=>"School__c", :Id=>"1"},
-                    {:type=>"School__c", :Id=>"2"}
-                    ],            
-                  :size=>"2"}}}
+                {:queryResponse=>{:result=>{:done=>"true", :queryLocator=>nil, :size=>"0"}}}
                 )
       query = "SELECT Id FROM School__c WHERE name='School A'"
       binding = ''
       Salesforce::Binding.should_receive(:instance).and_return(binding)
       binding.should_receive(:query).with({:searchString=>query}).and_return(answer)
-      mv_salesforce_object = SampleSalesforceObject.new
-      result = SampleSalesforceObject.get_first_record(:Id, :School__c, "name='School A'")
-      result.should == "1"
+      SampleSalesforceObject.all(:Id, :School__c, "name='School A'").should == []
     end
-    
+
+    it 'should return an array with one record if only one matched' do
+      answer = method_hash_from_hash(
+                {:queryResponse=>{:result=>{:done=>"true", :queryLocator=>nil, :records => {:Id => "1"}, :size=>"1"}}}
+                )
+      query = "SELECT Id FROM School__c WHERE name='School A'"
+      binding = ''
+      Salesforce::Binding.should_receive(:instance).and_return(binding)
+      binding.should_receive(:query).with({:searchString=>query}).and_return(answer)
+      SampleSalesforceObject.all(:Id, :School__c, "name='School A'").should == [{:Id => "1"}]
+    end
+
+    it 'should return an array with all the items that matched' do
+      answer = method_hash_from_hash(
+                {:queryResponse=>{:result=>{:done=>"true", :queryLocator=>nil, :records => [{:Id => "1"}, {:Id => "2"}], :size=>"2"}}}
+                )
+      query = "SELECT Id FROM School__c WHERE name='School A'"
+      binding = ''
+      Salesforce::Binding.should_receive(:instance).and_return(binding)
+      binding.should_receive(:query).with({:searchString=>query}).and_return(answer)
+      SampleSalesforceObject.all(:Id, :School__c, "name='School A'").should == [{:Id => "1"}, {:Id => "2"}]
+    end
+
+
   end
   
   describe 'save' do

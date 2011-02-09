@@ -33,12 +33,18 @@ module Salesforce
     end
   
     module ClassMethods
-      def get_first_record field, object_name, conditions 
+      def first field, object_name, conditions
+        record = all(field, object_name, conditions).first 
+        record.present? ? record.send(field) : nil
+      end
+      
+      def all field, object_name, conditions 
         query = "SELECT #{field.to_s} FROM #{object_name.to_s} WHERE #{conditions}"
         answer = Salesforce::Binding.instance.query(:searchString => query)
         records = answer.queryResponse.result.records
-        record = records.is_a?(Array) ? records.first : records
-        record.present? ? record.send(field) : nil
+        
+        return [] if records.nil?
+        records.is_a?(Array) ? records : [records]
       end
     end
   end

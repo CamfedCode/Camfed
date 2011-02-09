@@ -7,7 +7,7 @@ module Salesforce
 
     def self.get_first_or_create name
       first_name, last_name = name.split(' ')
-      contact = get_first_record(:Id, object_type, "FirstName='#{first_name}' AND LastName='#{last_name}'")
+      contact = first(:Id, object_type, "FirstName='#{first_name}' AND LastName='#{last_name}'")
       return contact if contact
     
       new_contact = Contact.new

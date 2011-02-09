@@ -12,13 +12,13 @@ describe Salesforce::Contact do
   
   describe 'get_first_or_create' do
     it "should return the id of the first one matching" do
-      Salesforce::Contact.should_receive(:get_first_record).with(:Id, "Contact", "FirstName='John' AND LastName='Doe'")
+      Salesforce::Contact.should_receive(:first).with(:Id, "Contact", "FirstName='John' AND LastName='Doe'")
         .and_return(1)
       Salesforce::Contact.get_first_or_create('John Doe').should == 1
     end
     
     it "should return the id of a newly created on if none found" do
-      Salesforce::Contact.should_receive(:get_first_record).with(:Id, "Contact", "FirstName='John' AND LastName='Doe'")
+      Salesforce::Contact.should_receive(:first).with(:Id, "Contact", "FirstName='John' AND LastName='Doe'")
         .and_return(nil)
       binding = ''
       Salesforce::Binding.should_receive(:instance).and_return(binding)

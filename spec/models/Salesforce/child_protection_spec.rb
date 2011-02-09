@@ -9,10 +9,10 @@ describe Salesforce::ChildProtection do
   end
   
   describe "replace_field_values_with_id" do
-    describe 'the mocked get_first_record' do
+    describe 'the mocked first' do
       cp_salesforce_object = Salesforce::ChildProtection.new
       it "should call lookup for school id" do
-        Salesforce::ChildProtection.should_receive(:get_first_record).with(:Id, :School__c, "name='School A'").and_return("1")
+        Salesforce::ChildProtection.should_receive(:first).with(:Id, :School__c, "name='School A'").and_return("1")
         cp_salesforce_object.field_values = {:School__c => 'School A'}
         cp_salesforce_object.replace_field_values_with_id
         cp_salesforce_object[:School__c].should == "1"
