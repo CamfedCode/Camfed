@@ -1,11 +1,11 @@
 module Salesforce
   class ObjectFactory
     def self.create type_name
-      case type_name.to_s
-        when 'Monitoring_Visit__c' then Salesforce::MonitoringVisit.new
-        when 'Financial_Accountability__c' then Salesforce::FinancialAccountability.new
-        when 'Structure__c' then Salesforce::Structure.new
-      end
+      "Salesforce::#{class_name_from_object_name(type_name)}".constantize.new
+    end
+    
+    def self.class_name_from_object_name object_name
+      object_name.sub(/__c/, '').camelize
     end
   end
 end
