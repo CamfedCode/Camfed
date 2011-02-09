@@ -2,27 +2,33 @@ require "spec_helper"
 
 describe EpiSurveyor::SurveyResponse do
   
-  describe 'find_all_by_survey_id' do
+  describe 'find_all_by_survey' do
+    before(:each) do
+      @survey = EpiSurveyor::Survey.new
+      @survey.id = 1
+      @survey.name = 'Mv-Dist-Info'
+    end
+    
     it 'should return empty when none found' do
       EpiSurveyor::SurveyResponse.should_receive(:post).and_return(nil)
-      EpiSurveyor::SurveyResponse.find_all_by_survey_id(1).should == []
+      EpiSurveyor::SurveyResponse.find_all_by_survey(@survey).should == []
     end
     
     it 'should return empty when surveydatalist is empty' do
       EpiSurveyor::SurveyResponse.should_receive(:post).and_return('SurveyDataList' => nil)
-      EpiSurveyor::SurveyResponse.find_all_by_survey_id(1).should == []
+      EpiSurveyor::SurveyResponse.find_all_by_survey(@survey).should == []
     end
     
     it 'should return empty when none found' do
       EpiSurveyor::SurveyResponse.should_receive(:post).and_return('SurveyDataList' => {'SurveyData' => nil})
-      EpiSurveyor::SurveyResponse.find_all_by_survey_id(1).should == []
+      EpiSurveyor::SurveyResponse.find_all_by_survey(@survey).should == []
     end
 
     it 'should return survey response when only one found' do
       EpiSurveyor::SurveyResponse.should_receive(:post).and_return('SurveyDataList' => {'SurveyData' => {'Id' => 1}})
       expected_survey_response = EpiSurveyor::SurveyResponse.new
       expected_survey_response.id = 1
-      respones = EpiSurveyor::SurveyResponse.find_all_by_survey_id(1)
+      respones = EpiSurveyor::SurveyResponse.find_all_by_survey(@survey)
       respones.length.should == 1
       expected_survey_response.should == respones.first
     end
@@ -35,7 +41,7 @@ describe EpiSurveyor::SurveyResponse do
       
       second_survey_response.id = 2
 
-      respones = EpiSurveyor::SurveyResponse.find_all_by_survey_id(1)
+      respones = EpiSurveyor::SurveyResponse.find_all_by_survey(@survey)
       respones.length.should == 2
       first_survey_response.should == respones.first
       second_survey_response.should == respones.last
@@ -76,15 +82,44 @@ describe EpiSurveyor::SurveyResponse do
   end
   
   describe 'sync!' do
-    it "should call sync! of Monitoring Visit" do
-      mvc_dist_response = EpiSurveyor::SurveyResponse.new
-      mvc_dist_response['Name'] = "test user"
-      mvc_dist_response['School'] = "school a"
-      mv_salesforce_object = Salesforce::MonitoringVisit.new
-      Salesforce::ObjectFactory.should_receive(:create).with('Monitoring_Visit__c').and_return(mv_salesforce_object)
+    describe 'when it is not synced' do
+      before(:each) do
+        survey = EpiSurveyor::Survey.new
+        survey.id = 1
+        survey.name = 'Mv-Dist-Info'
+        
+        
+        @response = EpiSurveyor::SurveyResponse.new
+        @response['Name'] = "test user"
+        @response['School'] = "school a"
+        @response.id = "2"
+        @response.survey = survey
+        @response.should_receive(:synced?).and_return(false)
+        @mv_salesforce_object = Salesforce::MonitoringVisit.new
+        @mv_salesforce_object.should_receive(:sync!)
+      
+        Salesforce::ObjectFactory.should_receive(:create)
+          .with('Monitoring_Visit__c').and_return(@mv_salesforce_object)
+        
+        @mapping = {'Monitoring_Visit__c' => {:School__c => 'School'}}
+      end
+    
+      it "should call sync! of Monitoring Visit" do
+        @response.sync!(@mapping)
+      end
+    
+      it 'should create a new import_history' do
+        @response.sync!(@mapping)
+        ImportHistory.where(:survey_id => "1", :survey_response_id => "2").first.should_not be nil
+      end
+    end
+    
+    it 'should return if already synced' do
+      Salesforce::ObjectFactory.should_not_receive(:create)
       mapping = {'Monitoring_Visit__c' => {:School__c => 'School'}}
-      mv_salesforce_object.should_receive(:sync!)
-      mvc_dist_response.sync!(mapping)
+      response = EpiSurveyor::SurveyResponse.new
+      response.should_receive(:synced?).and_return(true)
+      response.sync!(mapping)
     end
   end
   

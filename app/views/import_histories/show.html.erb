@@ -1,0 +1,18 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Survey:</b>
+  <%= @import_history.survey_id %>
+</p>
+
+<p>
+  <b>Survey response:</b>
+  <%= @import_history.survey_response_id %>
+</p>
+
+<p>
+  <b>Errors:</b>
+  <%= @import_history.error_message %>
+</p>
+
+<%= link_to 'Back', import_histories_path %>

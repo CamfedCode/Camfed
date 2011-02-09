@@ -21,61 +21,77 @@ describe EpiSurveyor::Survey do
       EpiSurveyor::Survey.should_receive(:post).with("/api/surveys", :body => body, :headers => headers)
       EpiSurveyor::Survey.all
     end    
+    
+    
+    it 'should return [] when no surveys found' do
+      EpiSurveyor::Survey.stub!(:post).and_return(nil)
+      EpiSurveyor::Survey.all.should == []
+    end  
+    
+    it 'should return [] when list is nil' do
+      EpiSurveyor::Survey.stub!(:post).and_return({"Surveys" => nil })
+      EpiSurveyor::Survey.all.should == []
+    end
+    
+    it 'should return [] when element is nil' do
+      EpiSurveyor::Survey.stub!(:post).and_return({"Surveys" => {"Survey" => nil}})
+      EpiSurveyor::Survey.all.should == []
+    end
+    
   end
   
   describe 'find_by_name' do
     it 'should find survey by name when it exists' do
-      EpiSurveyor::Survey.stub!(:all).and_return({"Surveys" => {"Survey" => [{"SurveyId" => 1, "SurveyName" => "the_name"}]}})
+      survey = EpiSurveyor::Survey.new
+      survey.id = 1
+      survey.name = 'the_name'
+
+      EpiSurveyor::Survey.should_receive(:all).and_return([survey])
       the_survey = EpiSurveyor::Survey.find_by_name "the_name"
     
       the_survey.id.should == 1
       the_survey.name.should == "the_name"
     end
-  
-    it 'should return nil when survey not found' do
-      EpiSurveyor::Survey.stub!(:all).and_return({"Surveys" => {"Survey" => [{"SurveyId" => 1, "SurveyName" => "the_name"}]}})
-      the_survey = EpiSurveyor::Survey.find_by_name "the_name2"
     
-      the_survey.should == nil
+    it 'should return nil when its not found' do
+      EpiSurveyor::Survey.should_receive(:all).and_return([])
+      EpiSurveyor::Survey.find_by_name("the_name").should be nil
     end
-  
-    it 'should return nil when no surveys found' do
-      EpiSurveyor::Survey.stub!(:all).and_return(nil)
-      the_survey = EpiSurveyor::Survey.find_by_name "the_name"
-    
-      the_survey.should == nil
-    end  
-    
-    it 'should return nil when list is nil' do
-      EpiSurveyor::Survey.stub!(:all).and_return({"Surveys" => nil })
-      the_survey = EpiSurveyor::Survey.find_by_name "the_name"
-    
-      the_survey.should == nil
-    end
-    
-    it 'should return nil when element is nil' do
-      EpiSurveyor::Survey.stub!(:all).and_return({"Surveys" => {"Survey" => nil}})
-      the_survey = EpiSurveyor::Survey.find_by_name "the_name"
-    
-      the_survey.should == nil
-    end
+
   end
   
   describe 'responses' do
+    before(:each) do
+      @survey = EpiSurveyor::Survey.new
+      @survey.id = 1
+    end
+    
     it "should call find_all_by_survey_id if not initalized" do
-      EpiSurveyor::SurveyResponse.should_receive(:find_all_by_survey_id).with(1).and_return([])
-      survey = EpiSurveyor::Survey.new
-      survey.id = 1
-      survey.responses.should == []
+      EpiSurveyor::SurveyResponse.should_receive(:find_all_by_survey).with(@survey).and_return([])
+      @survey.responses.should == []
     end
     
     it "should call find_all_by_survey_id only once" do
-      EpiSurveyor::SurveyResponse.should_receive(:find_all_by_survey_id).with(1).and_return([])
-      survey = EpiSurveyor::Survey.new
-      survey.id = 1
-      survey.responses
-      survey.responses
+      EpiSurveyor::SurveyResponse.should_receive(:find_all_by_survey).with(@survey).and_return([])
+      @survey.responses
+      @survey.responses
     end
   end
+  
+  describe 'sync!' do
+    it 'should call sync! of its responses' do
+      response_a = EpiSurveyor::SurveyResponse.new
+      response_b = EpiSurveyor::SurveyResponse.new
+      survey = EpiSurveyor::Survey.new
+      mapping = {}
+      survey.should_receive(:mapping).and_return(mapping)
+      responses = [response_a, response_b]
+      
+      survey.should_receive(:responses).and_return(responses)
+      responses.each{|response| response.should_receive(:sync!).with(mapping)}
+      survey.sync!
+    end
+  end
+  
   
 end

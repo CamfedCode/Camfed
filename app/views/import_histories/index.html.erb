@@ -1,0 +1,21 @@
+<h2>Import Histories <%= "for #{@survey.name}" if @survey%></h2>
+
+<table>
+  <tr>
+    <th>Survey</th>
+    <th>Survey response</th>
+    <th>Errors</th>
+    <th></th>
+    <th></th>
+  </tr>
+
+<% @import_histories.each do |import_history| %>
+  <tr>
+    <td><%= import_history.survey_name %></td>
+    <td><%= import_history.survey_response_id %></td>
+    <td><%= import_history.error_message %></td>
+    <td><%= link_to 'Show', import_history %></td>
+    <td><%= link_to 'Destroy', import_history, :confirm => 'Are you sure?', :method => :delete %></td>
+  </tr>
+<% end %>
+</table>

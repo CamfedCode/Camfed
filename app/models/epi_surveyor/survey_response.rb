@@ -3,7 +3,7 @@ module EpiSurveyor
     include HTTParty
     base_uri 'https://www.episurveyor.org'
   
-    attr_accessor :id, :question_answers
+    attr_accessor :id, :survey, :question_answers
 
     def initialize
       self.question_answers = {}
@@ -21,15 +21,19 @@ module EpiSurveyor
       question_answers[question] = answer
     end
     
-    def self.find_all_by_survey_id survey_id
-      body = Survey.auth.merge(:surveyid => survey_id)
+    def self.find_all_by_survey survey
+      body = Survey.auth.merge(:surveyid => survey.id)
       survey_data = post('/api/surveydata', :body => body, :headers => Survey.headers)
       return [] if survey_data.nil? || survey_data['SurveyDataList'].nil? || survey_data['SurveyDataList']['SurveyData'].nil?
     
       survey_data_hashes = survey_data['SurveyDataList']['SurveyData']
       survey_data_hashes = [] << survey_data_hashes unless survey_data_hashes.is_a?(Array)
     
-      survey_data_hashes.collect { |survey_data_hash| from_hash(survey_data_hash)}
+      survey_data_hashes.collect do |survey_data_hash|
+        survey_response = from_hash(survey_data_hash)
+        survey_response.survey = survey
+        survey_response
+      end
     end
 
     def self.from_hash survey_data_hash
@@ -40,6 +44,8 @@ module EpiSurveyor
     end
 
     def sync! mapping
+      return if synced?
+      
       sf_objects = []
       mapping.each_pair do |sales_force_object_name, field_mapping|
         sales_force_object = Salesforce::ObjectFactory.create(sales_force_object_name)
@@ -48,6 +54,11 @@ module EpiSurveyor
         end
         sales_force_object.sync!
       end
+      ImportHistory.create(:survey_id => survey.id, :survey_name => survey.name, :survey_response_id => self.id)
+    end
+    
+    def synced?
+      ImportHistory.exists?(:survey_id => survey.id, :survey_response_id => self.id)
     end
   
   end

@@ -1,0 +1,12 @@
+<h2>Surveys</h2>
+
+
+<ol>
+<% @surveys.each do |survey|%>
+	<li>
+		<%= survey.name %> 
+		<%= link_to 'Import', import_survey_path(survey.id, :survey_name => survey.name), :method => :post %>
+		<%= link_to 'History', survey_import_histories_path(survey.id) %>
+	</li>
+<%end%>
+</ol>

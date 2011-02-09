@@ -10,6 +10,15 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 0) do
+ActiveRecord::Schema.define(:version => 20110209190656) do
+
+  create_table "import_histories", :force => true do |t|
+    t.string   "survey_id"
+    t.string   "survey_name"
+    t.string   "survey_response_id"
+    t.text     "error_message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
