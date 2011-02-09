@@ -3,7 +3,7 @@ require "spec_helper"
 describe Salesforce::ChildProtection do
 
   describe 'object_type' do
-    it 'should be Monitoring_Visit__c' do
+    it 'should be Child_Protection__c' do
       Salesforce::ChildProtection.object_type.should == 'Child_Protection__c'
     end 
   end

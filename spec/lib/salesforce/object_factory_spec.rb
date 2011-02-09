@@ -13,5 +13,9 @@ describe Salesforce::ObjectFactory do
     it 'should create Structure when passed Structure__c' do
       Salesforce::ObjectFactory.create('Structure__c').is_a?(Salesforce::Structure).should be true
     end
+
+    it 'should create ChildProtection when passed Structure__c' do
+      Salesforce::ObjectFactory.create('Child_Protection__c').is_a?(Salesforce::ChildProtection).should be true
+    end
   end
 end
