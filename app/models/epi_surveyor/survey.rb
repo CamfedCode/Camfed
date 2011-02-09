@@ -22,9 +22,7 @@ module EpiSurveyor
     end
   
     def self.all
-      post('/api/surveys', 
-        :body => auth,
-        :headers => headers)
+      post('/api/surveys', :body => auth, :headers => headers)
     end
   
     def self.find_by_name name
