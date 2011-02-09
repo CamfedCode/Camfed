@@ -26,22 +26,24 @@ MV-Dist-Info5:
   Monitoring_Visit__c:
     Date__c: Date
     Monitor__c: Name
+    Monitor_Name__c: Name
     Visiting_structure__c: Structure
     School__c: School
     CPP_in_place__c: CPP
     CPP_posted__c: CPP_placing
     Amount__c: SNF_Amount
     TM__c: TM_Name
+    TM_Name__c: TM_Name
   Financial_Accountability__c:
     School__c: School
     Notes__c: FM_FollowUp_Notes
-  Sturcture__c:
+  Structure__c:
     School__c: School
     Group_Name__c: MSG_Name 
     MSG_active__c: MSG_Contact
     Initiative__c: MSG_Activity
-  Child_Protection__c:
-    School__c: School
-    steps_taken_by_school__c: Abuse_school_action
-    Steps_taken_by_school__c: Abuse_CDC_Action
-    Notes__c: Abuse_Notes
+  # Child_Protection__c:
+  #   School__c: School
+  #   steps_taken_by_school__c: Abuse_school_action
+  #   Steps_taken_by_school__c: Abuse_CDC_Action
+  #   Notes__c: Abuse_Notes

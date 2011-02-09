@@ -5,7 +5,7 @@ module Salesforce
     end
     
     def self.class_name_from_object_name object_name
-      object_name.sub(/__c/, '').camelize
+      object_name.to_s.sub(/__c/, '').camelize
     end
   end
 end

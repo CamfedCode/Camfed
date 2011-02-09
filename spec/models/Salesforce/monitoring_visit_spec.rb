@@ -11,9 +11,9 @@ describe Salesforce::MonitoringVisit do
   describe "replace_field_values_with_id" do
 
     it "should call lookup for school id" do
-      Salesforce::Contact.should_receive(:get_first_or_create).with('A Monitor').and_return("2")
+      Salesforce::Contact.should_receive(:first_or_create).with('A Monitor').and_return("2")
       Salesforce::MonitoringVisit.should_receive(:first).with(:Id, :School__c, "name='School A'").and_return("1")
-      Salesforce::Contact.should_receive(:get_first_or_create).with('A TM').and_return("3")
+      Salesforce::Contact.should_receive(:first_or_create).with('A TM').and_return("3")
       mv_salesforce_object = Salesforce::MonitoringVisit.new
       mv_salesforce_object.field_values = {:School__c => 'School A', :Monitor__c => "A Monitor", :TM__c =>'A TM'}
       mv_salesforce_object.replace_field_values_with_id
