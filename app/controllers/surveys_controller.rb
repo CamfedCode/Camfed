@@ -7,9 +7,14 @@ class SurveysController < ApplicationController
   end
   
   def import
-    @survey = EpiSurveyor::Survey.find_by_name(params[:survey_name])
-    @survey.sync!
-    flash[:notice] = "Synced #{@survey.name}"
+    begin
+      @survey = EpiSurveyor::Survey.find_by_name(params[:survey_name])
+      @survey.sync!
+      flash[:notice] = "Synced #{@survey.name}"
+    rescue Exception => error
+      flash[:error] = 'Failed to Sync because of ' + error.message
+    end
+    
     redirect_to surveys_path
   end
 
