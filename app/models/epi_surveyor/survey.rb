@@ -12,6 +12,10 @@ module EpiSurveyor
     def responses
       @responses ||= SurveyResponse.find_all_by_survey(self)
     end
+    
+    def questions
+      @questions ||= Question.find_all_by_survey(self)
+    end
 
     def self.auth
       @@auth ||= {:username => 'Camfedtest@gmail.com', :accesstoken => 'YUc8UfyeOm3W9GqNSJYs'}
@@ -38,20 +42,6 @@ module EpiSurveyor
   
     def self.find_by_name name
       all.select{|survey| survey.name == name}.first
-      # all_surveys = all
-      # 
-      #      return nil if all_surveys.nil? || all_surveys['Surveys'].nil? || all_surveys['Surveys']['Survey'].nil?
-      #      surveys = all_surveys['Surveys']['Survey']
-      #      surveys.each do |survey_hash|
-      #        if survey_hash['SurveyName'].present? && survey_hash['SurveyName'] == name
-      #          survey = Survey.new
-      #          survey.id = survey_hash['SurveyId']
-      #          survey.name = survey_hash['SurveyName']
-      #          return survey
-      #        end
-      #      end
-      #    
-      #      nil
     end
   
     def sync!
@@ -62,6 +52,7 @@ module EpiSurveyor
     def mapping
       EpiSurveyorToSalesforceMapping.find(self.name)
     end
+    
 
   end
 end

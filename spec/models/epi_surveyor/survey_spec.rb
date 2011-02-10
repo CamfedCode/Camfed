@@ -78,6 +78,25 @@ describe EpiSurveyor::Survey do
     end
   end
   
+  describe 'questions' do
+    before(:each) do
+      @survey = EpiSurveyor::Survey.new
+      @survey.id = 1
+    end
+    
+    it "should call find_all_by_survey_id if not initalized" do
+      EpiSurveyor::Question.should_receive(:find_all_by_survey).with(@survey).and_return([])
+      @survey.questions.should == []
+    end
+    
+    it "should call find_all_by_survey_id only once" do
+      EpiSurveyor::Question.should_receive(:find_all_by_survey).with(@survey).and_return([])
+      @survey.questions
+      @survey.questions
+    end
+    
+  end
+  
   describe 'sync!' do
     it 'should call sync! of its responses' do
       response_a = EpiSurveyor::SurveyResponse.new
