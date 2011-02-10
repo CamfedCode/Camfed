@@ -1,0 +1,16 @@
+<h2>Listing mappings for <%= @survey.name %></h2>
+<ol>
+<% @survey.object_mappings.each do |object_mapping|%>
+	<li><%= object_mapping.sf_object_type %>
+		<ol>
+		<%object_mapping.field_mappings.each do |field_mapping| %>
+			<li><%= field_mapping.field_name %> - <%= field_mapping.question_name %> </li>
+		<%end%>
+		</ol>
+	</li>
+<%end%>
+</ol>
+
+<br />
+
+<%= link_to 'New Mapping', new_survey_object_mapping_path(@survey) %>

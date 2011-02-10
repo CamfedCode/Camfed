@@ -43,14 +43,14 @@ module EpiSurveyor
       survey_response
     end
 
-    def sync! mapping
+    def sync! object_mappings
       return if synced?
       
       sf_objects = []
-      mapping.each_pair do |sales_force_object_name, field_mapping|
-        sales_force_object = Salesforce::ObjectFactory.create(sales_force_object_name)
-        field_mapping.each_pair do |field_name, question|
-          sales_force_object[field_name] = self[question]
+      object_mappings.each do |object_mapping|
+        sales_force_object = Salesforce::ObjectFactory.create(object_mapping.sf_object_type)
+        object_mapping.field_mappings.each do |field_mapping|
+          sales_force_object[field_mapping.field_name] = self[field_mapping.question_name]
         end
         sales_force_object.sync!
       end

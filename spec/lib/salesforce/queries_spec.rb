@@ -97,6 +97,42 @@ describe Salesforce::Queries do
     end
   end
   
+  describe 'fields' do
+    before(:each) do
+      @sf_object = SampleSalesforceObject.new
+      @binding = ''
+      Salesforce::Binding.should_receive(:instance).and_return(@binding)
+      
+    end
+    
+    it 'should return empty when result is nil' do
+      response = method_hash_from_hash(:describeSObjectResponse=>{:result=>nil})
+      @binding.should_receive(:describeSObject).with("sObjectType" => "AnObject").and_return(response)
+      @sf_object.fields.should == []
+    end
+
+    it 'should return empty when fields is nil' do
+      response = method_hash_from_hash(:describeSObjectResponse=>{:result=>{:fields => nil}})
+      @binding.should_receive(:describeSObject).with("sObjectType" => "AnObject").and_return(response)
+      @sf_object.fields.should == []
+    end
+
+    it 'should return fields' do
+      response = method_hash_from_hash(:describeSObjectResponse=>{:result=>{:fields => [
+        {:type => 'string', :name => 'first_name', :label => 'first name'},
+        {:type => 'string', :name => 'last_name', :label => 'last name'}
+        ]}})
+      @binding.should_receive(:describeSObject).with("sObjectType" => "AnObject").and_return(response)
+      @sf_object.fields.should have(2).things
+      first_field = Salesforce::Field.new('first_name', 'first name', 'string')
+      last_field = Salesforce::Field.new('last_name', 'last name', 'string')
+      @sf_object.fields.first.should == first_field
+      @sf_object.fields.second.should == last_field
+    end
+
+
+  end
+  
   describe 'sanitize_values!' do
     
     before(:each) do

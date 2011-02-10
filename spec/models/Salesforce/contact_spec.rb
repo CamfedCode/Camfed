@@ -38,6 +38,14 @@ describe Salesforce::Contact do
       binding.should_receive(:create).and_return(response)
       Salesforce::Contact.first_or_create('John Doe').should == 1
     end
+    
+    it 'should return nil if name is blank' do
+      Salesforce::Contact.first_or_create('').should be nil
+    end
+    it 'should return nil if name is nil' do
+      Salesforce::Contact.first_or_create(nil).should be nil
+    end
+
   end
   
 end

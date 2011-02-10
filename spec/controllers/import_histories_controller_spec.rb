@@ -12,8 +12,10 @@ describe ImportHistoriesController do
 
   describe "GET index" do
     it "assigns all import_histories as @import_histories" do
-      ImportHistory.stub(:all) { [mock_import_history] }
-      get :index
+      survey = ''
+      survey.should_receive(:import_histories).and_return([mock_import_history])
+      EpiSurveyor::Survey.should_receive(:find).with(1).and_return(survey)
+      get :index, :survey_id => 1
       assigns(:import_histories).should eq([mock_import_history])
     end
   end
@@ -21,7 +23,7 @@ describe ImportHistoriesController do
   describe "GET show" do
     it "assigns the requested import_history as @import_history" do
       ImportHistory.stub(:find).with("37") { mock_import_history }
-      get :show, :id => "37"
+      get :show, :survey_id => 1, :id => "37"
       assigns(:import_history).should be(mock_import_history)
     end
   end
@@ -35,8 +37,9 @@ describe ImportHistoriesController do
 
     it "redirects to the import_histories list" do
       ImportHistory.stub(:find) { mock_import_history }
-      delete :destroy, :id => "1"
-      response.should redirect_to(import_histories_url)
+      mock_import_history.should_receive(:survey_id).and_return(1)
+      delete :destroy, :survey_id => 1, :id => "1"
+      response.should redirect_to(survey_import_histories_url(1))
     end
   end
 

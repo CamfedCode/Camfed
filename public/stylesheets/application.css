@@ -1,0 +1,46 @@
+div.field_name
+{
+	width: 30%;
+	float: left;
+}
+
+div.question_name
+{
+	width: 70%;
+	float: left;
+}
+
+div.clear
+{
+	clear: both;
+}
+
+div.notice{
+	border: 1px solid #33CC66;
+	background-color: #99FF66;
+	padding: 5px;
+}
+
+div.error{
+	border: 1px solid #FF0000;
+	background-color: #FF3333;
+	padding: 5px;
+}
+
+div.banner{
+	border-bottom: 2px solid #787878;
+}
+
+div.breadcrumbs{
+	padding: 5px;
+}
+
+div.survey div.survey_name{
+	width: 30%;
+	float: left;
+}
+
+div.survey div.actions{
+	width: 70%;
+	float: left;
+}

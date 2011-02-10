@@ -1,6 +1,8 @@
 require 'spec_helper'
 
 describe ImportHistory do
+  it {should belong_to :survey}
+  
   before(:each) do
     @import_history = ImportHistory.new({:survey_id => "1", :survey_response_id => "2", :survey_name => "a survey"})
   end

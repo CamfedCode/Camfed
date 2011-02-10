@@ -19,6 +19,14 @@ module Salesforce
         response = Salesforce::Binding.instance.update("sObject {\"xsi:type\" => \"#{self.class.object_type}\"}" => field_values)
         self.id = response.updateResponse.result.id
       end
+      
+      def fields
+        return @fields if @fields
+        response = Salesforce::Binding.instance.describeSObject("sObjectType" => self.class.object_type)
+        result =  response.describeSObjectResponse.result
+        return [] if result.nil? || result.fields.nil?        
+        @fields = result.fields.collect {|field| Field.new(field.name, field.label, field.type)}
+      end
     
       def sanitize_values!
         field_values.each_pair do |field, value|

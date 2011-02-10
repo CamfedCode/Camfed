@@ -31,6 +31,7 @@ GEM
     arel (2.0.8)
     builder (2.1.2)
     crack (0.1.8)
+    crummy (1.1.0)
     diff-lcs (1.1.2)
     erubis (2.6.6)
       abstract (>= 1.0.0)
@@ -80,6 +81,7 @@ GEM
       activesupport (~> 3.0)
       railties (~> 3.0)
       rspec (~> 2.5.0)
+    shoulda (2.11.3)
     sqlite3 (1.3.3)
     sqlite3-ruby (1.3.3)
       sqlite3 (>= 1.3.3)
@@ -92,8 +94,10 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  crummy
   httparty
   rails (= 3.0.4)
   rforce
   rspec-rails (~> 2.4)
+  shoulda
   sqlite3-ruby

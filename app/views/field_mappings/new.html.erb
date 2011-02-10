@@ -1,0 +1,31 @@
+Survey: <%= @object_mapping.survey.name %>
+<br />
+Salesforce Object: <%= @object_mapping.sf_object_type %>
+
+<% questions_for_select = @questions.collect{|question| [question.prompt, question.name]}%>
+
+<% @fields.each {|field| @object_mapping.field_mappings.build(:field_name => field.name) }%>
+
+<%= form_for @object_mapping do |object_mapping_form| %>
+
+  <%= object_mapping_form.fields_for :field_mappings do |field_mapping_form| %>
+		
+		<div class="field_mapping">
+			<div class="field_name">
+				<%= field_mapping_form.hidden_field :field_name %> 
+				<%= field_mapping_form.object.field_name %> 
+			</div>
+			<div class="question_name">	
+				<%= field_mapping_form.select :question_name, questions_for_select, :prompt => true %>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<br />
+  <% end %>
+
+	<div class="actions">
+		<%= object_mapping_form.submit %>
+	</div>
+	
+<% end %>
+

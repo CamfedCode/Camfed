@@ -6,6 +6,8 @@ module Salesforce
     end
 
     def self.first_or_create name
+      return nil if name.blank?
+      
       first_name, last_name = name.split(' ')
       contacts = all(:Id, object_type, "FirstName='#{first_name}' AND LastName='#{last_name}'")
       return nil if contacts.length > 1

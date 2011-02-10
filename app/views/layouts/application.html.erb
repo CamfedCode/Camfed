@@ -9,8 +9,14 @@
 	<body>
 
 		<div class="banner">
+			<%= image_tag 'logo.gif'%>
 			<h1>Camfed Data Importer</h1>
 		</div>
+
+		<div class="breadcrumbs">
+			<%= render_crumbs %>
+		</div>
+		
 
 		<div class="messages">
 			<% flash.each_pair do |flash_type, message|%>

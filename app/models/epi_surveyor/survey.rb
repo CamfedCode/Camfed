@@ -1,9 +1,13 @@
 module EpiSurveyor
-  class Survey
+  class Survey < ActiveRecord::Base
     include HTTParty
     base_uri 'https://www.episurveyor.org'
 
-    attr_accessor :id, :name, :responses
+    has_many :object_mappings
+    has_many :import_histories
+
+    attr_accessible :id
+    attr_accessor :responses
   
     def test
       Survey.find_by_name('MV-Dist-Info5').sync!
@@ -16,7 +20,7 @@ module EpiSurveyor
     def questions
       @questions ||= Question.find_all_by_survey(self)
     end
-
+    
     def self.auth
       @@auth ||= {:username => 'Camfedtest@gmail.com', :accesstoken => 'YUc8UfyeOm3W9GqNSJYs'}
     end
@@ -25,7 +29,7 @@ module EpiSurveyor
       @@headers ||= {'Content-Type' => 'application/x-www-form-urlencoded'}
     end
   
-    def self.all
+    def self.sync_with_epi_surveyor
       response = post('/api/surveys', :body => auth, :headers => headers)
       return [] if response.nil? || response['Surveys'].nil? || response['Surveys']['Survey'].nil?
 
@@ -35,24 +39,16 @@ module EpiSurveyor
         survey = Survey.new
         survey.id = survey_hash['SurveyId']
         survey.name = survey_hash['SurveyName']
+        survey.save! unless Survey.exists?(:id => survey.id)
         surveys << survey
       end
       surveys
     end
   
-    def self.find_by_name name
-      all.select{|survey| survey.name == name}.first
-    end
-  
     def sync!
-      field_mapping = mapping
-      responses.each {|response| response.sync!(field_mapping)}
+      mappings = object_mappings
+      responses.each {|response| response.sync!(mappings)}
     end
-  
-    def mapping
-      EpiSurveyorToSalesforceMapping.find(self.name)
-    end
-    
 
   end
 end

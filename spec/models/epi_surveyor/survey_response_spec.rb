@@ -101,15 +101,17 @@ describe EpiSurveyor::SurveyResponse do
         Salesforce::ObjectFactory.should_receive(:create)
           .with('Monitoring_Visit__c').and_return(@mv_salesforce_object)
         
-        @mapping = {'Monitoring_Visit__c' => {:School__c => 'School'}}
+        @mapping = ObjectMapping.new
+        @mapping.sf_object_type = 'Monitoring_Visit__c'
+        @mapping.field_mappings.build(:field_name => 'School__c', :question_name => 'School')
       end
     
       it "should call sync! of Monitoring Visit" do
-        @response.sync!(@mapping)
+        @response.sync!([@mapping])
       end
     
       it 'should create a new import_history' do
-        @response.sync!(@mapping)
+        @response.sync!([@mapping])
         ImportHistory.where(:survey_id => "1", :survey_response_id => "2").first.should_not be nil
       end
     end

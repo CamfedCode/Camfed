@@ -10,13 +10,31 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110209190656) do
+ActiveRecord::Schema.define(:version => 20110210183303) do
+
+  create_table "field_mappings", :force => true do |t|
+    t.integer "object_mapping_id"
+    t.string  "field_name"
+    t.string  "question_name"
+  end
 
   create_table "import_histories", :force => true do |t|
     t.string   "survey_id"
     t.string   "survey_name"
     t.string   "survey_response_id"
     t.text     "error_message"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "object_mappings", :force => true do |t|
+    t.integer "survey_id"
+    t.string  "sf_object_type"
+  end
+
+  create_table "surveys", :force => true do |t|
+    t.string   "name"
+    t.datetime "last_imported_at"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

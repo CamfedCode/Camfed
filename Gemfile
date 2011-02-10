@@ -9,8 +9,11 @@ gem 'sqlite3-ruby', :require => 'sqlite3'
 
 gem 'httparty'
 
+gem 'crummy'
+
 group :test, :development do
   gem "rspec-rails", "~> 2.4"
+	gem "shoulda"
 end
 
 gem 'rforce'
