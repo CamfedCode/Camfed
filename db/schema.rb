@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110210183303) do
+ActiveRecord::Schema.define(:version => 20110210232202) do
 
   create_table "field_mappings", :force => true do |t|
     t.integer "object_mapping_id"
@@ -19,7 +19,7 @@ ActiveRecord::Schema.define(:version => 20110210183303) do
   end
 
   create_table "import_histories", :force => true do |t|
-    t.string   "survey_id"
+    t.integer  "survey_id",          :limit => 255
     t.string   "survey_name"
     t.string   "survey_response_id"
     t.text     "error_message"
