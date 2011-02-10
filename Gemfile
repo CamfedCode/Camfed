@@ -14,6 +14,7 @@ gem 'crummy'
 group :test, :development do
   gem "rspec-rails", "~> 2.4"
 	gem "shoulda"
+	gem "taps"
 end
 
 gem 'rforce'

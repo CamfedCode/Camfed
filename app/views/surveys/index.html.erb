@@ -3,7 +3,7 @@
 <%= link_to 'Sync with EpiSurveyor', sync_with_epi_surveyor_surveys_path, :method => :post %>
 
 <ol>
-<% @surveys.each do |survey|%>
+<% @surveys.sort_by{|survey| survey.name}.each do |survey|%>
 	<li>
 		<div class="survey">
 			<div class="survey_name">
