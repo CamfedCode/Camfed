@@ -1,7 +1,7 @@
 class CreateImportHistories < ActiveRecord::Migration
   def self.up
     create_table :import_histories do |t|
-      t.string :survey_id
+      t.integer :survey_id
       t.string :survey_name
       t.string :survey_response_id
       t.text :error_message
