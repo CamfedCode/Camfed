@@ -1,17 +1,24 @@
-Survey: <%= @object_mapping.survey.name %>
-<br />
-Salesforce Object: <%= @object_mapping.sf_object_type %>
+<h2>New Mappings for <%= @object_mapping.survey.name %> to <%= @object_mapping.sf_object_type %> </h2>
 
 <% questions_for_select = @questions.collect{|question| [question.prompt, question.name]}%>
 
-<% @fields.each {|field| @object_mapping.field_mappings.build(:field_name => field.name) }%>
+<div class="field_mapping">
+	<div class="field_name heading">
+		<%= @object_mapping.sf_object_type %> Field Name
+	</div>
+	<div class="question_name heading">	
+		<%= @object_mapping.survey.name %> Question
+	</div>
+	<div class="clear"></div>
+</div>
 
 <%= form_for @object_mapping do |object_mapping_form| %>
 
   <%= object_mapping_form.fields_for :field_mappings do |field_mapping_form| %>
-		
+	<div class="field_mappings">	
 		<div class="field_mapping">
 			<div class="field_name">
+				<%= field_mapping_form.hidden_field :id %> 
 				<%= field_mapping_form.hidden_field :field_name %> 
 				<%= field_mapping_form.object.field_name %> 
 			</div>
@@ -20,7 +27,7 @@ Salesforce Object: <%= @object_mapping.sf_object_type %>
 			</div>
 			<div class="clear"></div>
 		</div>
-		<br />
+	</div>
   <% end %>
 
 	<div class="actions">

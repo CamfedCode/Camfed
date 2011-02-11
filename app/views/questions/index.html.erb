@@ -1,6 +1,6 @@
 <h2>Questions for <%= @survey.name %></h2>
-<ol>
+<ol class="questions">
 	<% @questions.each do |question| %>
-		<li><%= question.name  %>:<%= question.prompt %></li>
+		<li><span class="question_name"><%= question.name  %></span>: <%= question.prompt %></li>
 	<% end %>
 </ol>

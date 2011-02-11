@@ -18,7 +18,7 @@ Camfed::Application.routes.draw do
   resources :object_mappings do
     resources :field_mappings
   end
-  
+  resources :field_mappings
   
   root :to => "surveys#index"
   

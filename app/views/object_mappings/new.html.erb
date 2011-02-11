@@ -1,13 +1,15 @@
-<%= form_for(@object_mapping, :url => survey_object_mappings_path(@survey)) do |f|%>
-	
+<h2>New Mapping for <%=@survey.name %></h2>
+
+
+<%= form_for(@object_mapping, :url => survey_object_mappings_path(@survey)) do |f|%>	
 	<%= f.hidden_field :survey_id %>
   <div class="field">
-    <%= f.label :sf_object_type %><br />
+    <%= f.label :sf_object_type, 'Select Salesforce Object' %><br />
     <%= f.select :sf_object_type, @sf_object_types, :prompt => true %>
   </div>
 
   <div class="actions">
-    <%= f.submit %>
+    <%= f.submit 'Proceed to Field Mapping' %>
   </div>
 
 <% end %>

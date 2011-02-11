@@ -114,6 +114,11 @@ describe EpiSurveyor::SurveyResponse do
         @response.sync!([@mapping])
         ImportHistory.where(:survey_id => "1", :survey_response_id => "2").first.should_not be nil
       end
+      
+      it 'should return import_history' do
+        @response.sync!([@mapping]).is_a?(ImportHistory).should be true
+      end
+            
     end
     
     it 'should return if already synced' do
@@ -122,6 +127,20 @@ describe EpiSurveyor::SurveyResponse do
       response = EpiSurveyor::SurveyResponse.new
       response.should_receive(:synced?).and_return(true)
       response.sync!(mapping)
+    end
+    
+    it 'should dump errors into import histories if there is any' do
+      response = EpiSurveyor::SurveyResponse.new
+      sf_object = ''
+      survey = EpiSurveyor::Survey.new(:name => 'a_survey', :id => '1')
+      response.survey = survey
+      response.id = '2'
+      
+      response.should_receive(:salesforce_object).with('mapping').and_return(sf_object)
+      response.should_receive(:salesforce_object).with('mapping 2').and_return(sf_object)
+      sf_object.should_receive(:sync!).exactly(2).times.and_raise('Error message')
+      response.sync!(['mapping', 'mapping 2'])
+      ImportHistory.first.error_message.should == 'Error message AND Error message'
     end
   end
   

@@ -1,3 +1,23 @@
+div.field_mapping
+{
+	padding: 5px;	
+}
+
+div.field_mappings:nth-child(2n) {
+	background-color: #DDD;
+}
+
+div.field_mappings:nth-child(2n+1) {
+	background-color: #EEE;
+}
+
+
+div.field_mapping div.heading
+{
+	font-weight: bold;
+	font-size: large;
+}
+
 div.field_name
 {
 	width: 30%;
@@ -27,8 +47,9 @@ div.error{
 	padding: 5px;
 }
 
-div.banner{
+div.banner, div.breadcrumbs{
 	border-bottom: 2px solid #787878;
+	margin: 5px;
 }
 
 div.breadcrumbs{
@@ -43,4 +64,29 @@ div.survey div.survey_name{
 div.survey div.actions{
 	width: 70%;
 	float: left;
+}
+
+div.content{
+	padding: 5px;
+}
+
+div.actions{
+	padding: 5px;
+}
+
+ol.field_mappings span.actions{
+}
+
+ol.questions li span.question_name{
+	font-weight: bold;
+}
+
+div.survey div.last_imported_at{
+	float: left;
+	width: 40%;
+}
+
+ol.surveys li div.survey{
+	background-color: #EEE;
+	margin: 3px;
 }

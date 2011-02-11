@@ -67,14 +67,26 @@ describe Salesforce::Queries do
   end
   
   describe 'create!' do
+    before(:each) do
+      @binding = ''
+      Salesforce::Binding.should_receive(:instance).and_return(@binding)
+    end
+    
     it 'should call binding with the parameters to create' do
-      binding = ''
-      Salesforce::Binding.should_receive(:instance).and_return(binding)
-      response = method_hash_from_hash(:createResponse=>{:result=>{ :id => 1}})      
-      binding.should_receive(:create).with("sObject {\"xsi:type\" => \"AnObject\"}" => {:name => 'Hi'}).and_return(response)
+      response = method_hash_from_hash(:createResponse=>{:result=>{ :id => 1, :success => "true"}})      
+      @binding.should_receive(:create).with("sObject {\"xsi:type\" => \"AnObject\"}" => {:name => 'Hi'}).and_return(response)
       new_object = SampleSalesforceObject.new
       new_object[:name] = 'Hi'
       new_object.create!.should == 1
+    end
+    
+    it 'should raise error with raw response' do
+      response = method_hash_from_hash(:createResponse=>{:result=>{ :id => 1, :success => "false"}})      
+      @binding.should_receive(:create).with("sObject {\"xsi:type\" => \"AnObject\"}" => {:name => 'Hi'}).and_return(response)
+      new_object = SampleSalesforceObject.new
+      new_object[:name] = 'Hi'
+      error_message = 'Object SampleSalesforceObject could not be created. FIELD_VALUES={:name=>"Hi"}. RAW_RESPONSE = {:createResponse=>{:result=>{:id=>1, :success=>"false"}}}'
+      lambda {new_object.create!}.should raise_error(RuntimeError, error_message)
     end
   end
   
@@ -88,13 +100,26 @@ describe Salesforce::Queries do
     it 'should call binding with the parameters to update' do
       binding = ''
       Salesforce::Binding.should_receive(:instance).and_return(binding)
-      response = method_hash_from_hash(:updateResponse=>{:result=>{ :id => 1}})      
+      response = method_hash_from_hash(:updateResponse=>{:result=>{ :id => 1, :success => 'true'}})      
       binding.should_receive(:update).with("sObject {\"xsi:type\" => \"AnObject\"}" => {:Id => 1}).and_return(response)
       new_object = SampleSalesforceObject.new
       new_object.id = 1
       new_object.update!
       new_object.id.should == 1
     end
+    
+    it 'should raise error when success is false' do
+      binding = ''
+      Salesforce::Binding.should_receive(:instance).and_return(binding)
+      response = method_hash_from_hash(:updateResponse=>{:result=>{ :id => 1, :success => 'false'}})      
+      binding.should_receive(:update).with("sObject {\"xsi:type\" => \"AnObject\"}" => {:Id => 1}).and_return(response)
+      new_object = SampleSalesforceObject.new
+      new_object.id = 1
+      error_message = 'Object SampleSalesforceObject could not be updated. FIELD_VALUES={:Id=>1} RAW_RESPONSE = {:updateResponse=>{:result=>{:id=>1, :success=>"false"}}}'
+      lambda {new_object.update!}.should raise_error(RuntimeError, error_message)
+    end
+    
+    
   end
   
   describe 'fields' do

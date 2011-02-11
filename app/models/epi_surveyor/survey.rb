@@ -47,7 +47,7 @@ module EpiSurveyor
   
     def sync!
       mappings = object_mappings
-      responses.each {|response| response.sync!(mappings)}
+      responses.collect {|response| response.sync!(mappings)}.select{|import_history| import_history.present?}
     end
 
   end

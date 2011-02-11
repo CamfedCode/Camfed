@@ -2,8 +2,7 @@
 
 <table>
   <tr>
-    <th>Survey</th>
-    <th>Survey response</th>
+    <th>ID</th>
     <th>Errors</th>
     <th></th>
     <th></th>
@@ -11,7 +10,6 @@
 
 <% @import_histories.each do |import_history| %>
   <tr>
-    <td><%= import_history.survey_name %></td>
     <td><%= import_history.survey_response_id %></td>
     <td><%= import_history.error_message %></td>
     <td><%= link_to 'Show', import_history %></td>

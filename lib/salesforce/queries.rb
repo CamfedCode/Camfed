@@ -10,6 +10,11 @@ module Salesforce
       def create!
         sanitize_values!
         response = Salesforce::Binding.instance.create("sObject {\"xsi:type\" => \"#{self.class.object_type}\"}" => field_values)
+        
+        if response.createResponse.result.success == "false" || response.createResponse.result.success == false
+          raise "Object #{self.class.name} could not be created. FIELD_VALUES=#{field_values}. RAW_RESPONSE = #{response}"
+        end
+        
         self.id = response.createResponse.result.id
       end
       
@@ -17,6 +22,12 @@ module Salesforce
         raise ArgumentError.new("Id is nil") if self.id.nil?
         sanitize_values!
         response = Salesforce::Binding.instance.update("sObject {\"xsi:type\" => \"#{self.class.object_type}\"}" => field_values)
+
+        if response.updateResponse.result.success == "false" || response.updateResponse.result.success == false
+          raise "Object #{self.class.name} could not be updated. FIELD_VALUES=#{field_values} RAW_RESPONSE = #{response}"
+        end
+
+
         self.id = response.updateResponse.result.id
       end
       

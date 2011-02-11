@@ -96,8 +96,11 @@ describe EpiSurveyor::Survey do
       responses = [response_a, response_b]
       
       survey.should_receive(:responses).and_return(responses)
-      responses.each{|response| response.should_receive(:sync!).with(mappings)}
-      survey.sync!
+      responses.each{|response| response.should_receive(:sync!).with(mappings).and_return(ImportHistory.new)}
+      import_histories = survey.sync!
+      import_histories.should have(2).things
+      import_histories.first.is_a?(ImportHistory).should be true
+      import_histories.last.is_a?(ImportHistory).should be true      
     end
   end
   

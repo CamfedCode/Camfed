@@ -1,8 +1,13 @@
 class ObjectMappingsController < ApplicationController
+  add_crumb 'Home', '/'
+  
   def new
     @survey = EpiSurveyor::Survey.find(params[:survey_id])
     @sf_object_types = ['MonitoringVisit', 'FinancialAccountability', 'Contact', 'Structure']
     @object_mapping = @survey.object_mappings.build
+    add_crumb 'Surveys', surveys_path
+    add_crumb 'Mappings', survey_mappings_path(@survey)
+    add_crumb 'New'
   end
   
   def create
@@ -15,9 +20,9 @@ class ObjectMappingsController < ApplicationController
   def update
     @object_mapping = ObjectMapping.find(params[:id])
     if @object_mapping.update_attributes(sanitized_params)
-      flash[:notice] = "Success"
+      flash[:notice] = "Successfully saved the mappings."
     else
-      flash[:error] = "Failed. See log."
+      flash[:error] = "The mapping was not saved. Please check log file for more."
       logger.error "Error in saving mapping " + @object_mapping.errors.inspect
     end
     redirect_to survey_mappings_path(@object_mapping.survey_id)

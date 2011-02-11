@@ -1,10 +1,17 @@
 <h2>Listing mappings for <%= @survey.name %></h2>
 <ol>
 <% @survey.object_mappings.each do |object_mapping|%>
-	<li><%= object_mapping.sf_object_type %>
-		<ol>
-		<%object_mapping.field_mappings.each do |field_mapping| %>
-			<li><%= field_mapping.field_name %> - <%= field_mapping.question_name %> </li>
+	<li class="object_mappings">
+		<%= object_mapping.sf_object_type %>
+		<ol class="field_mappings">
+		<% object_mapping.field_mappings.each do |field_mapping| %>
+			<li>
+				<%= field_mapping.field_name %> - <%= field_mapping.question_name %> 
+				<span class="actions">
+					<%= link_to 'Delete', field_mapping_path(field_mapping), 
+					:confirm => "Are you sure you want to delete the mapping between #{field_mapping.field_name} and #{field_mapping.question_name}", :method => :delete%>
+				</span>
+			</li>
 		<%end%>
 		</ol>
 	</li>

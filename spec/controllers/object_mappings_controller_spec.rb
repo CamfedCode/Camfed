@@ -7,7 +7,7 @@ require 'spec_helper'
 describe ObjectMappingsController do
   describe 'new' do
     it 'should populate survey and object mapping' do
-      survey = EpiSurveyor::Survey.new
+      survey = EpiSurveyor::Survey.new(:id => 1)
       EpiSurveyor::Survey.should_receive(:find).with("1").and_return(survey)
       get :new, :survey_id => "1"
       response.should be_success
@@ -30,7 +30,7 @@ describe ObjectMappingsController do
       ObjectMapping.create(params[:object_mapping])
       post :create, params
       ObjectMapping.where(params[:object_mapping]).should have(1).things
-      response.should redirect_to new_object_mapping_field_mapping_path(assigns[:object_mapping])
+      response.should redirect_to new_object_mapping_field_mapping_path(assigns[:object_mapping].id)
     end
   end
   

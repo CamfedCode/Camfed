@@ -23,6 +23,7 @@ describe SurveysController do
       post 'import', :id => "1", :survey_name => survey_name
       response.should redirect_to surveys_path
       assigns[:survey].should == survey 
+      assigns[:survey].last_imported_at.should > 1.minutes.ago
     end
   end
 end
