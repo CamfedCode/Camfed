@@ -14,6 +14,16 @@ describe QuestionsController do
       assigns[:questions].should == []
       assigns[:survey].should == survey
     end
+    
+    it 'should redirect to surveys with a flash error if there is an error in fetching' do
+      survey = EpiSurveyor::Survey.new(:id => 1)
+      EpiSurveyor::Survey.should_receive(:find).with("1").and_return(survey)
+      survey.should_receive(:questions).and_raise('no connection error')
+      
+      get 'index', :survey_id => "1"
+      flash[:error].should == 'Could not fetch questions from EpiSurveyor because of no connection error'
+      response.should redirect_to surveys_path
+    end
   end
 
 end
