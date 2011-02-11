@@ -56,9 +56,15 @@ div.breadcrumbs{
 	padding: 5px;
 }
 
+div.survey{
+	width: 90%;
+}
+
 div.survey div.survey_name{
 	width: 30%;
 	float: left;
+	font-weight: bold;
+	padding: 3px;
 }
 
 div.survey div.actions{
