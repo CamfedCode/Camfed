@@ -88,5 +88,10 @@ div.survey div.last_imported_at{
 
 ol.surveys li div.survey{
 	background-color: #EEE;
-	margin: 3px;
+	margin-bottom: 3px;
+}
+
+table.import_histories tr.error{
+	border: 1px solid #FF0000;
+	background-color: #FF3333;
 }

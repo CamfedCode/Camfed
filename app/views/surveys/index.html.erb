@@ -13,7 +13,7 @@
 			 (Last imported at: <%= "#{distance_of_time_in_words(Time.now, survey.last_imported_at)} ago" if survey.last_imported_at%>)
 			</div>
 			<div class="actions">
-				<%= link_to 'Import', import_survey_path(survey.id, :survey_name => survey.name), :method => :post %>
+				<%= link_to 'Import', import_survey_path(survey.id), :method => :post %>
 				<%= link_to 'Mappings', survey_mappings_path(survey.id) %>
 				<%= link_to 'Import History', survey_import_histories_path(survey.id) %>
 				<%= link_to 'Questions', survey_questions_path(survey.id) %>

@@ -8,10 +8,10 @@ class SurveysController < ApplicationController
   
   def import
     begin
-      @survey = EpiSurveyor::Survey.find_by_name(params[:survey_name])
+      @survey = EpiSurveyor::Survey.find(params[:id])
       import_histories = @survey.sync!
       @survey.touch(:last_imported_at)      
-      errors_count = import_histories.select{|import_history| import_history.error_message.present? }.length       
+      errors_count = import_histories.select{|import_history| import_history.is_error }.length       
       if errors_count > 0
         flash[:error] = "The #{@survey.name} import completed with errors in #{errors_count} out of #{import_histories.length} new response(s) to #{@survey.name}"
       else

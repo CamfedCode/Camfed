@@ -3,9 +3,9 @@ module EpiSurveyor
     include HTTParty
     base_uri 'https://www.episurveyor.org'
 
-    has_many :object_mappings
-    has_many :import_histories
-
+    has_many :object_mappings, :dependent => :destroy    
+    has_many :import_histories, :dependent => :destroy
+    
     attr_accessible :id
     attr_accessor :responses
   

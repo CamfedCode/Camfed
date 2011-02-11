@@ -14,13 +14,12 @@ describe SurveysController do
 
   describe "POST 'Import'" do
     it "should find the survey by name and then sync" do
-      survey_name = "the_survey"
       survey = EpiSurveyor::Survey.new
-      survey.name = survey_name
-      EpiSurveyor::Survey.should_receive(:find_by_name).with(survey_name).and_return(survey)
+      survey.id = 1
+      EpiSurveyor::Survey.should_receive(:find).with(survey.id).and_return(survey)
       survey.should_receive(:sync!)
       
-      post 'import', :id => "1", :survey_name => survey_name
+      post 'import', :id => 1
       response.should redirect_to surveys_path
       assigns[:survey].should == survey 
       assigns[:survey].last_imported_at.should > 1.minutes.ago

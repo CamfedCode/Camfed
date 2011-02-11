@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110210232202) do
+ActiveRecord::Schema.define(:version => 20110211204238) do
 
   create_table "field_mappings", :force => true do |t|
     t.integer "object_mapping_id"
@@ -25,6 +25,7 @@ ActiveRecord::Schema.define(:version => 20110210232202) do
     t.text     "error_message"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "is_error"
   end
 
   create_table "object_mappings", :force => true do |t|

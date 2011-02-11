@@ -2,7 +2,7 @@
 
 <p>
   <b>Survey:</b>
-  <%= @import_history.survey_id %>
+  <%= @import_history.survey.name %>
 </p>
 
 <p>
@@ -11,8 +11,13 @@
 </p>
 
 <p>
+  <b>Imported at:</b>
+  <%= @import_history.created_at %>
+</p>
+
+<p>
   <b>Errors:</b>
   <%= @import_history.error_message %>
 </p>
 
-<%= link_to 'Back', import_histories_path %>
+<%= link_to 'Back', survey_import_histories_path(@import_history.survey) %>

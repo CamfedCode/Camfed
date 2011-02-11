@@ -56,7 +56,8 @@ module EpiSurveyor
       end
       
       error_message = sync_errors.collect{|error| error.message}.join(" AND ")
-      ImportHistory.create!(:survey_id => survey.id, :survey_name => survey.name, :survey_response_id => self.id, :error_message => error_message)
+      ImportHistory.create!(:survey_id => survey.id, :survey_name => survey.name, :survey_response_id => self.id, 
+                            :is_error => error_message.present?, :error_message => error_message)
     end
     
     def synced?

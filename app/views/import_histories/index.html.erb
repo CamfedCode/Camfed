@@ -1,7 +1,8 @@
 <h2>Import Histories <%= "for #{@survey.name}" if @survey%></h2>
 
-<table>
+<table class="import_histories">
   <tr>
+	<th>Import Time</th>
     <th>ID</th>
     <th>Errors</th>
     <th></th>
@@ -9,7 +10,8 @@
   </tr>
 
 <% @import_histories.each do |import_history| %>
-  <tr>
+  <tr class="import_history <%= 'error' if import_history.is_error %>">
+   	<td><%= import_history.created_at %></td>
     <td><%= import_history.survey_response_id %></td>
     <td><%= import_history.error_message %></td>
     <td><%= link_to 'Show', import_history %></td>

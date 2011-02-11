@@ -1,5 +1,6 @@
 class ObjectMapping < ActiveRecord::Base
-  has_many :field_mappings
+  has_many :field_mappings, :dependent => :destroy
+    
   belongs_to :survey, :class_name => 'EpiSurveyor::Survey'
   
   accepts_nested_attributes_for :field_mappings
