@@ -1,7 +1,8 @@
 module EpiSurveyor
   class SurveyResponse
     include HTTParty
-    base_uri 'https://www.episurveyor.org'
+    base_uri Configuration.instance.epi_surveyor_url    
+    extend EpiSurveyor::Dependencies::ClassMethods
   
     attr_accessor :id, :survey, :question_answers
 
@@ -22,8 +23,8 @@ module EpiSurveyor
     end
     
     def self.find_all_by_survey survey
-      body = Survey.auth.merge(:surveyid => survey.id)
-      survey_data = post('/api/surveydata', :body => body, :headers => Survey.headers)
+      body = auth.merge(:surveyid => survey.id)
+      survey_data = post('/api/surveydata', :body => body, :headers => headers)
       return [] if survey_data.nil? || survey_data['SurveyDataList'].nil? || survey_data['SurveyDataList']['SurveyData'].nil?
     
       survey_data_hashes = survey_data['SurveyDataList']['SurveyData']

@@ -47,13 +47,17 @@ div.error{
 	padding: 5px;
 }
 
-div.banner, div.breadcrumbs{
+div.banner{
 	border-bottom: 2px solid #787878;
-	margin: 5px;
 }
 
-div.breadcrumbs{
+div.banner, div.menu, div.breadcrumbs{
+	margin: 5px;
 	padding: 5px;
+}
+
+div.menu, div.breadcrumbs{
+	border-bottom: 1px solid #787878;
 }
 
 div.survey{

@@ -4,22 +4,11 @@ describe EpiSurveyor::Survey do
   
   it {should have_many :object_mappings}
   it {should have_many :import_histories}
-  
-  describe 'init' do
-    it 'should set auth' do
-      expected_auth = { :username => 'Camfedtest@gmail.com', :accesstoken => 'YUc8UfyeOm3W9GqNSJYs' }
-      assert_equal(expected_auth, EpiSurveyor::Survey.auth)
-    end
-  
-    it 'should set headers' do
-      expected_headers = {'Content-Type' => 'application/x-www-form-urlencoded'}
-      assert_equal(expected_headers, EpiSurveyor::Survey.headers)
-    end
-  end
-  
+    
   describe 'sync_with_epi_surveyor' do
     it "should pass expected account parameters" do
-      body = {:username=>"Camfedtest@gmail.com", :accesstoken=>"YUc8UfyeOm3W9GqNSJYs"}
+      body = {:username => Configuration.instance.epi_surveyor_user, 
+              :accesstoken => Configuration.instance.epi_surveyor_token}
       headers = {"Content-Type"=>"application/x-www-form-urlencoded"}
       EpiSurveyor::Survey.should_receive(:post).with("/api/surveys", :body => body, :headers => headers)
       EpiSurveyor::Survey.sync_with_epi_surveyor
@@ -103,6 +92,5 @@ describe EpiSurveyor::Survey do
       import_histories.last.is_a?(ImportHistory).should be true      
     end
   end
-  
   
 end

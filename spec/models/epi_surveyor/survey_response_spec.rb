@@ -7,6 +7,8 @@ describe EpiSurveyor::SurveyResponse do
       @survey = EpiSurveyor::Survey.new
       @survey.id = 1
       @survey.name = 'Mv-Dist-Info'
+      # configuration = Configuration.new
+      # Configuration.stub!(:instance).and_return(configuration)
     end
     
     it 'should return empty when none found' do
@@ -144,5 +146,9 @@ describe EpiSurveyor::SurveyResponse do
     end
   end
   
+  # after(:each) do
+  #     Configuration.reset
+  #   end
+  #   
 end
       

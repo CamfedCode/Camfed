@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe FieldMappingsController do
+  
   describe 'new' do
     it 'should populate object mapping and questions' do
 

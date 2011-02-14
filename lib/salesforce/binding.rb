@@ -2,8 +2,8 @@ module Salesforce
   class Binding
     def self.instance
       unless defined?(@@binding)
-        @@binding = RForce::Binding.new 'https://test.salesforce.com/services/Soap/u/20.0'
-        @@binding.login 'sf_sysadmin@camfed.org.dean', 'w3stbrookLidRts9sALeXQYTYhYJUvl5wc'
+        @@binding = RForce::Binding.new Configuration.instance.salesforce_url
+        @@binding.login Configuration.instance.salesforce_user, Configuration.instance.salesforce_token
       end
       @@binding
     end

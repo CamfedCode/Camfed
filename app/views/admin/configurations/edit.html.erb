@@ -1,0 +1,42 @@
+<% method = @configuration.new_record? ? :post : :put%>
+
+<%= form_for @configuration, :url => admin_configuration_path, :method => method do |f|%>
+  <div class="field">
+    <%= f.label :epi_surveyor_url %><br />
+    <%= f.text_field :epi_surveyor_url %>
+  </div>
+
+
+  <div class="field">
+    <%= f.label :epi_surveyor_user %><br />
+    <%= f.text_field :epi_surveyor_user %>
+  </div>
+
+
+  <div class="field">
+    <%= f.label :epi_surveyor_token %><br />
+    <%= f.text_field :epi_surveyor_token %>
+  </div>
+
+
+  <div class="field">
+    <%= f.label :salesforce_url %><br />
+    <%= f.text_field :salesforce_url %>
+  </div>
+
+
+  <div class="field">
+    <%= f.label :salesforce_user %><br />
+    <%= f.text_field :salesforce_user %>
+  </div>
+
+
+  <div class="field">
+    <%= f.label :salesforce_token %><br />
+    <%= f.text_field :salesforce_token %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<%end%>

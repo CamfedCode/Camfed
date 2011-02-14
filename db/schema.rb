@@ -10,7 +10,18 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110211204238) do
+ActiveRecord::Schema.define(:version => 20110214170926) do
+
+  create_table "configurations", :force => true do |t|
+    t.string   "epi_surveyor_url"
+    t.string   "epi_surveyor_user"
+    t.string   "epi_surveyor_token"
+    t.string   "salesforce_url"
+    t.string   "salesforce_user"
+    t.string   "salesforce_token"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "field_mappings", :force => true do |t|
     t.integer "object_mapping_id"

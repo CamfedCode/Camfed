@@ -1,13 +1,14 @@
 module EpiSurveyor
   class Question
     include HTTParty
-    base_uri 'https://www.episurveyor.org'
+    base_uri Configuration.instance.epi_surveyor_url    
+    extend EpiSurveyor::Dependencies::ClassMethods
     
     attr_accessor :id, :prompt, :name, :survey
     
     def self.find_all_by_survey(survey)
-      body = Survey.auth.merge(:surveyid => survey.id)
-      response = post('/api/questions', :body => body, :headers => Survey.headers)
+      body = auth.merge(:surveyid => survey.id)
+      response = post('/api/questions', :body => body, :headers => headers)
       return [] if response.nil? || response['Questions'].nil? || response['Questions']['Question'].nil?
       
       questions = []

@@ -1,7 +1,8 @@
 module EpiSurveyor
   class Survey < ActiveRecord::Base
     include HTTParty
-    base_uri 'https://www.episurveyor.org'
+    base_uri Configuration.instance.epi_surveyor_url    
+    extend EpiSurveyor::Dependencies::ClassMethods
 
     has_many :object_mappings, :dependent => :destroy    
     has_many :import_histories, :dependent => :destroy
@@ -19,14 +20,6 @@ module EpiSurveyor
     
     def questions
       @questions ||= Question.find_all_by_survey(self)
-    end
-    
-    def self.auth
-      @@auth ||= {:username => 'Camfedtest@gmail.com', :accesstoken => 'YUc8UfyeOm3W9GqNSJYs'}
-    end
-
-    def self.headers
-      @@headers ||= {'Content-Type' => 'application/x-www-form-urlencoded'}
     end
   
     def self.sync_with_epi_surveyor

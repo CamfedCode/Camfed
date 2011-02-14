@@ -20,6 +20,10 @@ Camfed::Application.routes.draw do
   end
   resources :field_mappings
   
+  namespace 'admin' do
+    resource :configuration
+  end
+  
   root :to => "surveys#index"
   
 end
