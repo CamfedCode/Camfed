@@ -1,4 +1,4 @@
-class MappingsController < ApplicationController
+class MappingsController < AuthenticatedController
   add_crumb 'Home', '/'
 
   def index

@@ -1,4 +1,4 @@
-class ImportHistoriesController < ApplicationController
+class ImportHistoriesController < AuthenticatedController
   add_crumb 'Home', '/'
   
   def index

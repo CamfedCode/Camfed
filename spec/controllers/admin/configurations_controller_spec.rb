@@ -1,7 +1,12 @@
 require 'spec_helper'
+require 'controllers/authentication_helper'
 
 describe Admin::ConfigurationsController do
-
+  
+  before(:each) do
+    sign_on
+  end
+  
   describe "GET 'edit'" do
     it "should load the current configuration" do
       configuration = Configuration.new

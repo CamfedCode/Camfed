@@ -105,3 +105,7 @@ table.import_histories tr.error{
 	border: 1px solid #FF0000;
 	background-color: #FF3333;
 }
+
+div.menu{
+	text-align: right;
+}

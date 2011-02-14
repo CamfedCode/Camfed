@@ -18,6 +18,7 @@ group :test, :development do
 end
 
 gem 'rforce'
+gem 'devise'
 
 # Use unicorn as the web server
 # gem 'unicorn'

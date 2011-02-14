@@ -1,4 +1,4 @@
-class ObjectMappingsController < ApplicationController
+class ObjectMappingsController < AuthenticatedController
   add_crumb 'Home', '/'
   
   def new

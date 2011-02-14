@@ -13,14 +13,21 @@
 			<h1>Camfed Data Importer</h1>
 		</div>
 
-		<div class="menu">
-			<%= link_to 'Settings', edit_admin_configuration_path %>
-		</div>
+		<% if user_signed_in? %>
+			<div class="menu">
+				<% if current_user.verified_by_admin? %>
+				<%= link_to('Settings', edit_admin_configuration_path) %>
+				<%= link_to('Users', admin_users_path)  %>
+				
+				<% end %>
+				
+				<%=link_to 'Logout', destroy_user_session_path %>
+			</div>
 
-		<div class="breadcrumbs">
-			<%= render_crumbs %>
-		</div>
-
+			<div class="breadcrumbs">
+				<%= render_crumbs %>
+			</div>
+		<%end%>
 		<div class="messages">
 			<% flash.each_pair do |flash_type, message|%>
 			<div class="<%=flash_type%>">

@@ -1,0 +1,15 @@
+<ol>
+<% @users.each do |user| %>
+	<li>
+	<%= user.email %>
+	<% if user.verified_by_admin? %>
+		<%= link_to 'Inactivate', inactivate_admin_user_path(user.id), :method => :put %>
+	<%else%>
+		<%= link_to 'Activate', activate_admin_user_path(user.id), :method => :put %>
+	<%end%>
+
+		<%= link_to 'Delete', admin_user_path(user.id), :confirm => "Are you sure you want to delete #{user.email}?", :method => :delete %>
+	
+	</li>
+<% end %>
+<ol>

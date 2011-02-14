@@ -1,5 +1,5 @@
 module Admin
-  class ConfigurationsController < ApplicationController
+  class ConfigurationsController < AuthenticatedController
 
     def edit
       @configuration = Configuration.instance

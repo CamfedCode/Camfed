@@ -16,3 +16,13 @@ if Configuration.count == 0
       :salesforce_token => 'w3stbrookLidRts9sALeXQYTYhYJUvl5wc', 
      })
 end
+
+if User.count == 0
+  user = User.new({
+      :email => 'admin@example.com', 
+      :password => 'admin123',
+      :password_confirmation => 'admin123'
+     })
+  user.verified_by_admin = true
+  user.save!
+end

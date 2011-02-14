@@ -1,4 +1,4 @@
-class QuestionsController < ApplicationController
+class QuestionsController < AuthenticatedController
   add_crumb 'Home', '/'
   def index
     begin

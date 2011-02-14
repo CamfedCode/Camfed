@@ -1,6 +1,11 @@
 require 'spec_helper'
+require 'controllers/authentication_helper'
 
 describe QuestionsController do
+  
+  before(:each) do
+    sign_on
+  end
 
   describe "GET 'index'" do
     it "should be successful" do

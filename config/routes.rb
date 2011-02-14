@@ -1,5 +1,7 @@
 Camfed::Application.routes.draw do
   
+  devise_for :users
+
   resources :surveys do
     member do
       post 'import'
@@ -22,7 +24,15 @@ Camfed::Application.routes.draw do
   
   namespace 'admin' do
     resource :configuration
+    resources :users do
+      member do
+        put :activate
+        put :inactivate
+      end
+    end
   end
+
+  resource 'home'
   
   root :to => "surveys#index"
   

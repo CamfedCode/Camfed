@@ -1,4 +1,4 @@
-class FieldMappingsController < ApplicationController
+class FieldMappingsController < AuthenticatedController
   add_crumb 'Home', '/'
   def new
     @object_mapping = ObjectMapping.find(params[:object_mapping_id])

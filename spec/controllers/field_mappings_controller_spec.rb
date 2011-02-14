@@ -1,6 +1,10 @@
 require 'spec_helper'
+require 'controllers/authentication_helper'
 
 describe FieldMappingsController do
+  before(:each) do
+    sign_on
+  end
   
   describe 'new' do
     it 'should populate object mapping and questions' do

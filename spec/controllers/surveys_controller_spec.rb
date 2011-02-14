@@ -1,7 +1,11 @@
 require 'spec_helper'
+require 'controllers/authentication_helper'
 
 describe SurveysController do
-
+  before(:each) do
+    sign_on
+  end
+  
   describe "GET 'index'" do
     it "should get all surveys" do
       surveys = []
