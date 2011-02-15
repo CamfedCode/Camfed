@@ -4,6 +4,7 @@
 
 <%= form_tag import_selected_surveys_path do %>
 
+	<%= link_to_function 'Select All', "selectSurveyIds()" %>
 	<ol class="surveys">
 	<% @surveys.sort_by{|survey| survey.name}.each do |survey|%>
 		<li>
