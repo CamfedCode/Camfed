@@ -1,10 +1,22 @@
 <h2>Surveys</h2>
 
-<%= link_to 'Refresh Surveys List from EpiSurveyor', sync_with_epi_surveyor_surveys_path, :method => :post %>
+<div class="search_form">
+	<%= form_tag search_surveys_path, :method => :get do %>
+		<input type="search" name="query" value="<%= params[:query] %>" placeholder="Search Survey" size="20"/>
+		<%= submit_tag 'Search' %>
+	<% end %>
+</div>
 
 <%= form_tag import_selected_surveys_path do %>
 
+
 	<%= link_to_function 'Select All', "selectSurveyIds()" %>
+	<%= submit_tag 'Import Selected'%>
+	
+	<span class="sync_with_epi_surveyor">
+		<%= link_to 'Refresh Surveys List from EpiSurveyor', sync_with_epi_surveyor_surveys_path, :method => :post %>
+	</span>
+	
 	<ol class="surveys">
 	<% @surveys.sort_by{|survey| survey.name}.each do |survey|%>
 		<li>
@@ -25,5 +37,6 @@
 		</li>
 	<%end%>
 	</ol>
+		<%= link_to_function 'Select All', "selectSurveyIds()" %>
 		<%= submit_tag 'Import Selected'%>
 <% end %>

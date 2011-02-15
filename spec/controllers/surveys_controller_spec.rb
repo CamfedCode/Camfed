@@ -56,4 +56,13 @@ describe SurveysController do
       assigns[:surveys].should == surveys
     end
   end
+  
+  describe 'Get Search' do
+    it 'should render index with @surveys' do
+      EpiSurveyor::Survey.should_receive(:where).with("surveys.name LIKE ?", "%QUERY%").and_return([])
+      get 'search', :query => 'QUERY'
+      response.should render_template :index
+      assigns[:surveys].should == []
+    end
+  end
 end

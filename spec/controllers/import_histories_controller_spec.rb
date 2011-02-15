@@ -35,18 +35,15 @@ describe ImportHistoriesController do
   end
 
   describe "DELETE destroy" do
+    
     it "destroys the requested import_history" do
       ImportHistory.stub(:find).with("37") { mock_import_history }
       mock_import_history.should_receive(:destroy)
+      request.env["HTTP_REFERER"] = import_histories_path
       delete :destroy, :id => "37"
+      response.should redirect_to import_histories_path
     end
 
-    it "redirects to the import_histories list" do
-      ImportHistory.stub(:find) { mock_import_history }
-      mock_import_history.should_receive(:survey_id).and_return(1)
-      delete :destroy, :survey_id => 1, :id => "1"
-      response.should redirect_to(survey_import_histories_url(1))
-    end
   end
 
 end

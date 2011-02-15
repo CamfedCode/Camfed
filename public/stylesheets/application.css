@@ -87,6 +87,14 @@ ol.questions li span.question_name{
 	font-weight: bold;
 }
 
+ol.surveys{
+	padding-left: 5px;	
+}
+
+ol.surveys li{
+	list-style-type: none;
+}
+
 ol.surveys li div.survey{
 	background-color: #EEE;
 	margin-bottom: 3px;
@@ -119,4 +127,13 @@ div.menu{
 span.highlighted{
 	background-color: #ECFF0F;
 	padding: 0 2px;
+}
+
+div.search_form{
+	text-align: right;
+	padding: 5px;
+}
+
+span.sync_with_epi_surveyor{
+	float: right;
 }

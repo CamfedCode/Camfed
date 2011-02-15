@@ -36,6 +36,13 @@ class SurveysController < AuthenticatedController
     redirect_to surveys_path
   end
   
+  def search
+    @surveys = EpiSurveyor::Survey.where("surveys.name LIKE ?", "%#{params[:query]}%")
+    add_crumb 'Surveys', surveys_path
+    add_crumb "Search results for: #{params[:query]}"
+    render :index
+  end
+  
   
   private
   def errors_count import_histories

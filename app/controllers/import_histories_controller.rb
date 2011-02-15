@@ -24,6 +24,6 @@ class ImportHistoriesController < AuthenticatedController
     @import_history = ImportHistory.find(params[:id])
     @import_history.destroy
     flash[:notice] = 'The record was successfully deleted'
-    redirect_to(survey_import_histories_url(@import_history.survey_id))
+    redirect_to :back
   end
 end
