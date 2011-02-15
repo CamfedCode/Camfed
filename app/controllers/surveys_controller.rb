@@ -11,9 +11,9 @@ class SurveysController < AuthenticatedController
       @survey = EpiSurveyor::Survey.find(params[:id])
       import_histories = @survey.sync!
       @survey.touch(:last_imported_at)      
-      errors_count = import_histories.select{|import_history| import_history.is_error }.length       
+      errors_count = import_histories.select{|import_history| import_history.sync_errors.present? }.length       
       if errors_count > 0
-        flash[:error] = "The #{@survey.name} import completed with errors in #{errors_count} out of #{import_histories.length} new response(s) to #{@survey.name}"
+        flash[:error] = "The import completed with errors in #{errors_count} out of #{import_histories.length} new response(s) to #{@survey.name}"
       else
         flash[:notice] = "Successfully synced #{import_histories.length} new response(s) to #{@survey.name}"  
       end

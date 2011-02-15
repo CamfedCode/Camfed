@@ -98,7 +98,9 @@ describe EpiSurveyor::SurveyResponse do
         @response.survey = survey
         @response.should_receive(:synced?).and_return(false)
         @mv_salesforce_object = Salesforce::MonitoringVisit.new
-        @mv_salesforce_object.should_receive(:sync!)
+        
+        object_history = Salesforce::ObjectHistory.new(:salesforce_id => '1', :salesforce_object => 'AnObject')
+        @mv_salesforce_object.should_receive(:sync!).and_return(object_history)
       
         Salesforce::ObjectFactory.should_receive(:create)
           .with('Monitoring_Visit__c').and_return(@mv_salesforce_object)
@@ -117,8 +119,10 @@ describe EpiSurveyor::SurveyResponse do
         ImportHistory.where(:survey_id => "1", :survey_response_id => "2").first.should_not be nil
       end
       
-      it 'should return import_history' do
-        @response.sync!([@mapping]).is_a?(ImportHistory).should be true
+      it 'should return import_history with object history' do
+        import_history = @response.sync!([@mapping])
+        import_history.is_a?(ImportHistory).should be true
+        import_history.object_histories.should have(1).thing
       end
             
     end
@@ -134,15 +138,21 @@ describe EpiSurveyor::SurveyResponse do
     it 'should dump errors into import histories if there is any' do
       response = EpiSurveyor::SurveyResponse.new
       sf_object = ''
+      sf_object_2 = ''
       survey = EpiSurveyor::Survey.new(:name => 'a_survey', :id => '1')
       response.survey = survey
       response.id = '2'
       
+      #sets up the mapping
       response.should_receive(:salesforce_object).with('mapping').and_return(sf_object)
-      response.should_receive(:salesforce_object).with('mapping 2').and_return(sf_object)
-      sf_object.should_receive(:sync!).exactly(2).times.and_raise('Error message')
-      response.sync!(['mapping', 'mapping 2'])
-      ImportHistory.first.error_message.should == 'Error message AND Error message'
+      response.should_receive(:salesforce_object).with('mapping 2').and_return(sf_object_2)
+      
+      #sets up the exceptions
+      sf_object.should_receive(:sync!).and_raise(SyncException.new(SyncError.new(:salesforce_object => '1')))
+      sf_object_2.should_receive(:sync!).and_raise(SyncException.new(SyncError.new(:salesforce_object => '2')))
+
+      import_history = response.sync!(['mapping', 'mapping 2'])
+      import_history.sync_errors.should have(2).things
     end
   end
   

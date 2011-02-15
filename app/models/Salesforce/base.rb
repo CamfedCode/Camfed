@@ -33,5 +33,9 @@ module Salesforce
       self[:Id] = value
     end
     
+    def raw_request
+      field_values.keys.collect{|key| "#{key}: #{field_values[key]}"}.join(', ')
+    end
+    
   end
 end

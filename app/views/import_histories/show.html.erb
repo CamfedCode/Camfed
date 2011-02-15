@@ -6,18 +6,42 @@
 </p>
 
 <p>
-  <b>Survey response:</b>
+  <b>Survey response Id:</b>
   <%= @import_history.survey_response_id %>
 </p>
 
 <p>
   <b>Imported at:</b>
-  <%= @import_history.created_at %>
+  <%=time @import_history.created_at %>
 </p>
 
+<% if @import_history.object_histories.present? %>
+<p>
+  <b>Salesforce Objects:</b>
+	<ol>
+		<%@import_history.object_histories.each do |object_history|%>
+		<li>
+			<%= link_to object_history.salesforce_object, object_history.url %>
+		</li>
+		<% end %>
+	</ol>
+</p>
+<% end %>
+		
+
+<% if @import_history.sync_errors.present? %>
 <p>
   <b>Errors:</b>
-  <%= @import_history.error_message %>
+<ol>
+	<%@import_history.sync_errors.each do |sync_error|%>
+	<li>
+		<p> <b>Salesforce Object</b>: <%= sync_error.salesforce_object %></p>
+		<p> <b>Response</b>: <span class="highlighted"> <%= sync_error.raw_response %> </span></p>
+		<p> <b>Request</b>: <%= sync_error.raw_request %></p>
+	</li>
+	<% end %>
+</ol>
 </p>
+<% end%>
 
 <%= link_to 'Back', survey_import_histories_path(@import_history.survey) %>

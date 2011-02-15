@@ -10,12 +10,14 @@ module Salesforce
       def create!
         sanitize_values!
         response = Salesforce::Binding.instance.create("sObject {\"xsi:type\" => \"#{self.class.object_type}\"}" => field_values)
-        
-        if response.createResponse.result.success == "false" || response.createResponse.result.success == false
-          raise "Object #{self.class.name} could not be created. FIELD_VALUES=#{field_values}. RAW_RESPONSE = #{response}"
+
+        if response.createResponse.result.success.to_s == false.to_s
+          raise SyncException.new(SyncError.new(:raw_request => raw_request, 
+                :raw_response => response.createResponse.result.errors.message, :salesforce_object => self.class.object_type))
         end
         
         self.id = response.createResponse.result.id
+        Salesforce::ObjectHistory.new(:salesforce_object => self.class.object_type, :salesforce_id => self.id)
       end
       
       def update!
@@ -23,12 +25,13 @@ module Salesforce
         sanitize_values!
         response = Salesforce::Binding.instance.update("sObject {\"xsi:type\" => \"#{self.class.object_type}\"}" => field_values)
 
-        if response.updateResponse.result.success == "false" || response.updateResponse.result.success == false
-          raise "Object #{self.class.name} could not be updated. FIELD_VALUES=#{field_values} RAW_RESPONSE = #{response}"
+        if response.updateResponse.result.success.to_s == false.to_s
+          raise SyncException.new(SyncError.new(:raw_request => raw_request, 
+                :raw_response => response.updateResponse.result.errors.message, :salesforce_object => self.class.object_type))
         end
 
-
         self.id = response.updateResponse.result.id
+        Salesforce::ObjectHistory.new(:salesforce_object => self.class.object_type, :salesforce_id => self.id)
       end
       
       def fields

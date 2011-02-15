@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110214212346) do
+ActiveRecord::Schema.define(:version => 20110215180235) do
 
   create_table "configurations", :force => true do |t|
     t.string   "epi_surveyor_url"
@@ -31,12 +31,17 @@ ActiveRecord::Schema.define(:version => 20110214212346) do
 
   create_table "import_histories", :force => true do |t|
     t.integer  "survey_id",          :limit => 255
-    t.string   "survey_name"
     t.string   "survey_response_id"
-    t.text     "error_message"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "is_error"
+  end
+
+  create_table "object_histories", :force => true do |t|
+    t.integer  "import_history_id"
+    t.string   "salesforce_id"
+    t.string   "salesforce_object"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "object_mappings", :force => true do |t|
@@ -47,6 +52,15 @@ ActiveRecord::Schema.define(:version => 20110214212346) do
   create_table "surveys", :force => true do |t|
     t.string   "name"
     t.datetime "last_imported_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "sync_errors", :force => true do |t|
+    t.integer  "import_history_id"
+    t.string   "salesforce_object"
+    t.string   "raw_request"
+    t.string   "raw_response"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

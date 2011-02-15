@@ -101,11 +101,31 @@ ol.surveys li div.survey{
 	margin-bottom: 3px;
 }
 
-table.import_histories tr.error{
+table.import_histories tr{
+	
+}
+
+table.import_histories tr.success{
+	border: 1px solid #99FF66;
+	background-color: #99FF66;
+}
+
+
+table.import_histories tr.failed{
 	border: 1px solid #FF0000;
 	background-color: #FF3333;
 }
 
+table.import_histories tr.incomplete{
+	border: 1px solid #ECFF0F;
+	background-color: #ECFF0F;
+}
+
 div.menu{
 	text-align: right;
+}
+
+span.highlighted{
+	background-color: #ECFF0F;
+	padding: 0 2px;
 }

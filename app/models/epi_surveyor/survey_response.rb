@@ -46,19 +46,18 @@ module EpiSurveyor
 
     def sync! object_mappings
       return if synced?
-      sync_errors = []
-      sf_objects = []
+      
+      import_history = ImportHistory.new(:survey_id => survey.id, :survey_response_id => self.id)
+
       object_mappings.each do |object_mapping|
         begin
-          salesforce_object(object_mapping).sync!
-        rescue Exception => error
-          sync_errors << error
+          import_history.object_histories << salesforce_object(object_mapping).sync!
+        rescue SyncException => sync_exception
+          import_history.sync_errors << sync_exception.sync_error
         end
-      end
-      
-      error_message = sync_errors.collect{|error| error.message}.join(" AND ")
-      ImportHistory.create!(:survey_id => survey.id, :survey_name => survey.name, :survey_response_id => self.id, 
-                            :is_error => error_message.present?, :error_message => error_message)
+      end      
+      import_history.save!
+      import_history
     end
     
     def synced?
