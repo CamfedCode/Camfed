@@ -1,7 +1,10 @@
-<h2>Import Histories <%= "for #{@survey.name}" if @survey%></h2>
+<h2>Import Histories <%= "for #{@survey.name}" if defined?(@survey)%></h2>
 
 <table class="import_histories">
   <tr>
+		<% unless defined?(@survey) %>
+			<th>Survey</th>
+		<%end%>
 		<th>ID</th>
 		<th>Import Time</th>
     <th>Status</th>
@@ -11,6 +14,10 @@
 
 <% @import_histories.each do |import_history| %>
   <tr class="import_history <%= import_history.status.downcase %>">
+		<% unless defined?(@survey) %>
+			<td><%= import_history.survey.name %></td>
+		<%end%>
+
     <td><%= import_history.survey_response_id %></td>
    	<td><%=time import_history.created_at %></td>
 

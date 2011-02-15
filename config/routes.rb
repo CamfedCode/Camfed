@@ -8,6 +8,7 @@ Camfed::Application.routes.draw do
     end
     collection do
       post 'sync_with_epi_surveyor'
+      post 'import_selected'
     end
     resources :import_histories
     resources :questions

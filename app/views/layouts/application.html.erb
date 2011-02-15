@@ -17,6 +17,7 @@
 			<div class="menu">
 				<% if current_user.verified_by_admin? %>
 					<%= link_to 'Surveys', surveys_path %>
+					<%= link_to 'Import Histories', import_histories_path %>
 					<%= link_to('Settings', edit_admin_configuration_path) %>
 					<%= link_to('Users', admin_users_path)  %>	
 				<% end %>

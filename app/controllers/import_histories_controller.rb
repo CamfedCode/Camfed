@@ -2,8 +2,13 @@ class ImportHistoriesController < AuthenticatedController
   add_crumb 'Home', '/'
   
   def index
-    @survey = EpiSurveyor::Survey.find(params[:survey_id])
-    @import_histories = @survey.import_histories
+    if params[:survey_id].present?
+      @survey = EpiSurveyor::Survey.find(params[:survey_id])
+      @import_histories = @survey.import_histories
+    else
+      @import_histories = ImportHistory.all
+    end
+
     add_crumb 'Surveys', surveys_path
     add_crumb 'Histories'
   end

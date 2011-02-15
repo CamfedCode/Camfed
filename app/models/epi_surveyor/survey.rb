@@ -40,7 +40,9 @@ module EpiSurveyor
   
     def sync!
       mappings = object_mappings
-      responses.collect {|response| response.sync!(mappings)}.select{|import_history| import_history.present?}
+      import_histories = responses.collect {|response| response.sync!(mappings)}.select{|import_history| import_history.present?}
+      touch(:last_imported_at)
+      import_histories
     end
 
   end

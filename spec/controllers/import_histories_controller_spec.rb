@@ -18,6 +18,12 @@ describe ImportHistoriesController do
       get :index, :survey_id => 1
       assigns(:import_histories).should eq([mock_import_history])
     end
+    
+    it 'call ImportHistory.all if survey_id is nil' do
+      ImportHistory.should_receive(:all).and_return([])
+      get :index
+      assigns(:import_histories).should == []
+    end
   end
 
   describe "GET show" do

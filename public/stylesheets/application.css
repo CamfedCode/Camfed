@@ -61,19 +61,15 @@ div.menu, div.breadcrumbs{
 }
 
 div.survey{
-	width: 90%;
 }
 
 div.survey div.survey_name{
-	width: 30%;
 	float: left;
-	font-weight: bold;
 	padding: 3px;
 }
 
-div.survey div.actions{
-	width: 70%;
-	float: left;
+div.survey div.survey_name span {
+	font-weight: bold;
 }
 
 div.content{
@@ -89,11 +85,6 @@ ol.field_mappings span.actions{
 
 ol.questions li span.question_name{
 	font-weight: bold;
-}
-
-div.survey div.last_imported_at{
-	float: left;
-	width: 40%;
 }
 
 ol.surveys li div.survey{
