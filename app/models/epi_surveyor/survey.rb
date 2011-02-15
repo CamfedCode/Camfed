@@ -44,6 +44,29 @@ module EpiSurveyor
       touch(:last_imported_at)
       import_histories
     end
+    
+    def clone_mappings_from! other_survey
+      missing_questions = missing_questions(other_survey)
+      raise MappingCloneException.new(missing_questions) if missing_questions.present?
 
+      object_mappings.clear
+      other_survey.object_mappings.each do |object_mapping|
+        object_mappings << object_mapping.deep_clone
+      end
+      save!
+    end
+    
+    def missing_questions other_survey
+      question_names = questions.map(&:name)
+      missing_ones = []
+      other_survey.object_mappings.each do |object_mapping|
+        object_mapping.field_mappings.each do |field_mapping| 
+          missing_ones << field_mapping.question_name unless question_names.include?(field_mapping.question_name)
+        end
+      end
+      missing_ones
+    end
+    
+    
   end
 end

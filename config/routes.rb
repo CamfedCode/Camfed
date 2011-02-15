@@ -13,7 +13,12 @@ Camfed::Application.routes.draw do
     end
     resources :import_histories
     resources :questions
-    resources :mappings
+    resources :mappings do
+      collection do
+        post 'clone'
+        get 'source'
+      end
+    end
     resources :object_mappings
   end
   

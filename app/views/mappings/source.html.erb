@@ -1,0 +1,16 @@
+<h2>Clone Mapping for <%= @survey.name%> </h2>
+
+
+<p>
+	<span class="highlighted">
+		Hitting Clone will remove the existing mapping for <%= @survey.name%>.
+	</span>
+</p>
+
+<%= form_tag clone_survey_mappings_path do %>
+	<p>
+		Select Source Mapping:
+		<%= select_tag 'source_survey_id', options_from_collection_for_select(@surveys, :id, :name) %>
+		<%= submit_tag 'Clone'%>
+	</p>
+<%end%>

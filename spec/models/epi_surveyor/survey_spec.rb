@@ -93,4 +93,52 @@ describe EpiSurveyor::Survey do
     end
   end
   
+  describe 'clone_mappings_from' do
+    it 'should call deep_clone on the other surveys mappings and save!' do
+      other_survey = EpiSurveyor::Survey.new
+      
+      
+      
+      object_mappings = [ObjectMapping.new, ObjectMapping.new]
+      object_mappings.each{|object_mapping| object_mapping.should_receive(:deep_clone).and_return(object_mapping)}
+      
+      other_survey.object_mappings = object_mappings
+      
+      survey = EpiSurveyor::Survey.new
+      object_mapping = ObjectMapping.new
+      survey.object_mappings << object_mapping
+      
+      survey.should_receive(:missing_questions).with(other_survey).and_return([])      
+            
+      survey.should_receive(:save!)
+      
+      survey.clone_mappings_from! other_survey
+      
+      survey.object_mappings.should have(2).things
+      #it should clear the existing mappings
+      survey.object_mappings.include?(object_mapping).should be false
+    end
+    
+    
+    it 'should raise MappingCloneException if there are missing questions' do
+      survey = EpiSurveyor::Survey.new
+      source_survey = EpiSurveyor::Survey.new
+      survey.should_receive(:missing_questions).with(source_survey).and_return(['a_question'])      
+      lambda { survey.clone_mappings_from!(source_survey) }.should raise_error(MappingCloneException)      
+    end
+  end
+  
+  describe 'missing_questions' do
+    it 'should return the missing questions' do
+      survey = EpiSurveyor::Survey.new
+      survey.should_receive(:questions).and_return([])
+      
+      other_survey = EpiSurveyor::Survey.new
+      other_survey.object_mappings << ObjectMapping.new
+      other_survey.object_mappings.first.field_mappings << FieldMapping.new(:question_name => 'a_question')
+      
+      survey.missing_questions(other_survey).should == ['a_question']
+    end
+  end
+  
 end

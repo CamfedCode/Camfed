@@ -3,6 +3,7 @@ require 'spec_helper'
 describe ObjectMapping do
   it {should have_many :field_mappings }
   it {should belong_to :survey }
+  it {should validate_presence_of :sf_object_type }
   
   describe 'build_unmapped_field_mappings' do
     before(:each) do
@@ -24,4 +25,24 @@ describe ObjectMapping do
       @object_mapping.field_mappings.last.new_record?.should be true
     end
   end
+  
+  describe 'deep_clone' do
+    before(:each) do
+      @object_mapping = ObjectMapping.new(:survey_id => 1, :sf_object_type => 'object_a')
+      cloned = @object_mapping.clone
+      @object_mapping.should_receive(:clone).and_return(cloned)
+    end
+    it 'should call clone and set survey_id to nil' do
+      cloned_mapping = @object_mapping.deep_clone
+      cloned_mapping.survey_id.should == nil
+    end
+    
+    it 'should call deep_clone on for each field mapping' do
+      field_mappings = []
+      @object_mapping.field_mappings = field_mappings
+      field_mappings.each{|field_mapping| field_mapping.should_receive(:deep_clone).and_return(field_mapping)}
+      cloned_mapping = @object_mapping.deep_clone
+    end 
+  end
+  
 end
