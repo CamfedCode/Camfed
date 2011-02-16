@@ -16,7 +16,7 @@ module Salesforce
                 :raw_response => response.createResponse.result.errors.message, :salesforce_object => self.class.object_type))
         end
 
-        self.id = response.createResponse.result[:id]
+        self.id = response.createResponse.result.id
         Salesforce::ObjectHistory.new(:salesforce_object => self.class.object_type, :salesforce_id => self.id)
       end
       
@@ -30,7 +30,7 @@ module Salesforce
                 :raw_response => response.updateResponse.result.errors.message, :salesforce_object => self.class.object_type))
         end
 
-        self.id = response.updateResponse.result[:id]
+        self.id = response.updateResponse.result.id
         Salesforce::ObjectHistory.new(:salesforce_object => self.class.object_type, :salesforce_id => self.id)
       end
       
