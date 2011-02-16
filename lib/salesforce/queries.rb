@@ -16,6 +16,8 @@ module Salesforce
                 :raw_response => response.createResponse.result.errors.message, :salesforce_object => self.class.object_type))
         end
         
+        Rails.logger.debug "RAW RESPONSE= #{response.inspect}"
+        
         self.id = response.createResponse.result.id
         Salesforce::ObjectHistory.new(:salesforce_object => self.class.object_type, :salesforce_id => self.id)
       end
