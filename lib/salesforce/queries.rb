@@ -16,11 +16,6 @@ module Salesforce
                 :raw_response => response.createResponse.result.errors.message, :salesforce_object => self.class.object_type))
         end
 
-
-        raise SyncException.new(SyncError.new(:raw_request => raw_request, 
-              :raw_response => response.inspect, :salesforce_object => self.class.object_type))
-
-        
         self.id = response.createResponse.result.id
         Salesforce::ObjectHistory.new(:salesforce_object => self.class.object_type, :salesforce_id => self.id)
       end
