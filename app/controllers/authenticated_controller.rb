@@ -1,6 +1,8 @@
 class AuthenticatedController < ApplicationController
   before_filter :authenticate_verified_user!
 
+  add_crumb 'Home', '/'
+
   protected
   def authenticate_verified_user!
     logger.debug "CURRENT user = #{current_user.inspect}"

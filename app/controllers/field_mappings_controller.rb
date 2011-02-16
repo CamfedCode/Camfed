@@ -1,5 +1,5 @@
 class FieldMappingsController < AuthenticatedController
-  add_crumb 'Home', '/'
+
   def new
     @object_mapping = ObjectMapping.find(params[:object_mapping_id])
     @object_mapping.build_unmapped_field_mappings

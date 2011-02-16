@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110215180235) do
+ActiveRecord::Schema.define(:version => 20110216204138) do
 
   create_table "configurations", :force => true do |t|
     t.string   "epi_surveyor_url"
@@ -21,6 +21,7 @@ ActiveRecord::Schema.define(:version => 20110215180235) do
     t.string   "salesforce_token"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "salesforce_browse_url"
   end
 
   create_table "field_mappings", :force => true do |t|

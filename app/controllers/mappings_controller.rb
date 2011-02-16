@@ -1,5 +1,4 @@
 class MappingsController < AuthenticatedController
-  add_crumb 'Home', '/'
 
   def index
     @survey = EpiSurveyor::Survey.find(params[:survey_id])

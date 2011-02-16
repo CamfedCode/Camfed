@@ -1,4 +1,4 @@
-<h2>Import Histories <%= "for #{@survey.name}" if defined?(@survey)%></h2>
+<%= title "Import Histories #{("for " + @survey.name) if defined?(@survey)}", true %>
 
 <table class="import_histories">
   <tr>

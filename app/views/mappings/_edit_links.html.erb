@@ -1,0 +1,5 @@
+<%= link_to 'Back to Home', root_path %> | 
+
+<%= link_to 'Modify Mapping', modify_survey_object_mappings_path(@survey) %> | 
+
+<%= link_to 'Clone Mapping from Another Survey', source_survey_mappings_path(@survey), :confirm => 'Cloning mappings will delete all existing mappings for this survey. Do you want to proceed?' %>

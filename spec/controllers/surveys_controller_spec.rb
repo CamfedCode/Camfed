@@ -16,32 +16,6 @@ describe SurveysController do
     end
     
   end
-
-  describe "POST 'Import'" do
-    before(:each) do
-      @survey = EpiSurveyor::Survey.new
-      @survey.name = 'a survey'
-      @survey.id = 1
-      EpiSurveyor::Survey.should_receive(:find).with(@survey.id).and_return(@survey)
-    end
-    
-    it "should find the survey by id and then sync" do
-      @survey.should_receive(:sync!).and_return([ImportHistory.new])
-      post 'import', :id => 1
-      response.should redirect_to surveys_path
-      assigns[:survey].should == @survey 
-    end
-    
-    it 'should respond with the count of errors in the import' do
-      import_history = ImportHistory.new
-      import_history.sync_errors << SyncError.new
-      
-      @survey.should_receive(:sync!).and_return([import_history])
-      post 'import', :id => 1
-      flash[:error].should == 'Failed to import 1 out of 1 new response(s) to a survey'
-    end
-    
-  end
   
   describe 'POST import_selected' do
     it "should find the surveys by ids and then sync" do

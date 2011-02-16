@@ -1,38 +1,29 @@
-<h2>New Mappings for <%= @object_mapping.survey.name %> to <%= @object_mapping.sf_object_type %> </h2>
+<%= title "Mapping between #{@object_mapping.survey.name} and #{@object_mapping.sf_object_type}", true %>
 
-<% questions_for_select = @questions.collect{|question| [question.prompt, question.name]}%>
+<% questions_for_select = @questions.collect{|question| [truncate(question.prompt, :length => 75), question.name]}%>
 
-<div class="field_mapping">
-	<div class="field_name heading">
-		<%= @object_mapping.sf_object_type %> Field Name
-	</div>
-	<div class="question_name heading">	
-		<%= @object_mapping.survey.name %> Question
-	</div>
-	<div class="clear"></div>
-</div>
 
 <%= form_for @object_mapping do |object_mapping_form| %>
-
-  <%= object_mapping_form.fields_for :field_mappings do |field_mapping_form| %>
-	<div class="field_mappings">	
-		<div class="field_mapping">
-			<div class="field_name">
-				<%= field_mapping_form.hidden_field :id %> 
-				<%= field_mapping_form.hidden_field :field_name %> 
-				<%= field_mapping_form.object.field_name %> 
+	<div class="field_mapping_form">
+		<div class="field_mappings">	
+	  <%= object_mapping_form.fields_for :field_mappings do |field_mapping_form| %>
+			<div class="field_mapping">
+				<div class="field_name">
+					<%= field_mapping_form.hidden_field :id %> 
+					<%= field_mapping_form.hidden_field :field_name %> 
+					<%= field_mapping_form.object.field_name %> 
+				</div>
+				<div class="question_name">	
+					<%= field_mapping_form.select :question_name, questions_for_select, :prompt => true %>
+				</div>
+				<div class="clear"></div>
 			</div>
-			<div class="question_name">	
-				<%= field_mapping_form.select :question_name, questions_for_select, :prompt => true %>
-			</div>
-			<div class="clear"></div>
+	  <% end %>
+		</div>
+		<div class="actions">
+			<%= link_to 'Back to List', survey_mappings_path(@object_mapping.survey) %>
+			<%= object_mapping_form.submit %>			
 		</div>
 	</div>
-  <% end %>
-
-	<div class="actions">
-		<%= object_mapping_form.submit %>
-	</div>
-	
 <% end %>
 

@@ -1,8 +1,9 @@
 module Admin
   class ConfigurationsController < AuthenticatedController
 
-    def edit
+    def edit      
       @configuration = Configuration.instance
+      add_crumb 'Settings'
     end
     
     def update

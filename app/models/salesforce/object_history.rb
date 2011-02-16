@@ -4,7 +4,7 @@ module Salesforce
     validates :salesforce_id, :presence => true
     
     def url
-      parts = URI.split(Configuration.instance.salesforce_url)
+      parts = URI.split(Configuration.instance.salesforce_browse_url)
       URI.join("#{parts[0]}://#{parts[2]}", salesforce_id).to_s
     end
   end

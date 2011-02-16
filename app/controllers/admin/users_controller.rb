@@ -1,7 +1,9 @@
 module Admin
   class UsersController < AuthenticatedController
+
     def index
       @users = User.all
+      add_crumb 'Users'
     end
     
     def activate

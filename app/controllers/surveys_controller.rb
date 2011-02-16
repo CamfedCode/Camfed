@@ -1,23 +1,10 @@
 class SurveysController < AuthenticatedController
-  add_crumb 'Home', '/'
   
   def index
     @surveys = EpiSurveyor::Survey.all
     add_crumb 'Surveys'
   end
   
-  def import
-    begin
-      @survey = EpiSurveyor::Survey.find(params[:id])
-      set_flash(@survey.sync!, [@survey])
-    rescue Exception => error
-      flash[:error] = 'Failed to Sync because of ' + error.message
-      logger.error "Error in importing Survey #{@survey}. MESSAGE: #{error.message} AT: #{error.backtrace.join(' ')}"
-    end
-    
-    redirect_to surveys_path
-  end
-
   def import_selected
     begin
       @surveys = EpiSurveyor::Survey.find(params[:survey_ids])

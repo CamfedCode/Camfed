@@ -1,17 +1,19 @@
-<h2>Surveys</h2>
+<% title 'Surveys' %>
 
-<div class="search_form">
-	<%= form_tag search_surveys_path, :method => :get do %>
-		<input type="search" name="query" value="<%= params[:query] %>" placeholder="Search Survey" size="20"/>
-		<%= submit_tag 'Search' %>
-	<% end %>
-</div>
+
+
+<% content_for :middle_right do %>
+	<div class="search_form">
+		<%= form_tag search_surveys_path, :method => :get do %>
+			<input type="search" name="query" value="<%= params[:query] %>" placeholder="Search Survey" size="20"/>
+			<%= submit_tag 'Search' %>
+		<% end %>
+	</div>
+<% end %>
 
 <%= form_tag import_selected_surveys_path do %>
 
-
-	<%= link_to_function 'Select All', "selectSurveyIds()" %>
-	<%= submit_tag 'Import Selected'%>
+	<%= render :partial => 'select_and_import' %>
 	
 	<span class="sync_with_epi_surveyor">
 		<%= link_to 'Refresh Surveys List from EpiSurveyor', sync_with_epi_surveyor_surveys_path, :method => :post %>
@@ -26,17 +28,15 @@
 					<span><%= survey.name %></span>
 					<%= "Imported #{distance_of_time_in_words(Time.now, survey.last_imported_at)} ago" if survey.last_imported_at%>
 				</div>
-				<div class="clear"></div>
 				<div class="actions">
-					<%= link_to 'Import', import_survey_path(survey.id), :method => :post %>
-					<%= link_to 'Mappings', survey_mappings_path(survey.id) %>
-					<%= link_to 'Import History', survey_import_histories_path(survey.id) %>
+					<%= link_to 'Mappings', survey_mappings_path(survey.id) %> |
+					<%= link_to 'History', survey_import_histories_path(survey.id) %> |
 					<%= link_to 'Questions', survey_questions_path(survey.id) %>
 				</div>
+				<div class="clear"></div>
 			</div>
 		</li>
 	<%end%>
 	</ol>
-		<%= link_to_function 'Select All', "selectSurveyIds()" %>
-		<%= submit_tag 'Import Selected'%>
+	<%= render :partial => 'select_and_import' %>
 <% end %>

@@ -1,5 +1,5 @@
 class QuestionsController < AuthenticatedController
-  add_crumb 'Home', '/'
+
   def index
     begin
       @survey = EpiSurveyor::Survey.find(params[:survey_id])

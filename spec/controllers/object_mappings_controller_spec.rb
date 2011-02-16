@@ -9,11 +9,11 @@ describe ObjectMappingsController do
     sign_on
   end
   
-  describe 'new' do
+  describe 'modify' do
     it 'should populate survey and object mapping' do
       survey = EpiSurveyor::Survey.new(:id => 1)
       EpiSurveyor::Survey.should_receive(:find).with("1").and_return(survey)
-      get :new, :survey_id => "1"
+      get :modify, :survey_id => "1"
       response.should be_success
       assigns[:survey].should == survey
       assigns[:object_mapping].should_not be nil
@@ -35,6 +35,13 @@ describe ObjectMappingsController do
       post :create, params
       ObjectMapping.where(params[:object_mapping]).should have(1).things
       response.should redirect_to new_object_mapping_field_mapping_path(assigns[:object_mapping].id)
+    end
+    
+    it 'should redirect to modify if no salesforce object was selected' do
+      params = {:survey_id => 1}
+      post :create, params
+      response.should redirect_to modify_survey_object_mappings_path(1)
+      flash[:error].should == 'Please select a salesforce object to proceed'
     end
   end
   

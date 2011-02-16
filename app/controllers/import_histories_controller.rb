@@ -1,5 +1,4 @@
 class ImportHistoriesController < AuthenticatedController
-  add_crumb 'Home', '/'
   
   def index
     if params[:survey_id].present?

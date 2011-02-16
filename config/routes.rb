@@ -3,9 +3,6 @@ Camfed::Application.routes.draw do
   devise_for :users
 
   resources :surveys do
-    member do
-      post 'import'
-    end
     collection do
       post 'sync_with_epi_surveyor'
       post 'import_selected'
@@ -19,7 +16,11 @@ Camfed::Application.routes.draw do
         get 'source'
       end
     end
-    resources :object_mappings
+    resources :object_mappings do
+      collection do
+        get :modify
+      end
+    end
   end
   
   resources :import_histories

@@ -1,33 +1,125 @@
+body {
+	font-family: Georgia,"Times New Roman",serif;
+	background-color: #E9E8E0;
+	font-size: 10pt;
+	padding: 0;
+	margin: 0;
+}
+
+body, h1, h2, h3, h4, h5, h6, p, ul, ol {
+    font-size-adjust: none;
+    font-stretch: normal;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: normal;
+}
+
+a:link, a:visited, a:active {
+  text-decoration: underline;
+	color: #008FD0;
+}
+
+h2{
+	font-size: 1.285em;
+  font-style: italic;
+}
+
+div.top {
+	background: url("../images/bg.jpg") repeat-x scroll 0 0 white;
+	border-bottom: 5px solid #008FD0;
+	height: 75px;
+  padding: 15px;	
+}
+
+div.middle {
+	margin: 5px;
+	padding: 5px;
+}
+
+div.banner {
+	float: left;
+}
+
+div.banner a {
+	display: block;
+	height: 32px;
+	width: 132px;
+	background: url("../images/main.png") no-repeat scroll -10px -24px transparent;
+}
+
+div.menu {
+	float: right;
+}
+
+div.menu ul{
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+div.menu ul li {
+	float: left;
+	margin: 0 40px 0 0;
+}
+
+div.menu ul li a {
+  display: block;
+  font-size: 1.142em;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  line-height: 3em;
+  text-decoration: none;
+  color: #333333;
+}
+
+div.breadcrumbs{
+	font-style: italic;
+	float: left;
+}
+
+div.messages{
+	margin-top: 15px;
+}
+
+div.content{
+	padding-top: 20px;
+}
+
 div.field_mapping
 {
 	padding: 5px;	
 }
 
-div.field_mappings:nth-child(2n) {
-	background-color: #DDD;
+ol.object_mappings li.object_mapping div.object_name{
+	margin: 2px;
 }
 
-div.field_mappings:nth-child(2n+1) {
-	background-color: #EEE;
+ol.object_mappings, ol.field_mappings{
+	padding-left: 5px;
 }
 
+ol.object_mappings li, ol.field_mappings li{
+	list-style-type: none;
+}
 
-div.field_mapping div.heading
-{
-	font-weight: bold;
-	font-size: large;
+div.field_mapping_form{
+	width: 80%;
+	max-width: 700px;
 }
 
 div.field_name
 {
-	width: 30%;
 	float: left;
 }
 
 div.question_name
 {
-	width: 70%;
-	float: left;
+	float: right;
+}
+
+div.field_mapping_form div.actions{
+	margin-top: 10px;
+	text-align: right;
 }
 
 div.clear
@@ -47,22 +139,6 @@ div.error{
 	padding: 5px;
 }
 
-div.banner{
-	border-bottom: 2px solid #787878;
-}
-
-div.banner, div.menu, div.breadcrumbs{
-	margin: 5px;
-	padding: 5px;
-}
-
-div.menu, div.breadcrumbs{
-	border-bottom: 1px solid #787878;
-}
-
-div.survey{
-}
-
 div.survey div.survey_name{
 	float: left;
 	padding: 3px;
@@ -72,15 +148,9 @@ div.survey div.survey_name span {
 	font-weight: bold;
 }
 
-div.content{
+div.survey div.actions{
+	float: right;
 	padding: 5px;
-}
-
-div.actions{
-	padding: 5px;
-}
-
-ol.field_mappings span.actions{
 }
 
 ol.questions li span.question_name{
@@ -88,7 +158,7 @@ ol.questions li span.question_name{
 }
 
 ol.surveys{
-	padding-left: 5px;	
+	padding-left: 0;
 }
 
 ol.surveys li{
@@ -96,28 +166,54 @@ ol.surveys li{
 }
 
 ol.surveys li div.survey{
-	background-color: #EEE;
 	margin-bottom: 3px;
 }
 
-table.import_histories tr{
-	
+ol.field_mappings li{
+	padding: 2px;
+	width: 500px;
+}
+
+ol.field_mappings li div.actions{
+	float: right;
+}
+
+ol.field_mappings li div.mapping{
+	float: left;
+}
+
+table.import_histories{
+	width: 80%;
+}
+
+table.import_histories{
+	border-collapse: collapse;
+}
+
+table.import_histories td, table.import_histories th{
+	border-collapse: collapse;
+	padding: 5px;
+}
+
+table.import_histories td{
+	border-bottom: 2px solid #FFF;
+}
+
+table.import_histories th{
+	font-weight: normal;
+	text-align: left;
 }
 
 table.import_histories tr.success{
-	border: 1px solid #99FF66;
-	background-color: #99FF66;
+	background-color: #AAFFAA;
 }
 
-
 table.import_histories tr.failed{
-	border: 1px solid #FF0000;
-	background-color: #FF3333;
+	background-color: #F7403A;
 }
 
 table.import_histories tr.incomplete{
-	border: 1px solid #ECFF0F;
-	background-color: #ECFF0F;
+	background-color: #FFFF99;
 }
 
 div.menu{
@@ -136,4 +232,54 @@ div.search_form{
 
 span.sync_with_epi_surveyor{
 	float: right;
+}
+
+div.field{
+	margin: 5px;
+	padding: 5px;
+}
+
+div.configuration_form{
+	max-width: 700px;
+	width: 80%;
+}
+ol.surveys li:nth-child(2n+1),
+	ol.field_mappings li:nth-child(2n+1),
+	div.field_mappings div.field_mapping:nth-child(2n+1), 
+	div.configuration_form div.field:nth-child(2n+1),
+	ol.users li:nth-child(2n+1)
+{
+	background-color: #DFD7C8;
+}
+
+div.field div.label{
+	width: 200px;
+	float:left;
+}
+div.field div.input{
+	float:left;
+}
+
+ol.users{
+	padding-left: 5px;
+	max-width: 500px;
+	width: 60%;	
+}
+
+ol.users div.user{
+	padding: 5px;
+}
+
+ol.users li{
+	list-style-type: none;
+	padding: 5px 0;
+}
+
+div.user div.email{
+	width: 200px;
+	float:left;
+}
+
+div.user div.actions{
+	float:right;
 }

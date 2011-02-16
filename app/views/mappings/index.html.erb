@@ -1,26 +1,34 @@
-<h2>Listing mappings for <%= @survey.name %></h2>
-<ol>
+<%= title "Listing mappings for #{@survey.name}", true %>
+
+<%= render :partial => 'edit_links' %>
+
+<ol class="object_mappings">
 <% @survey.object_mappings.each do |object_mapping|%>
-	<li class="object_mappings">
-		<%= object_mapping.sf_object_type %>
-		<ol class="field_mappings">
-		<% object_mapping.field_mappings.each do |field_mapping| %>
-			<li>
-				<%= field_mapping.field_name %> - <%= field_mapping.question_name %> 
-				<span class="actions">
-					<%= link_to 'Delete', field_mapping_path(field_mapping), 
-					:confirm => "Are you sure you want to delete the mapping between #{field_mapping.field_name} and #{field_mapping.question_name}", :method => :delete%>
-				</span>
-			</li>
-		<%end%>
-		</ol>
+	<li class="object_mapping">
+		<div class="object_name">
+			<h3><%= object_mapping.sf_object_type %></h3>
+		</div>
+		
+		<div>
+			<ol class="field_mappings">
+			<% object_mapping.field_mappings.each do |field_mapping| %>
+				<li>
+					<div class="field_mapping">
+						<div class="mapping">
+							<%= field_mapping.field_name %> - <%= field_mapping.question_name %> 
+						</div>
+						<div class="actions">
+							<%= link_to 'Delete', field_mapping_path(field_mapping), 
+							:confirm => "Are you sure you want to delete the mapping between #{field_mapping.field_name} and #{field_mapping.question_name}", :method => :delete%>
+						</div>
+						<div class="clear"></div>
+					</div>
+				</li>
+			<%end%>
+			</ol>
+		</div>
 	</li>
 <%end%>
 </ol>
 
-<br />
-
-<%= link_to 'Edit Mapping', new_survey_object_mapping_path(@survey) %>
-
-<%= link_to 'Clone Mapping from Another Survey', source_survey_mappings_path(@survey), :confirm => 'Cloning mappings will delete all existing mappings for this survey. Do you want to proceed?' %>
-
+<%= render :partial => 'edit_links' %>
