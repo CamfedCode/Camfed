@@ -10,13 +10,16 @@ module Salesforce
       def create!
         sanitize_values!
         response = Salesforce::Binding.instance.create("sObject {\"xsi:type\" => \"#{self.class.object_type}\"}" => field_values)
-
+        
         if response.createResponse.result.success.to_s == false.to_s
           raise SyncException.new(SyncError.new(:raw_request => raw_request, 
                 :raw_response => response.createResponse.result.errors.message, :salesforce_object => self.class.object_type))
         end
-        
-        Rails.logger.error "RAW RESPONSE= #{response.inspect}"
+
+
+        raise SyncException.new(SyncError.new(:raw_request => raw_request, 
+              :raw_response => response.inspect, :salesforce_object => self.class.object_type))
+
         
         self.id = response.createResponse.result.id
         Salesforce::ObjectHistory.new(:salesforce_object => self.class.object_type, :salesforce_id => self.id)
