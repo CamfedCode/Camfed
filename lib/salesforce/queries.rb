@@ -17,7 +17,7 @@ module Salesforce
         end
 
         self.id = response.createResponse.result.id
-        Salesforce::ObjectHistory.new(:salesforce_object => self.class.object_type, :salesforce_id => self.id)
+        Salesforce::ObjectHistory.new(:salesforce_object => self.class.object_type, :salesforce_id => response.createResponse.result.id)
       end
       
       def update!
