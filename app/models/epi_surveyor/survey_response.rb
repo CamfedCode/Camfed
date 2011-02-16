@@ -55,7 +55,10 @@ module EpiSurveyor
         rescue SyncException => sync_exception
           import_history.sync_errors << sync_exception.sync_error
         end
-      end      
+      end
+      
+      puts "ObjectHistories = #{import_history.object_histories.map(&:salesforce_id).join(' ')}}"
+            
       import_history.save!
       import_history
     end
