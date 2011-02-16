@@ -18,7 +18,7 @@ module Salesforce
 
         self.id = response.createResponse.result.id
         puts "SalesforceID = result#{response.createResponse.result.inspect} ID #{response.createResponse.result.id}"
-        Salesforce::ObjectHistory.new(:salesforce_object => self.class.object_type, :salesforce_id => response.createResponse.result.id)
+        Salesforce::ObjectHistory.new(:salesforce_object => self.class.object_type, :salesforce_id => response.createResponse.result[:id])
       end
       
       def update!
