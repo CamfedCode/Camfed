@@ -47,6 +47,7 @@ module EpiSurveyor
     
     def clone_mappings_from! other_survey
       missing_questions = missing_questions(other_survey)
+      logger.debug "MISSING Q=#{missing_questions}"
       raise MappingCloneException.new(missing_questions) if missing_questions.present?
 
       object_mappings.clear
@@ -61,7 +62,9 @@ module EpiSurveyor
       missing_ones = []
       other_survey.object_mappings.each do |object_mapping|
         object_mapping.field_mappings.each do |field_mapping| 
-          missing_ones << field_mapping.question_name unless question_names.include?(field_mapping.question_name)
+          if field_mapping.question_name.present? && question_names.exclude?(field_mapping.question_name)
+            missing_ones << field_mapping.question_name
+          end
         end
       end
       missing_ones

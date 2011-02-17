@@ -1,3 +1,4 @@
 Select <%= link_to_function 'All', "selectSurveyIds(true)" %>, 
 <%= link_to_function 'None', "selectSurveyIds(false)" %>
-<%= submit_tag 'Import Selected'%>
+<%= submit_tag 'Import Selected', :class=> 'import_selected'%>
+<%= submit_tag 'Delete Selected', :class=> 'delete_selected'%>

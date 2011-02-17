@@ -1,6 +1,6 @@
 <%= title "Mapping between #{@object_mapping.survey.name} and #{@object_mapping.sf_object_type}", true %>
 
-<% questions_for_select = @questions.collect{|question| [truncate(question.prompt, :length => 75), question.name]}%>
+<% questions_for_select = @questions.collect{|question| [truncate(question.prompt, :length => 40), question.name]}%>
 
 
 <%= form_for @object_mapping do |object_mapping_form| %>
@@ -16,6 +16,15 @@
 				<div class="question_name">	
 					<%= field_mapping_form.select :question_name, questions_for_select, :prompt => true %>
 				</div>
+
+				<div class="lookup_object_name">	
+					Lookup: <%= field_mapping_form.text_field :lookup_object_name %>
+				</div>
+
+				<div class="lookup_condition">	
+					Condition: <%= field_mapping_form.text_field :lookup_condition %>
+				</div>
+
 				<div class="clear"></div>
 			</div>
 	  <% end %>

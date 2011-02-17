@@ -207,7 +207,7 @@ describe Salesforce::Queries do
 end
 
 class SampleSalesforceObject < Salesforce::Base
-  def self.object_type
-    "AnObject"
+  def name
+    'AnObject'
   end
 end

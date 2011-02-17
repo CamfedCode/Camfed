@@ -94,6 +94,14 @@ ol.object_mappings li.object_mapping div.object_name{
 	margin: 2px;
 }
 
+li.object_mapping div.object_name h3{
+	float: left;
+}
+
+li.object_mapping div.object_name div.actions{
+	float: right;
+}
+
 ol.object_mappings, ol.field_mappings{
 	padding-left: 5px;
 }
@@ -103,19 +111,16 @@ ol.object_mappings li, ol.field_mappings li{
 }
 
 div.field_mapping_form{
-	width: 80%;
-	max-width: 700px;
+	width: 100%;
+/*	max-width: 900px;*/
 }
 
-div.field_name
+div.field_name, div.question_name, div.lookup_object_name, div.lookup_condition
 {
 	float: left;
+	width: 25%;
 }
 
-div.question_name
-{
-	float: right;
-}
 
 div.field_mapping_form div.actions{
 	margin-top: 10px;
@@ -171,7 +176,7 @@ ol.surveys li div.survey{
 
 ol.field_mappings li{
 	padding: 2px;
-	width: 500px;
+/*	width: 500px;*/
 }
 
 ol.field_mappings li div.actions{

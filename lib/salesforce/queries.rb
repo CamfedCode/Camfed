@@ -9,40 +9,41 @@ module Salesforce
       
       def create_in_salesforce!
         sanitize_values!
-        response = Salesforce::Binding.instance.create("sObject {\"xsi:type\" => \"#{self.class.object_type}\"}" => field_values)
+        response = Salesforce::Binding.instance.create("sObject {\"xsi:type\" => \"#{self.name}\"}" => field_values)
         
         if response.createResponse.result.success.to_s == false.to_s
           raise SyncException.new(SyncError.new(:raw_request => raw_request, 
-                :raw_response => response.createResponse.result.errors.message, :salesforce_object => self.class.object_type))
+                :raw_response => response.createResponse.result.errors.message, :salesforce_object => self.name))
         end
 
         self.salesforce_id = response.createResponse.result.id
-        Salesforce::ObjectHistory.new(:salesforce_object => self.class.object_type, :salesforce_id => self.salesforce_id)
+        Salesforce::ObjectHistory.new(:salesforce_object => self.name, :salesforce_id => self.salesforce_id)
       end
       
       def update_in_salesforce!
         raise ArgumentError.new("salesforce_id is nil") if self.salesforce_id.nil?
         sanitize_values!
-        response = Salesforce::Binding.instance.update("sObject {\"xsi:type\" => \"#{self.class.object_type}\"}" => field_values)
+        response = Salesforce::Binding.instance.update("sObject {\"xsi:type\" => \"#{self.name}\"}" => field_values)
 
         if response.updateResponse.result.success.to_s == false.to_s
           raise SyncException.new(SyncError.new(:raw_request => raw_request, 
-                :raw_response => response.updateResponse.result.errors.message, :salesforce_object => self.class.object_type))
+                :raw_response => response.updateResponse.result.errors.message, :salesforce_object => self.name))
         end
 
         self.salesforce_id = response.updateResponse.result.id
-        Salesforce::ObjectHistory.new(:salesforce_object => self.class.object_type, :salesforce_id => self.salesforce_id)
+        Salesforce::ObjectHistory.new(:salesforce_object => self.name, :salesforce_id => self.salesforce_id)
       end
       
       def salesforce_fields
         return @salesforce_fields if @salesforce_fields
-        response = Salesforce::Binding.instance.describeSObject("sObjectType" => self.class.object_type)
+        response = Salesforce::Binding.instance.describeSObject("sObjectType" => self.name)
         result =  response.describeSObjectResponse.result
         return [] if result.nil? || result.fields.nil?        
         @salesforce_fields = result.fields.collect {|field| Field.new(field.name, field.label, field.type)}
       end
     
       def sanitize_values!
+        self.field_values.symbolize_keys!
         field_values[:Id] = self.salesforce_id if self.salesforce_id.present?
 
         field_values.each_pair do |field, value|
@@ -64,7 +65,9 @@ module Salesforce
       
       def all_from_salesforce field, object_name, conditions 
         query = "SELECT #{field.to_s} FROM #{object_name.to_s} WHERE #{conditions}"
+        logger.debug "QUERY = #{query}"
         answer = Salesforce::Binding.instance.query(:searchString => query)
+        logger.debug "Answer = #{answer.inspect}"
         records = answer.queryResponse.result.records
         
         return [] if records.nil?

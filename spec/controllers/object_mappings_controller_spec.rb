@@ -13,11 +13,16 @@ describe ObjectMappingsController do
     it 'should populate survey and object mapping' do
       survey = EpiSurveyor::Survey.new(:id => 1)
       EpiSurveyor::Survey.should_receive(:find).with("1").and_return(survey)
+      
+      an_object = Salesforce::Base.new(:name => 'a_name', :label => 'a label')
+      Salesforce::Base.should_receive(:where).with(:display => true).and_return([an_object])
+      
       get :modify, :survey_id => "1"
       response.should be_success
       assigns[:survey].should == survey
       assigns[:object_mapping].should_not be nil
-      assigns[:sf_object_types].should have(4).things
+      assigns[:sf_object_types].should have(1).things
+      assigns[:sf_object_types].should == [an_object]
     end
   end
   
@@ -59,6 +64,18 @@ describe ObjectMappingsController do
       mapping.reload
       mapping.field_mappings.first.field_name.should == 'a_field'
       mapping.field_mappings.should have(1).things
+    end
+  end
+  
+  describe 'destroy' do
+    it 'should delete an existing object_mapping' do
+      survey = EpiSurveyor::Survey.new(:name => 'a survey', :id => 2)
+      object_mapping = ObjectMapping.new
+      object_mapping.survey = survey
+      ObjectMapping.should_receive(:find).with(1).and_return(object_mapping)
+      object_mapping.should_receive(:destroy)
+      delete :destroy, :id => 1
+      response.should redirect_to survey_mappings_path(survey)
     end
   end
   

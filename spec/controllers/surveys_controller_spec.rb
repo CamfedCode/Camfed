@@ -17,18 +17,30 @@ describe SurveysController do
     
   end
   
-  describe 'POST import_selected' do
-    it "should find the surveys by ids and then sync" do
-      surveys = [EpiSurveyor::Survey.new, EpiSurveyor::Survey.new]
-      EpiSurveyor::Survey.should_receive(:find).with([1,2]).and_return(surveys)
-
-      surveys.each {|survey| survey.should_receive(:sync!).and_return(ImportHistory.new)}
-
-      post 'import_selected', :survey_ids => [1, 2]
-      
-      response.should redirect_to surveys_path
-      assigns[:surveys].should == surveys
+  describe 'after select many' do
+    before(:each) do
+      @surveys = [EpiSurveyor::Survey.new, EpiSurveyor::Survey.new]
+      EpiSurveyor::Survey.should_receive(:find).with([1,2]).and_return(@surveys)
     end
+    
+    describe 'POST import_selected' do
+      it "should find the surveys by ids and then sync" do
+        @surveys.each {|survey| survey.should_receive(:sync!).and_return(ImportHistory.new)}
+        post 'import_selected', :survey_ids => [1, 2]
+        response.should redirect_to surveys_path
+        assigns[:surveys].should == @surveys
+      end
+    end
+    
+    describe 'DELETE destroy_selected' do
+      it 'should delete all selected surveys' do
+        @surveys.each {|survey| survey.should_receive(:destroy) }
+        delete 'destroy_selected', :survey_ids => [1, 2]
+        response.should redirect_to surveys_path
+        assigns[:surveys].should == @surveys
+      end
+    end
+    
   end
   
   describe 'Get Search' do

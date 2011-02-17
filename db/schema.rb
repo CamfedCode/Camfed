@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110217164044) do
+ActiveRecord::Schema.define(:version => 20110217180617) do
 
   create_table "configurations", :force => true do |t|
     t.string   "epi_surveyor_url"
@@ -28,6 +28,8 @@ ActiveRecord::Schema.define(:version => 20110217164044) do
     t.integer "object_mapping_id"
     t.string  "field_name"
     t.string  "question_name"
+    t.string  "lookup_object_name"
+    t.string  "lookup_condition"
   end
 
   create_table "import_histories", :force => true do |t|

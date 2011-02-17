@@ -16,6 +16,18 @@ class SurveysController < AuthenticatedController
     end
     redirect_to surveys_path
   end
+  
+  def destroy_selected
+    begin
+      @surveys = EpiSurveyor::Survey.find(params[:survey_ids])
+      @surveys.collect{|survey| survey.destroy}
+      flash[:notice] = "Successfully Deleted #{@surveys.length} surveys."
+    rescue Exception => error
+      flash[:error] = 'Failed to Sync because of ' + error.message
+      logger.error "Error in importing Surveys #{@surveys.inspect}. MESSAGE: #{error.message} AT: #{error.backtrace.join(' ')}"
+    end
+    redirect_to surveys_path
+  end
 
   def sync_with_epi_surveyor
     EpiSurveyor::Survey.sync_with_epi_surveyor

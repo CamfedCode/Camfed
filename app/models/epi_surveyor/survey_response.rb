@@ -66,11 +66,30 @@ module EpiSurveyor
     end
     
     def salesforce_object object_mapping
-      sf_object = Salesforce::ObjectFactory.create(object_mapping.sf_object_type)
+      sf_object = Salesforce::Base.where(:name => object_mapping.sf_object_type).first
       object_mapping.field_mappings.each do |field_mapping|
-        sf_object[field_mapping.field_name] = self[field_mapping.question_name]
+        sf_object[field_mapping.field_name] = value_for(field_mapping)
       end
-      sf_object      
+      sf_object
+    end
+    
+    def value_for field_mapping
+      field_mapping.lookup? ? lookup(field_mapping) : self[field_mapping.question_name]
+    end
+    
+    def lookup field_mapping
+      condition = replace_with_answers field_mapping.lookup_condition
+      Salesforce::Base.first_from_salesforce(:Id, field_mapping.lookup_object_name, condition)
+    end
+    
+    def replace_with_answers condition_string
+      #[<a_question>,...]
+      question_nodes = condition_string.scan(/\<[^\>]*\>/)
+      question_nodes.each do |question_node|
+        question_name = question_node[1..-2]
+        condition_string.gsub!(/#{question_node}/, self[question_name])
+      end
+      condition_string
     end
   
   end

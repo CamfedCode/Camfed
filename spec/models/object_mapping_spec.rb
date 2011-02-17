@@ -12,7 +12,7 @@ describe ObjectMapping do
       @object_mapping.sf_object_type = 'MonitoringVisit'
       @object_mapping.field_mappings << field_mapping
       sf_object = ''
-      Salesforce::ObjectFactory.should_receive(:create).with('MonitoringVisit').and_return(sf_object)
+      Salesforce::Base.should_receive(:where).with(:name => 'MonitoringVisit').and_return([sf_object])
       unmapped_field = Salesforce::Field.new('b_field')
       sf_object.should_receive(:salesforce_fields).and_return([unmapped_field])
     end

@@ -5,7 +5,8 @@
 
 	<%= f.hidden_field :survey_id %>
 
-	<%= f.select :sf_object_type, @sf_object_types, :prompt => 'Select Salesforce Object' %>
+	<%= f.select :sf_object_type, @sf_object_types.collect{|an_object| [an_object.label, an_object.name]}, :prompt => 'Select Salesforce Object' %>
+
 
 	<%= f.submit 'Proceed' %>
 

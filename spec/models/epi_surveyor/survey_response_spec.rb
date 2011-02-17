@@ -97,13 +97,12 @@ describe EpiSurveyor::SurveyResponse do
         @response.id = "2"
         @response.survey = survey
         @response.should_receive(:synced?).and_return(false)
-        @mv_salesforce_object = Salesforce::MonitoringVisit.new
+        @mv_salesforce_object = Salesforce::Base.new
         
         object_history = Salesforce::ObjectHistory.new(:salesforce_id => '1', :salesforce_object => 'AnObject')
         @mv_salesforce_object.should_receive(:sync!).and_return(object_history)
       
-        Salesforce::ObjectFactory.should_receive(:create)
-          .with('Monitoring_Visit__c').and_return(@mv_salesforce_object)
+        Salesforce::Base.should_receive(:where).with(:name => 'Monitoring_Visit__c').and_return([@mv_salesforce_object])
         
         @mapping = ObjectMapping.new
         @mapping.sf_object_type = 'Monitoring_Visit__c'
@@ -128,7 +127,7 @@ describe EpiSurveyor::SurveyResponse do
     end
     
     it 'should return if already synced' do
-      Salesforce::ObjectFactory.should_not_receive(:create)
+      Salesforce::Base.should_not_receive(:where)
       mapping = {'Monitoring_Visit__c' => {:School__c => 'School'}}
       response = EpiSurveyor::SurveyResponse.new
       response.should_receive(:synced?).and_return(true)
@@ -156,9 +155,56 @@ describe EpiSurveyor::SurveyResponse do
     end
   end
   
-  # after(:each) do
-  #     Configuration.reset
-  #   end
-  #   
+  describe 'replace_with_answers' do
+    before(:each) do
+      @survey_response = EpiSurveyor::SurveyResponse.new
+      @survey_response.question_answers = {'a_question' => 'an answer', 'b_question' => 'b answer'}
+    end
+    it 'should not replace if there is no token to replace' do
+      @survey_response.replace_with_answers('').should == ''
+    end
+
+    it 'should replace if there is only one token to replace' do
+      @survey_response.replace_with_answers("name='<a_question>'").should == "name='an answer'"
+    end
+
+    it 'should replace if there are many tokens to replace' do
+      @survey_response.replace_with_answers("name='<a_question>' and email='<b_question>'").should == "name='an answer' and email='b answer'"
+    end
+
+  end
+  
+  describe 'lookup' do
+    it 'should lookup using the field mapping' do
+      @survey_response = EpiSurveyor::SurveyResponse.new
+      field_mapping = FieldMapping.new(:field_name => 'a_field', :lookup_object_name => 'Contact', :lookup_condition => "name='<name>'")
+      @survey_response.should_receive(:replace_with_answers).with(field_mapping.lookup_condition).and_return("name='hello'")
+      Salesforce::Base.should_receive(:first_from_salesforce)
+                    .with(:Id, field_mapping.lookup_object_name, "name='hello'")
+                    .and_return(1)
+      @survey_response.lookup(field_mapping).should == 1
+    end
+  end
+  
+  describe 'value_for' do
+    before(:each) do
+      @survey_response = EpiSurveyor::SurveyResponse.new
+      @survey_response.question_answers = {'a_question' => 'an answer'}
+      @field_mapping = FieldMapping.new(:question_name => 'a_question')
+    end
+    
+    it 'should return the answer when lookup not required' do
+      @field_mapping.should_receive(:lookup?).and_return(false)
+      @survey_response.value_for(@field_mapping).should == 'an answer'
+    end
+    
+    it 'should call lookup when field_mapping requires lookup' do
+      @field_mapping.should_receive(:lookup?).and_return(true)
+      @survey_response.should_receive(:lookup).with(@field_mapping).and_return(1)
+      @survey_response.value_for(@field_mapping).should == 1
+    end
+  end
+  
 end
+      
       

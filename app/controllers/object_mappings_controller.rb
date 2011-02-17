@@ -2,7 +2,7 @@ class ObjectMappingsController < AuthenticatedController
   
   def modify
     @survey = EpiSurveyor::Survey.find(params[:survey_id])
-    @sf_object_types = ['MonitoringVisit', 'FinancialAccountability', 'Contact', 'Structure']
+    @sf_object_types = Salesforce::Base.where(:display => true)
     @object_mapping = @survey.object_mappings.build
     add_crumb 'Surveys', surveys_path
     add_crumb 'Mappings', survey_mappings_path(@survey)
@@ -16,7 +16,7 @@ class ObjectMappingsController < AuthenticatedController
       return
     end
     
-    @object_mapping = ObjectMapping.where(params[:object_mapping]).first || ObjectMapping.new(params[:object_mapping])
+    @object_mapping = populate_object_mapping
     if @object_mapping.save
       redirect_to new_object_mapping_field_mapping_path(@object_mapping)
     else
@@ -37,14 +37,32 @@ class ObjectMappingsController < AuthenticatedController
     redirect_to survey_mappings_path(@object_mapping.survey_id)
   end
   
+  def destroy
+    @object_mapping = ObjectMapping.find(params[:id])
+    begin
+      @object_mapping.destroy
+      flash[:notice] = "Successfully deleted the mapping between #{@object_mapping.survey.name} and #{@object_mapping.sf_object_type}."
+    rescue Exception => error
+      logger.error "Could not delete the object mapping. #{error.message}"
+      flash[:error] = "The object mapping was not deleted. Please see log file."
+    end
+    redirect_to survey_mappings_path(@object_mapping.survey)
+  end
+  
   private
   def sanitized_params
     new_params = params[:object_mapping]
     params[:object_mapping][:field_mappings_attributes].each_pair do |key, value|
-      new_params[:field_mappings_attributes].delete(key) if value[:question_name].blank?
+      if(value[:question_name].blank? && value[:lookup_object_name].blank?)
+        new_params[:field_mappings_attributes].delete(key) 
+      end
     end
     new_params
   end
   
+  def populate_object_mapping
+    object_type = params[:object_mapping][:sf_object_type]
+    ObjectMapping.where(:sf_object_type => object_type).first || ObjectMapping.new(params[:object_mapping])
+  end
   
 end 

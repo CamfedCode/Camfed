@@ -20,12 +20,8 @@ module Salesforce
     end
   
     def sync!
-      self.field_values.symbolize_keys!
-      replace_field_values_with_id
-      create_in_salesforce!    
+      save_in_salesforce!
     end
-  
-    def replace_field_values_with_id; end
     
     def raw_request
       field_values.keys.collect{|key| "#{key}: #{field_values[key]}"}.join(', ')

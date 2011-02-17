@@ -7,6 +7,7 @@ Camfed::Application.routes.draw do
       post 'sync_with_epi_surveyor'
       post 'import_selected'
       get 'search'
+      delete 'destroy_selected'
     end
     resources :import_histories
     resources :questions
