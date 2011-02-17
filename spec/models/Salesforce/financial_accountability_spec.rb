@@ -12,7 +12,7 @@ describe Salesforce::FinancialAccountability do
     describe 'the mocked first' do
       fm_salesforce_object = Salesforce::FinancialAccountability.new
       it "should call lookup for school id" do
-        Salesforce::FinancialAccountability.should_receive(:first).with(:Id, :School__c, "name='School A'").and_return("1")
+        Salesforce::FinancialAccountability.should_receive(:first_from_salesforce).with(:Id, :School__c, "name='School A'").and_return("1")
         fm_salesforce_object.field_values = {:School__c => 'School A'}
         fm_salesforce_object.replace_field_values_with_id
         fm_salesforce_object[:School__c].should == "1"

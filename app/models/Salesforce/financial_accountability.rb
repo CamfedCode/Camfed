@@ -6,7 +6,7 @@ module Salesforce
     end
   
     def replace_field_values_with_id
-      self[:School__c] = FinancialAccountability.first(:Id, :School__c, "name='#{self[:School__c]}'")
+      self[:School__c] = FinancialAccountability.first_from_salesforce(:Id, :School__c, "name='#{self[:School__c]}'")
     end
   
     def test

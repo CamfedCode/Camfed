@@ -3,18 +3,18 @@ require "method_hash_helper"
 
 describe Salesforce::Queries do
   
-  describe 'first' do
+  describe 'first_from_salesforce' do
     it 'should return the first record if there are many' do
       answer = method_hash_from_hash(:type=>"School__c", :Id=>"1")
       mv_salesforce_object = SampleSalesforceObject.new
-      SampleSalesforceObject.should_receive(:all).with(:Id, :School__c, "name='School A'").and_return([answer])
-      result = SampleSalesforceObject.first(:Id, :School__c, "name='School A'")
+      SampleSalesforceObject.should_receive(:all_from_salesforce).with(:Id, :School__c, "name='School A'").and_return([answer])
+      result = SampleSalesforceObject.first_from_salesforce(:Id, :School__c, "name='School A'")
       result.should == "1"
     end
     
   end
   
-  describe 'all' do
+  describe 'all_from_salesforce' do
     it 'should return an empty array if none matched' do
       answer = method_hash_from_hash(
                 {:queryResponse=>{:result=>{:done=>"true", :queryLocator=>nil, :size=>"0"}}}
@@ -23,7 +23,7 @@ describe Salesforce::Queries do
       binding = ''
       Salesforce::Binding.should_receive(:instance).and_return(binding)
       binding.should_receive(:query).with({:searchString=>query}).and_return(answer)
-      SampleSalesforceObject.all(:Id, :School__c, "name='School A'").should == []
+      SampleSalesforceObject.all_from_salesforce(:Id, :School__c, "name='School A'").should == []
     end
 
     it 'should return an array with one record if only one matched' do
@@ -34,7 +34,7 @@ describe Salesforce::Queries do
       binding = ''
       Salesforce::Binding.should_receive(:instance).and_return(binding)
       binding.should_receive(:query).with({:searchString=>query}).and_return(answer)
-      SampleSalesforceObject.all(:Id, :School__c, "name='School A'").should == [{:Id => "1"}]
+      SampleSalesforceObject.all_from_salesforce(:Id, :School__c, "name='School A'").should == [{:Id => "1"}]
     end
 
     it 'should return an array with all the items that matched' do
@@ -45,28 +45,27 @@ describe Salesforce::Queries do
       binding = ''
       Salesforce::Binding.should_receive(:instance).and_return(binding)
       binding.should_receive(:query).with({:searchString=>query}).and_return(answer)
-      SampleSalesforceObject.all(:Id, :School__c, "name='School A'").should == [{:Id => "1"}, {:Id => "2"}]
+      SampleSalesforceObject.all_from_salesforce(:Id, :School__c, "name='School A'").should == [{:Id => "1"}, {:Id => "2"}]
     end
 
 
   end
   
-  describe 'save' do
+  describe 'save_in_salesforce' do
     it 'should call update when id is set' do
-      sf_object = SampleSalesforceObject.new
-      sf_object.should_receive(:update!)
-      sf_object.id = 1
-      sf_object.save!
+      sf_object = SampleSalesforceObject.new(:salesforce_id => 1)
+      sf_object.should_receive(:update_in_salesforce!)
+      sf_object.save_in_salesforce!
     end
     
     it 'should call create when id is not set' do
       sf_object = SampleSalesforceObject.new
-      sf_object.should_receive(:create!)
-      sf_object.save!
+      sf_object.should_receive(:create_in_salesforce!)
+      sf_object.save_in_salesforce!
     end
   end
   
-  describe 'create!' do
+  describe 'create_in_salesforce!' do
     before(:each) do
       @binding = ''
       Salesforce::Binding.should_receive(:instance).and_return(@binding)
@@ -77,7 +76,7 @@ describe Salesforce::Queries do
       @binding.should_receive(:create).with("sObject {\"xsi:type\" => \"AnObject\"}" => {:name => 'Hi'}).and_return(response)
       new_object = SampleSalesforceObject.new
       new_object[:name] = 'Hi'
-      object_history = new_object.create!
+      object_history = new_object.create_in_salesforce!
       object_history.is_a?(Salesforce::ObjectHistory).should be true
       object_history.salesforce_id.should == 1
       object_history.salesforce_object.should == "AnObject"
@@ -89,15 +88,15 @@ describe Salesforce::Queries do
       new_object = SampleSalesforceObject.new
       new_object[:name] = 'Hi'
       error_message = 'Object SampleSalesforceObject could not be created. FIELD_VALUES={:name=>"Hi"}. RAW_RESPONSE = {:createResponse=>{:result=>{:id=>1, :success=>"false"}}}'
-      lambda {new_object.create!}.should raise_error(SyncException)
+      lambda {new_object.create_in_salesforce!}.should raise_error(SyncException)
     end
     
   end
   
-  describe 'update!' do
+  describe 'update_in_salesforce!' do
     it 'should throw exception when id not set' do
       sf_object = SampleSalesforceObject.new
-      lambda {sf_object.update!}.should raise_error(ArgumentError)
+      lambda {sf_object.update_in_salesforce!}.should raise_error(ArgumentError)
       
     end
     
@@ -107,9 +106,9 @@ describe Salesforce::Queries do
       response = method_hash_from_hash(:updateResponse=>{:result=>{ :id => 1, :success => 'true'}})      
       binding.should_receive(:update).with("sObject {\"xsi:type\" => \"AnObject\"}" => {:Id => 1}).and_return(response)
       new_object = SampleSalesforceObject.new
-      new_object.id = 1
-      new_object.update!
-      new_object.id.should == 1
+      new_object.salesforce_id = 1
+      new_object.update_in_salesforce!
+      new_object.salesforce_id.should == 1
     end
     
     it 'should raise error when success is false' do
@@ -118,15 +117,15 @@ describe Salesforce::Queries do
       response = method_hash_from_hash(:updateResponse=>{:result=>{ :id => 1, :success => 'false', :errors => {:message => 'a'}}})      
       binding.should_receive(:update).with("sObject {\"xsi:type\" => \"AnObject\"}" => {:Id => 1}).and_return(response)
       new_object = SampleSalesforceObject.new
-      new_object.id = 1
+      new_object.salesforce_id = 1
       error_message = 'Object SampleSalesforceObject could not be updated. FIELD_VALUES={:Id=>1} RAW_RESPONSE = {:updateResponse=>{:result=>{:id=>1, :success=>"false"}}}'
-      lambda {new_object.update!}.should raise_error(SyncException)
+      lambda {new_object.update_in_salesforce!}.should raise_error(SyncException)
     end
     
     
   end
   
-  describe 'fields' do
+  describe 'salesforce_fields' do
     before(:each) do
       @sf_object = SampleSalesforceObject.new
       @binding = ''
@@ -137,13 +136,13 @@ describe Salesforce::Queries do
     it 'should return empty when result is nil' do
       response = method_hash_from_hash(:describeSObjectResponse=>{:result=>nil})
       @binding.should_receive(:describeSObject).with("sObjectType" => "AnObject").and_return(response)
-      @sf_object.fields.should == []
+      @sf_object.salesforce_fields.should == []
     end
 
     it 'should return empty when fields is nil' do
       response = method_hash_from_hash(:describeSObjectResponse=>{:result=>{:fields => nil}})
       @binding.should_receive(:describeSObject).with("sObjectType" => "AnObject").and_return(response)
-      @sf_object.fields.should == []
+      @sf_object.salesforce_fields.should == []
     end
 
     it 'should return fields' do
@@ -152,11 +151,11 @@ describe Salesforce::Queries do
         {:type => 'string', :name => 'last_name', :label => 'last name'}
         ]}})
       @binding.should_receive(:describeSObject).with("sObjectType" => "AnObject").and_return(response)
-      @sf_object.fields.should have(2).things
+      @sf_object.salesforce_fields.should have(2).things
       first_field = Salesforce::Field.new('first_name', 'first name', 'string')
       last_field = Salesforce::Field.new('last_name', 'last name', 'string')
-      @sf_object.fields.first.should == first_field
-      @sf_object.fields.second.should == last_field
+      @sf_object.salesforce_fields.first.should == first_field
+      @sf_object.salesforce_fields.second.should == last_field
     end
 
 
@@ -170,25 +169,39 @@ describe Salesforce::Queries do
       @sf_object[:CPP_placing] = ' No '
       @sf_object[:TM_c] = ' N/A '
       @sf_object[:Docs] = 'A|B'
-      @sf_object.sanitize_values!      
     end
     
     it 'should change Yes to true' do
+      @sf_object.sanitize_values!
       @sf_object[:CPP].should == 'true'
     end
 
     it 'should change No to false' do
+      @sf_object.sanitize_values!
       @sf_object[:CPP_placing].should == 'false'
     end
 
     it 'should change N/A to false' do
+      @sf_object.sanitize_values!
       @sf_object[:TM_c].should == nil
     end
 
     it 'should replace | with ;' do
+      @sf_object.sanitize_values!
       @sf_object[:Docs].should == 'A;B'
     end
+    
+    it 'should map salesforce_id to Id' do
+      @sf_object.salesforce_id = 1 
+      @sf_object.sanitize_values!
+      @sf_object[:Id].should == 1
+    end
 
+    it 'should not map salesforce_id to Id if salesforce_id not set' do
+      @sf_object.sanitize_values!
+      @sf_object[:Id].should == nil
+    end
+    
   end
   
 end

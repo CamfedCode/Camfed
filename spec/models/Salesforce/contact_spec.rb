@@ -13,7 +13,7 @@ describe Salesforce::Contact do
   describe 'first_or_create' do
     it "should return the id if one match found" do
       single_match = [method_hash_from_hash(:Id => 1)]
-      Salesforce::Contact.should_receive(:all)
+      Salesforce::Contact.should_receive(:all_from_salesforce)
         .with(:Id, "Contact", "FirstName='John' AND LastName='Doe'")
         .and_return(single_match)
       Salesforce::Contact.first_or_create('John Doe').should == 1
@@ -21,15 +21,15 @@ describe Salesforce::Contact do
     
     it 'should return nil if more than one match found' do
       multiple_matches = [1,2]
-      Salesforce::Contact.should_receive(:all)
+      Salesforce::Contact.should_receive(:all_from_salesforce)
         .with(:Id, "Contact", "FirstName='John' AND LastName='Doe'")
         .and_return(multiple_matches)
       Salesforce::Contact.first_or_create('John Doe').should be nil
     end
     
-    it "should return the id of a newly created on if none found" do
+    it "should return the id of a newly created one if none found" do
       no_match = []
-      Salesforce::Contact.should_receive(:all)
+      Salesforce::Contact.should_receive(:all_from_salesforce)
         .with(:Id, "Contact", "FirstName='John' AND LastName='Doe'")
         .and_return(no_match)
       binding = ''

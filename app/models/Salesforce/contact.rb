@@ -9,15 +9,15 @@ module Salesforce
       return nil if name.blank?
       
       first_name, last_name = name.split(' ')
-      contacts = all(:Id, object_type, "FirstName='#{first_name}' AND LastName='#{last_name}'")
+      contacts = all_from_salesforce(:Id, object_type, "FirstName='#{first_name}' AND LastName='#{last_name}'")
       return nil if contacts.length > 1
       return contacts.first.Id if contacts.length == 1
     
       new_contact = Contact.new
       new_contact[:FirstName] = first_name
       new_contact[:LastName] = last_name
-      new_contact.create!
-      new_contact.id
+      new_contact.create_in_salesforce!
+      new_contact.salesforce_id
     end
 
   end

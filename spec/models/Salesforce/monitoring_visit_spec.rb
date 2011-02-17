@@ -12,7 +12,7 @@ describe Salesforce::MonitoringVisit do
 
     it "should call lookup for school id" do
       Salesforce::Contact.should_receive(:first_or_create).with('A Monitor').and_return("2")
-      Salesforce::MonitoringVisit.should_receive(:first).with(:Id, :School__c, "name='School A'").and_return("1")
+      Salesforce::MonitoringVisit.should_receive(:first_from_salesforce).with(:Id, :School__c, "name='School A'").and_return("1")
       Salesforce::Contact.should_receive(:first_or_create).with('A TM').and_return("3")
       mv_salesforce_object = Salesforce::MonitoringVisit.new
       mv_salesforce_object.field_values = {:School__c => 'School A', :Monitor__c => "A Monitor", :TM__c =>'A TM'}
@@ -27,7 +27,7 @@ describe Salesforce::MonitoringVisit do
     before(:each) do
       @mv_salesforce_object = Salesforce::MonitoringVisit.new
       @mv_salesforce_object['School__c'] = 'A School'
-      @mv_salesforce_object.stub!(:create!)
+      @mv_salesforce_object.stub!(:create_in_salesforce!)
       @mv_salesforce_object.stub!(:replace_field_values_with_id)
     end
     

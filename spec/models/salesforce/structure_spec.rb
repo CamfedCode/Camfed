@@ -11,8 +11,8 @@ describe Salesforce::Structure do
   describe "replace_field_values_with_id" do
 
     it "should call lookup for school id" do
-      Salesforce::Structure.should_receive(:first).with(:Id, :RecordType, "name='Mothers Support Group'").and_return("2")
-      Salesforce::Structure.should_receive(:first).with(:Id, :School__c, "name='School A'").and_return("1")
+      Salesforce::Structure.should_receive(:first_from_salesforce).with(:Id, :RecordType, "name='Mothers Support Group'").and_return("2")
+      Salesforce::Structure.should_receive(:first_from_salesforce).with(:Id, :School__c, "name='School A'").and_return("1")
       structure = Salesforce::Structure.new
       structure.field_values = {:School__c => 'School A', :RecordTypeId => 'Mothers Support Group', :Monitor__c => "A Monitor", :TM__c =>'A TM'}
       structure.replace_field_values_with_id
@@ -22,12 +22,12 @@ describe Salesforce::Structure do
   end
   
   describe 'sync!' do
-    it 'should should save!' do
+    it 'should should save_in_salesforce!' do
       structure = Salesforce::Structure.new
       structure.stub!(:replace_field_values_with_id)
       structure.should_receive(:find_conditions).and_return('a=b')
-      Salesforce::Structure.should_receive(:first).with(:Id, 'Structure__c', 'a=b')
-      structure.should_receive(:save!)
+      Salesforce::Structure.should_receive(:first_from_salesforce).with(:Id, 'Structure__c', 'a=b')
+      structure.should_receive(:save_in_salesforce!)
       structure.sync!
     end
   end

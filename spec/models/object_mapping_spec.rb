@@ -14,7 +14,7 @@ describe ObjectMapping do
       sf_object = ''
       Salesforce::ObjectFactory.should_receive(:create).with('MonitoringVisit').and_return(sf_object)
       unmapped_field = Salesforce::Field.new('b_field')
-      sf_object.should_receive(:fields).and_return([unmapped_field])
+      sf_object.should_receive(:salesforce_fields).and_return([unmapped_field])
     end
     
     it 'should build field_mappings for unmapped fields' do
