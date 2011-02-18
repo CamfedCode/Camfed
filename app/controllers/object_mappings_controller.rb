@@ -62,7 +62,7 @@ class ObjectMappingsController < AuthenticatedController
   
   def populate_object_mapping
     object_type = params[:object_mapping][:sf_object_type]
-    ObjectMapping.where(:sf_object_type => object_type).first || ObjectMapping.new(params[:object_mapping])
+    ObjectMapping.where(params[:object_mapping]).first || ObjectMapping.new(params[:object_mapping])
   end
   
 end 

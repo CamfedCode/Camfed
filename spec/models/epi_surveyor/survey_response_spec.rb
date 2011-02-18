@@ -165,11 +165,11 @@ describe EpiSurveyor::SurveyResponse do
     end
 
     it 'should replace if there is only one token to replace' do
-      @survey_response.replace_with_answers("name='<a_question>'").should == "name='an answer'"
+      @survey_response.replace_with_answers("name=<a_question>").should == "name='an answer'"
     end
 
     it 'should replace if there are many tokens to replace' do
-      @survey_response.replace_with_answers("name='<a_question>' and email='<b_question>'").should == "name='an answer' and email='b answer'"
+      @survey_response.replace_with_answers("name=<a_question> and email=<b_question>").should == "name='an answer' and email='b answer'"
     end
 
   end

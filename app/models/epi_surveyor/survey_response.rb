@@ -87,7 +87,7 @@ module EpiSurveyor
       question_nodes = condition_string.scan(/\<[^\>]*\>/)
       question_nodes.each do |question_node|
         question_name = question_node[1..-2]
-        condition_string.gsub!(/#{question_node}/, self[question_name])
+        condition_string.gsub!(/#{question_node}/, "'#{self[question_name]}'")
       end
       condition_string
     end

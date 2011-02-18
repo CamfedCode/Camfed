@@ -115,12 +115,32 @@ div.field_mapping_form{
 /*	max-width: 900px;*/
 }
 
-div.field_name, div.question_name, div.lookup_object_name, div.lookup_condition
-{
+div.field_name, div.is_lookup, div.question_name,  div.lookup_object_name, div.lookup_condition{
 	float: left;
+}
+
+div.field_name
+{
 	width: 25%;
 }
 
+div.question_name
+{
+	width: 70%;
+}
+
+div.lookup_object_name
+{
+	width: 25%;
+}
+
+div.lookup_condition{
+	width: 45%;	
+}
+
+div.is_lookup{
+	width: 5%;
+}
 
 div.field_mapping_form div.actions{
 	margin-top: 10px;

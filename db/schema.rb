@@ -10,7 +10,12 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110217180617) do
+ActiveRecord::Schema.define(:version => 20110218165128) do
+
+  create_table "add_default_value_to_field_mapppings", :force => true do |t|
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "configurations", :force => true do |t|
     t.string   "epi_surveyor_url"
@@ -30,6 +35,7 @@ ActiveRecord::Schema.define(:version => 20110217180617) do
     t.string  "question_name"
     t.string  "lookup_object_name"
     t.string  "lookup_condition"
+    t.boolean "is_lookup"
   end
 
   create_table "import_histories", :force => true do |t|
