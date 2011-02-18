@@ -6,7 +6,7 @@
 <% @survey.object_mappings.each do |object_mapping|%>
 	<li class="object_mapping">
 		<div class="object_name">
-			<h3>Insert into <%= object_mapping.sf_object_type %></h3>
+			<h3>Insert into <%= object_mapping.salesforce_object_name %></h3>
 			<div class="actions"><%= link_to 'Delete', object_mapping_path(object_mapping), :method => :delete %></div>
 			<div class="clear"></div>
 		</div>

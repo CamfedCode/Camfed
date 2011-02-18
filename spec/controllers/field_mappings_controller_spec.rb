@@ -9,7 +9,7 @@ describe FieldMappingsController do
   describe 'new' do
     it 'should populate object mapping and questions' do
 
-      object_mapping = ObjectMapping.create(:survey_id => 1, :sf_object_type => 'MonitoringVisit')
+      object_mapping = ObjectMapping.create(:survey_id => 1, :salesforce_object_name => 'MonitoringVisit')
       object_mapping.should_receive(:build_unmapped_field_mappings)
       ObjectMapping.should_receive(:find).with(object_mapping.id).and_return(object_mapping)
 

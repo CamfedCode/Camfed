@@ -59,15 +59,14 @@ module Salesforce
   
     module ClassMethods
       def first_from_salesforce field, object_name, conditions
-        record = all_from_salesforce(field, object_name, conditions).first 
-        record.present? ? record.send(field) : nil
+        records = all_from_salesforce(field, object_name, conditions)
+        return nil if records.length != 1
+        records.first.send(field)
       end
       
       def all_from_salesforce field, object_name, conditions 
         query = "SELECT #{field.to_s} FROM #{object_name.to_s} WHERE #{conditions}"
-        logger.debug "QUERY = #{query}"
         answer = Salesforce::Binding.instance.query(:searchString => query)
-        logger.debug "Answer = #{answer.inspect}"
         records = answer.queryResponse.result.records
         
         return [] if records.nil?

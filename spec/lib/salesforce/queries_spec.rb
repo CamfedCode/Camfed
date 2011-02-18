@@ -4,13 +4,22 @@ require "method_hash_helper"
 describe Salesforce::Queries do
   
   describe 'first_from_salesforce' do
-    it 'should return the first record if there are many' do
+    it 'should return the Id of the first record if there is one' do
       answer = method_hash_from_hash(:type=>"School__c", :Id=>"1")
       mv_salesforce_object = SampleSalesforceObject.new
       SampleSalesforceObject.should_receive(:all_from_salesforce).with(:Id, :School__c, "name='School A'").and_return([answer])
       result = SampleSalesforceObject.first_from_salesforce(:Id, :School__c, "name='School A'")
       result.should == "1"
     end
+
+    it 'should return nil if there are many' do
+      answers = ['','']
+      mv_salesforce_object = SampleSalesforceObject.new
+      SampleSalesforceObject.should_receive(:all_from_salesforce).with(:Id, :School__c, "name='School A'").and_return(answers)
+      result = SampleSalesforceObject.first_from_salesforce(:Id, :School__c, "name='School A'")
+      result.should be nil
+    end
+
     
   end
   

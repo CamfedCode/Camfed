@@ -105,7 +105,7 @@ describe EpiSurveyor::SurveyResponse do
         Salesforce::Base.should_receive(:where).with(:name => 'Monitoring_Visit__c').and_return([@mv_salesforce_object])
         
         @mapping = ObjectMapping.new
-        @mapping.sf_object_type = 'Monitoring_Visit__c'
+        @mapping.salesforce_object_name = 'Monitoring_Visit__c'
         @mapping.field_mappings.build(:field_name => 'School__c', :question_name => 'School')
       end
     

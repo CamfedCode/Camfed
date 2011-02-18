@@ -1,0 +1,21 @@
+<%= link_to_function 'Example Lookup Mapping', "showHideHelp()"%>
+<div class="help">
+	<h3>Help for <%= @object_mapping.salesforce_object_name %></h3>
+
+
+	<h4>Example lookup</h4>
+
+	<p>
+		<b>Lookup Object</b>: School
+	</p>
+	<p>
+		<b>Simple Condition</b>: name=&lt;Which_school_are_you_visiting&gt;
+	</p>
+	<p>
+		<b>Complex Condition</b>: name=&lt;Which_school_are_you_visiting&gt; AND email=&lt;What_is_your_email&gt;
+	</p>
+
+	<h4>The text between &lt; and &gt; should be a question name from the following:</h4>
+	<%= @questions.map(&:name).join(", ") %>
+
+</div>

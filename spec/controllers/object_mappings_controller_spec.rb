@@ -15,27 +15,27 @@ describe ObjectMappingsController do
       EpiSurveyor::Survey.should_receive(:find).with("1").and_return(survey)
       
       an_object = Salesforce::Base.new(:name => 'a_name', :label => 'a label')
-      Salesforce::Base.should_receive(:where).with(:display => true).and_return([an_object])
+      Salesforce::Base.should_receive(:where).with(:enabled => true).and_return([an_object])
       
       get :modify, :survey_id => "1"
       response.should be_success
       assigns[:survey].should == survey
       assigns[:object_mapping].should_not be nil
-      assigns[:sf_object_types].should have(1).things
-      assigns[:sf_object_types].should == [an_object]
+      assigns[:salesforce_object_names].should have(1).things
+      assigns[:salesforce_object_names].should == [an_object]
     end
   end
   
   describe 'create' do
     it 'should create the mapping' do
-      post :create, :object_mapping => {:survey_id => 1, :sf_object_type => "Monitoring_Visit__c"}
+      post :create, :object_mapping => {:survey_id => 1, :salesforce_object_name => "Monitoring_Visit__c"}
       assigns[:object_mapping].survey_id.should == 1
-      assigns[:object_mapping].sf_object_type.should == "Monitoring_Visit__c"
+      assigns[:object_mapping].salesforce_object_name.should == "Monitoring_Visit__c"
       response.should redirect_to new_object_mapping_field_mapping_path(assigns[:object_mapping])
     end
     
     it 'should reuse an existing mapping' do
-      params = {:object_mapping => {:survey_id => 1, :sf_object_type => "Monitoring_Visit__c"}}
+      params = {:object_mapping => {:survey_id => 1, :salesforce_object_name => "Monitoring_Visit__c"}}
       ObjectMapping.create(params[:object_mapping])
       post :create, params
       ObjectMapping.where(params[:object_mapping]).should have(1).things
@@ -59,7 +59,7 @@ describe ObjectMappingsController do
                                     }
                 }
 
-      mapping = ObjectMapping.create(:survey_id => 1, :sf_object_type => 'AnObject')
+      mapping = ObjectMapping.create(:survey_id => 1, :salesforce_object_name => 'AnObject')
       put :update, :id => mapping.id, :object_mapping => params[:object_mapping]
       mapping.reload
       mapping.field_mappings.first.field_name.should == 'a_field'

@@ -2,7 +2,7 @@ class ObjectMappingsController < AuthenticatedController
   
   def modify
     @survey = EpiSurveyor::Survey.find(params[:survey_id])
-    @sf_object_types = Salesforce::Base.where(:display => true)
+    @salesforce_object_names = Salesforce::Base.where(:enabled => true)
     @object_mapping = @survey.object_mappings.build
     add_crumb 'Surveys', surveys_path
     add_crumb 'Mappings', survey_mappings_path(@survey)
@@ -10,7 +10,7 @@ class ObjectMappingsController < AuthenticatedController
   end
   
   def create
-    if params[:object_mapping].blank? || params[:object_mapping][:sf_object_type].blank?
+    if params[:object_mapping].blank? || params[:object_mapping][:salesforce_object_name].blank?
       flash[:error] = 'Please select a salesforce object to proceed'
       redirect_to modify_survey_object_mappings_path(params[:survey_id])
       return
@@ -41,7 +41,7 @@ class ObjectMappingsController < AuthenticatedController
     @object_mapping = ObjectMapping.find(params[:id])
     begin
       @object_mapping.destroy
-      flash[:notice] = "Successfully deleted the mapping between #{@object_mapping.survey.name} and #{@object_mapping.sf_object_type}."
+      flash[:notice] = "Successfully deleted the mapping between #{@object_mapping.survey.name} and #{@object_mapping.salesforce_object_name}."
     rescue Exception => error
       logger.error "Could not delete the object mapping. #{error.message}"
       flash[:error] = "The object mapping was not deleted. Please see log file."
@@ -61,7 +61,7 @@ class ObjectMappingsController < AuthenticatedController
   end
   
   def populate_object_mapping
-    object_type = params[:object_mapping][:sf_object_type]
+    object_type = params[:object_mapping][:salesforce_object_name]
     ObjectMapping.where(params[:object_mapping]).first || ObjectMapping.new(params[:object_mapping])
   end
   

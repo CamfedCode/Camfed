@@ -3,13 +3,13 @@ class ObjectMapping < ActiveRecord::Base
     
   belongs_to :survey, :class_name => 'EpiSurveyor::Survey'
 
-  validates :sf_object_type, :presence => true
+  validates :salesforce_object_name, :presence => true
   
   accepts_nested_attributes_for :field_mappings
   
   def build_unmapped_field_mappings
     mapped_field_names = field_mappings.collect{|field| field.field_name}
-    fields = Salesforce::Base.where(:name => self.sf_object_type).first.salesforce_fields
+    fields = Salesforce::Base.where(:name => self.salesforce_object_name).first.salesforce_fields
     fields.each do |field|
       field_mappings.build(:field_name => field.name) unless mapped_field_names.include?(field.name)
     end

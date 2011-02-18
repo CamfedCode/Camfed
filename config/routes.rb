@@ -40,8 +40,18 @@ Camfed::Application.routes.draw do
       end
     end
   end
+  
+  resources :salesforce_objects do
+    collection do
+      post :fetch_all
+    end
+    member do
+      put :enable
+      put :disable
+    end
+  end
 
-  resource 'home'
+  resource :home
   
   root :to => "surveys#index"
   

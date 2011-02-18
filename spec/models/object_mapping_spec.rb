@@ -3,13 +3,13 @@ require 'spec_helper'
 describe ObjectMapping do
   it {should have_many :field_mappings }
   it {should belong_to :survey }
-  it {should validate_presence_of :sf_object_type }
+  it {should validate_presence_of :salesforce_object_name }
   
   describe 'build_unmapped_field_mappings' do
     before(:each) do
       field_mapping = FieldMapping.new(:field_name => 'a_field', :question_name => 'a_question')
       @object_mapping = ObjectMapping.new
-      @object_mapping.sf_object_type = 'MonitoringVisit'
+      @object_mapping.salesforce_object_name = 'MonitoringVisit'
       @object_mapping.field_mappings << field_mapping
       sf_object = ''
       Salesforce::Base.should_receive(:where).with(:name => 'MonitoringVisit').and_return([sf_object])
@@ -28,7 +28,7 @@ describe ObjectMapping do
   
   describe 'deep_clone' do
     before(:each) do
-      @object_mapping = ObjectMapping.new(:survey_id => 1, :sf_object_type => 'object_a')
+      @object_mapping = ObjectMapping.new(:survey_id => 1, :salesforce_object_name => 'object_a')
       cloned = @object_mapping.clone
       @object_mapping.should_receive(:clone).and_return(cloned)
     end

@@ -3,3 +3,7 @@
 function selectSurveyIds(checked){
 	$$('div.survey_name input').each(function(check_box) {check_box.checked = checked })
 }
+
+function showHideHelp(){
+	$$('div.help').each(function(help) {help.toggle(); });
+}

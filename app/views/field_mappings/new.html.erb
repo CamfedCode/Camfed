@@ -2,6 +2,7 @@
 	document.observe("dom:loaded", function() {
 		listenIsLookupClick();
 		showHideBasedOnLookup();
+		hideHelp();
 	})
 	
 	function listenIsLookupClick(){
@@ -32,11 +33,18 @@
 	function display(ctrl, should_display) {
 		should_display ? $(ctrl).show() : $(ctrl).hide();
 	}
+	
+	function	hideHelp(){
+		showHideHelp();
+	}
 </script>
 
-<%= title "Mapping between #{@object_mapping.survey.name} and #{@object_mapping.sf_object_type}", true %>
+<%= title "Mapping between #{@object_mapping.survey.name} and #{@object_mapping.salesforce_object_name}", true %>
 
 <% questions_for_select = @questions.collect{|question| [truncate(question.prompt, :length => 40), question.name]}%>
+
+
+<%= render :partial => 'help', :locals => {:object_mapping => @object_mapping, :questions => @questions} %>
 
 
 <%= form_for @object_mapping do |object_mapping_form| %>

@@ -1,0 +1,22 @@
+<%= link_to 'Update List from Salesforce', fetch_all_salesforce_objects_path, :method => :post %>
+
+<ol class="salesforce_objects">
+	<% @salesforce_objects.sort_by{|an_object| an_object.label}.each do |salesforce_object| %>
+		<li class="salesforce_object">
+			<div class="salesforce_object">
+				<div class="object_label">
+					<%= salesforce_object.label %>
+				</div>
+				<div class="actions">
+					<% if salesforce_object.enabled? %>
+						<%= link_to "Disable", disable_salesforce_object_path(salesforce_object), :method => :put %>
+					<%else%>
+						<%= link_to "Enable", enable_salesforce_object_path(salesforce_object), :method => :put %>
+					<%end%>
+
+				</div>
+				<div class="clear"></div>
+			</div>
+		</li>
+	<% end %>
+</ol>

@@ -66,7 +66,7 @@ module EpiSurveyor
     end
     
     def salesforce_object object_mapping
-      sf_object = Salesforce::Base.where(:name => object_mapping.sf_object_type).first
+      sf_object = Salesforce::Base.where(:name => object_mapping.salesforce_object_name).first
       object_mapping.field_mappings.each do |field_mapping|
         sf_object[field_mapping.field_name] = value_for(field_mapping)
       end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110218165128) do
+ActiveRecord::Schema.define(:version => 20110218185542) do
 
   create_table "add_default_value_to_field_mapppings", :force => true do |t|
     t.datetime "created_at"
@@ -55,13 +55,13 @@ ActiveRecord::Schema.define(:version => 20110218165128) do
 
   create_table "object_mappings", :force => true do |t|
     t.integer "survey_id"
-    t.string  "sf_object_type"
+    t.string  "salesforce_object_name"
   end
 
   create_table "salesforce_objects", :force => true do |t|
     t.string   "name"
     t.string   "label"
-    t.boolean  "display"
+    t.boolean  "enabled"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
