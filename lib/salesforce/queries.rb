@@ -11,6 +11,8 @@ module Salesforce
         sanitize_values!
         response = Salesforce::Binding.instance.create("sObject {\"xsi:type\" => \"#{self.name}\"}" => field_values)
         
+        raise_if_fault response, raw_request
+
         if response.createResponse.result.success.to_s == false.to_s
           raise SyncException.new(SyncError.new(:raw_request => raw_request, 
                 :raw_response => response.createResponse.result.errors.message, :salesforce_object => self.name))
@@ -24,6 +26,8 @@ module Salesforce
         raise ArgumentError.new("salesforce_id is nil") if self.salesforce_id.nil?
         sanitize_values!
         response = Salesforce::Binding.instance.update("sObject {\"xsi:type\" => \"#{self.name}\"}" => field_values)
+
+        raise_if_fault response, raw_request
 
         if response.updateResponse.result.success.to_s == false.to_s
           raise SyncException.new(SyncError.new(:raw_request => raw_request, 
@@ -54,6 +58,14 @@ module Salesforce
           field_values[field] = nil if the_value.downcase == 'n/a'        
           field_values[field] = the_value.gsub(/\|/, ';') if the_value.include?("|")        
         end
+      end
+      
+      def raise_if_fault response, raw_request
+        if response.try(:Fault).try(:faultstring)
+          raise SyncException.new(SyncError.new(:raw_request => raw_request, 
+                :raw_response => response.Fault.faultstring, :salesforce_object => self.name))
+        end
+        
       end
     end
   

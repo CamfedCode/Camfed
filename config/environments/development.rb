@@ -25,5 +25,16 @@ Camfed::Application.configure do
   
   config.time_zone = 'Mountain Time (US & Canada)'
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
+  
+  config.action_mailer.delivery_method = :test
+  config.action_mailer.smtp_settings = {
+    :address              => "smtp.gmail.com",
+    :port                 => 587,
+    :domain               => 'camfed.org',
+    :user_name            => '',
+    :password             => '',
+    :authentication       => 'plain',
+    :enable_starttls_auto => true  }
+  
 end
 

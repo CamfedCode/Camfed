@@ -32,7 +32,15 @@
 	}
 	
 	function display(ctrl, should_display) {
-		should_display ? $(ctrl).show() : $(ctrl).hide();
+		if(should_display)
+		{
+			$(ctrl).show();
+		}
+		else
+		{
+			$(ctrl).hide();
+			$(ctrl).value = '';
+		}
 	}
 	
 	function	hideHelp(){

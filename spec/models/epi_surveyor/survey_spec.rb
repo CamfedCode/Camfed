@@ -76,11 +76,15 @@ describe EpiSurveyor::Survey do
   end
   
   describe 'sync!' do
+    it 'should return [] if no object mapping attached' do
+      EpiSurveyor::Survey.new.sync!.should == []
+    end
+    
     it 'should call sync! of its responses' do
       response_a = EpiSurveyor::SurveyResponse.new
       response_b = EpiSurveyor::SurveyResponse.new
       survey = EpiSurveyor::Survey.new
-      mappings = []
+      mappings = [ObjectMapping.new]
       survey.should_receive(:object_mappings).and_return(mappings)
       responses = [response_a, response_b]
       
@@ -139,6 +143,19 @@ describe EpiSurveyor::Survey do
       
       survey.missing_questions(other_survey).should == ['a_question']
     end
+  end
+  
+  describe 'sync_and_notify!' do
+    it 'should call sync! on all surveys and notify on all sync histories' do
+      surveys = [EpiSurveyor::Survey.new, EpiSurveyor::Survey.new]
+      surveys.each{|survey| survey.should_receive(:sync!).and_return([1])}
+      EpiSurveyor::Survey.should_receive(:all).and_return(surveys)
+      sync_email = ''
+      Notifier.should_receive(:sync_email).with([1, 1]).and_return(sync_email)
+      sync_email.should_receive(:deliver)
+      EpiSurveyor::Survey.sync_and_notify!.should == [1, 1]
+    end
+    
   end
   
 end

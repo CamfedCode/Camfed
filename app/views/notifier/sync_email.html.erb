@@ -1,0 +1,11 @@
+Import Summary:<br/>
+Time: <%= Time.now %><br/>
+Total surveys imported: <%= @import_histories.length %><br/>
+Success: <%= @import_histories.select{|import_history| import_history.status == 'Success'}.length %><br/>
+Incomplete: <%= @import_histories.select{|import_history| import_history.status == 'Incomplete'}.length %><br/>
+Failed: <%= @import_histories.select{|import_history| import_history.status == 'Failed'}.length %><br/>
+<br/>
+Please visit <%=link_to 'this link', import_histories_url %> to see the individual import histories.<br/>
+<br/>
+Thank you.<br/>
+--

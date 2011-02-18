@@ -40,6 +40,7 @@ module EpiSurveyor
   
     def sync!
       mappings = object_mappings
+      return [] if mappings.blank?
       import_histories = responses.collect {|response| response.sync!(mappings)}.select{|import_history| import_history.present?}
       touch(:last_imported_at)
       import_histories
@@ -70,6 +71,13 @@ module EpiSurveyor
       missing_ones
     end
     
-    
+    def self.sync_and_notify!
+      all_histories = []
+      all.each do |survey|
+        all_histories += survey.sync!
+      end
+      Notifier.sync_email(all_histories).deliver
+      all_histories
+    end
   end
 end
