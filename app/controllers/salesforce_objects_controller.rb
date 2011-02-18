@@ -18,6 +18,16 @@ class SalesforceObjectsController < AuthenticatedController
     set_enabled(false)
   end
   
+  def show
+    @salesforce_object = Salesforce::Base.find(params[:id])
+    add_crumb 'Salesforce Objects', salesforce_objects_path
+    add_crumb @salesforce_object.label
+    respond_to do |format|
+      format.html
+      format.json{render :json => @salesforce_object.salesforce_fields.to_json }
+    end
+  end
+  
   private
   def set_enabled enabled
     message = enabled ? "enable" : "disable"

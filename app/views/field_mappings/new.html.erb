@@ -3,6 +3,7 @@
 		listenIsLookupClick();
 		showHideBasedOnLookup();
 		hideHelp();
+		listenToHelpChange();
 	})
 	
 	function listenIsLookupClick(){
@@ -37,14 +38,37 @@
 	function	hideHelp(){
 		showHideHelp();
 	}
+	
+	function listenToHelpChange(){
+		object_select = $("selected_object");
+		object_select.observe("change", function(event){
+			var salesforce_fields = $('salesforce_fields')
+			
+			if(object_select.value == ''){
+				salesforce_fields.innerHTML = '';
+				return;
+			}
+
+			salesforce_fields.innerHTML = "Loading fields...";
+			
+			new Ajax.Request('/salesforce_objects/'+ object_select.value + '.json', {
+			  method: 'get',
+			  onSuccess: function(transport) {
+					salesforce_fields.innerHTML = transport.responseJSON.collect(function(field) {
+						return field.name}).join(", ")
+			  	}
+			});
+			
+		})
+		
+	}
 </script>
 
 <%= title "Mapping between #{@object_mapping.survey.name} and #{@object_mapping.salesforce_object_name}", true %>
 
 <% questions_for_select = @questions.collect{|question| [truncate(question.prompt, :length => 40), question.name]}%>
 
-
-<%= render :partial => 'help', :locals => {:object_mapping => @object_mapping, :questions => @questions} %>
+<%= render :partial => 'help' %>
 
 
 <%= form_for @object_mapping do |object_mapping_form| %>

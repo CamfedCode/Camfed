@@ -1,21 +1,18 @@
-<%= link_to_function 'Example Lookup Mapping', "showHideHelp()"%>
+<%= link_to_function 'Field Mapping Help', 'showHideHelp()' %>
+
 <div class="help">
-	<h3>Help for <%= @object_mapping.salesforce_object_name %></h3>
+	<div class="field_mapping_example">
+		<h3>Example</h3>
+		<p>Enter Dan's description here</p>
+		SalesforceField=&lt;SurveyField&gt; such as: name=&lt;Name&gt;
+	</div>
+	<div class="all_questions">
+		<h3>Survey Fields for <%= @object_mapping.survey.name %></h3>
+		<%= @questions.map(&:name).join(', ')%>
+	</div>
+	<div class="salesforce_field_info">
+		<h3>Salesforce fields for <%= select_tag :selected_object, options_from_collection_for_select(@salesforce_objects, :id, :label), :class=>"help_select_object", :include_blank => "Select Salesforce Object" %></h3>
 
-
-	<h4>Example lookup</h4>
-
-	<p>
-		<b>Lookup Object</b>: School
-	</p>
-	<p>
-		<b>Simple Condition</b>: name=&lt;Which_school_are_you_visiting&gt;
-	</p>
-	<p>
-		<b>Complex Condition</b>: name=&lt;Which_school_are_you_visiting&gt; AND email=&lt;What_is_your_email&gt;
-	</p>
-
-	<h4>The text between &lt; and &gt; should be a question name from the following:</h4>
-	<%= @questions.map(&:name).join(", ") %>
-
+		<div id="salesforce_fields"></div>
+	</div>
 </div>

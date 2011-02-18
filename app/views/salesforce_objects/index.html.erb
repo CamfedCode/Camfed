@@ -5,7 +5,7 @@
 		<li class="salesforce_object">
 			<div class="salesforce_object">
 				<div class="object_label">
-					<%= salesforce_object.label %>
+					<%=link_to salesforce_object.label, salesforce_object_path(salesforce_object) %>
 				</div>
 				<div class="actions">
 					<% if salesforce_object.enabled? %>

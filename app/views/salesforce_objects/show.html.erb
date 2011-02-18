@@ -1,0 +1,9 @@
+<%= @salesforce_object.label %>
+
+<% fields = @salesforce_object.salesforce_fields %>
+
+<ol>
+<% fields.each do |field| %>
+	<li><b><%= field.name%></b>: <%= field.label%></li>
+<%end%>
+</ol>
