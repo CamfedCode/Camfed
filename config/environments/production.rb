@@ -53,7 +53,7 @@ Camfed::Application.configure do
     :port                 => 587,
     :domain               => 'camfed.org',
     :user_name            => 'camfed.notification@gmail.com',
-    :password             => '123Camfed',
+    :password             => ENV['CAMFED_NOTIFICATION_PASSWORD'],
     :authentication       => 'plain',
     :enable_starttls_auto => true  }
 end
