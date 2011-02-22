@@ -31,8 +31,8 @@ Camfed::Application.configure do
     :address              => "smtp.gmail.com",
     :port                 => 587,
     :domain               => 'camfed.org',
-    :user_name            => '',
-    :password             => '',
+    :user_name            => 'camfed.notification@gmail.com',
+    :password             => '123Camfed',
     :authentication       => 'plain',
     :enable_starttls_auto => true  }
   

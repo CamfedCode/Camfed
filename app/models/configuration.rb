@@ -10,7 +10,6 @@ class Configuration < ActiveRecord::Base
     self.class.refresh
   end
   
-  
   def self.instance
     @@configuration ||= (Configuration.first || Configuration.new)
   end
