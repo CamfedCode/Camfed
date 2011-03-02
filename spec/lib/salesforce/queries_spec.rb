@@ -211,6 +211,12 @@ describe Salesforce::Queries do
       @sf_object[:Id].should == nil
     end
     
+    it 'should put nil if the value is ~ since this is should be skipped' do
+      @sf_object[:Amount] = '~'
+      @sf_object.sanitize_values!
+      @sf_object[:Amount].should be nil
+    end
+    
   end
   
 end

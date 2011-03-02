@@ -53,13 +53,21 @@ module Salesforce
         field_values.each_pair do |field, value|
           next if value.nil?
           the_value = value.to_s.strip
+          
+          #Skip ~ since EpiSurveyor uses this value when it's don't care because of an answer to a previous question
+          #E.g.   
+          #     Q1: Did you receive SNF? A: No
+          #     Q2: What amount was Received? A: ~, since Q1 was No
+          
+          field_values[field] = nil if the_value == '~'
+          
           field_values[field] = 'true' if the_value.downcase == 'yes'
           field_values[field] = 'false' if the_value.downcase == 'no'
           field_values[field] = nil if the_value.downcase == 'n/a'        
           field_values[field] = the_value.gsub(/\|/, ';') if the_value.include?("|")        
         end
       end
-      
+            
       def raise_if_fault response, raw_request
         if response.try(:Fault).try(:faultstring)
           raise SyncException.new(SyncError.new(:raw_request => raw_request, 
