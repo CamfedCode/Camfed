@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110222160815) do
+ActiveRecord::Schema.define(:version => 20110302155144) do
 
   create_table "add_default_value_to_field_mapppings", :force => true do |t|
     t.datetime "created_at"
@@ -77,8 +77,8 @@ ActiveRecord::Schema.define(:version => 20110222160815) do
   create_table "sync_errors", :force => true do |t|
     t.integer  "import_history_id"
     t.string   "salesforce_object"
-    t.string   "raw_request"
-    t.string   "raw_response"
+    t.text     "raw_request",       :limit => 255
+    t.text     "raw_response",      :limit => 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
