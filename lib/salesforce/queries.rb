@@ -86,7 +86,14 @@ module Salesforce
       
       def all_from_salesforce field, object_name, conditions 
         query = "SELECT #{field.to_s} FROM #{object_name.to_s} WHERE #{conditions}"
+        
+        Rails.logger.debug "Query=#{query}"
+        
         answer = Salesforce::Binding.instance.query(:searchString => query)
+        
+        Rails.logger.debug "Answer=#{answer}"
+        
+        
         records = answer.queryResponse.result.records
         
         return [] if records.nil?
