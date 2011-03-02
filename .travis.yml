@@ -1,1 +1,1 @@
-script: "rake db:migrate && rake test"
+script: "rake db:migrate && rake"
