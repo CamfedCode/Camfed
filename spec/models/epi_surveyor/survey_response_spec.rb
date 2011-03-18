@@ -205,6 +205,16 @@ describe EpiSurveyor::SurveyResponse do
     end
   end
   
+  describe 'formatted_answer' do
+    it 'should not quote if its a valid date' do
+      EpiSurveyor::SurveyResponse.new.formatted_answer('2011-03-18').should == "2011-03-18"
+    end
+    
+    it 'should quote non date fields' do
+      EpiSurveyor::SurveyResponse.new.formatted_answer('2011-13-18').should == "'2011-13-18'"
+    end
+  end
+  
 end
       
       

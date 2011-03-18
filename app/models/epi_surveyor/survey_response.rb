@@ -87,9 +87,15 @@ module EpiSurveyor
       question_nodes = condition_string.scan(/\<[^\>]*\>/)
       question_nodes.each do |question_node|
         question_name = question_node[1..-2]
-        condition_string.gsub!(/(\'?)#{question_node}(\'?)/, "'#{self[question_name]}'")
+        condition_string.gsub!(/(\'?)#{question_node}(\'?)/, formatted_answer(self[question_name]))
       end
       condition_string
+    end
+    
+    #should not quote if its a date argument
+    def formatted_answer answer
+      y, m, d = answer.to_s.split('-')        
+      Date.valid_date?(y.to_i, m.to_i, d.to_i) ? answer : "'#{answer}'"
     end
   
   end
