@@ -171,7 +171,13 @@ describe EpiSurveyor::SurveyResponse do
     it 'should replace if there are many tokens to replace' do
       @survey_response.replace_with_answers("name=<a_question> and email=<b_question>").should == "name='an answer' and email='b answer'"
     end
-
+    
+    it 'should not alter the condition_string' do
+      condition_string = "name=<a_question> and email=<b_question>"
+      @survey_response.replace_with_answers(condition_string).should == "name='an answer' and email='b answer'"
+      condition_string.should == "name=<a_question> and email=<b_question>"
+    end
+    
   end
   
   describe 'lookup' do

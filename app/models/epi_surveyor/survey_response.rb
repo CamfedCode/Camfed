@@ -85,11 +85,15 @@ module EpiSurveyor
     def replace_with_answers condition_string
       #[<a_question>,...]
       question_nodes = condition_string.scan(/\<[^\>]*\>/)
+      
+      replaced_condition_string = condition_string.clone
+      
       question_nodes.each do |question_node|
         question_name = question_node[1..-2]
-        condition_string.gsub!(/(\'?)#{question_node}(\'?)/, formatted_answer(self[question_name]))
+        replaced_condition_string.gsub!(/(\'?)#{question_node}(\'?)/, formatted_answer(self[question_name]))
       end
-      condition_string
+      
+      replaced_condition_string
     end
     
     #should not quote if its a date argument
