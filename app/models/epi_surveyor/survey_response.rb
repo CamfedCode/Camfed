@@ -74,7 +74,9 @@ module EpiSurveyor
     end
     
     def value_for field_mapping
-      field_mapping.lookup? ? lookup(field_mapping) : self[field_mapping.question_name]
+      return field_mapping.predefined_value if field_mapping.predefined_value?
+      return lookup(field_mapping) if field_mapping.lookup?      
+      self[field_mapping.question_name]
     end
     
     def lookup field_mapping

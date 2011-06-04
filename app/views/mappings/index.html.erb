@@ -20,7 +20,9 @@
 							<%= field_mapping.field_name %> - 
 								<% if field_mapping.lookup? %>
 									<%= field_mapping.lookup_object_name %> WHERE <%=field_mapping.lookup_condition %> 
-								<% else %>
+								<% elsif field_mapping.predefined_value? %>
+									<%= field_mapping.predefined_value %>
+								<% elsif field_mapping.question? %>
 									<%= field_mapping.question_name %>
 								<% end %>
 						</div>

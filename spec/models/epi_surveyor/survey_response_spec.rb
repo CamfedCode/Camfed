@@ -209,6 +209,13 @@ describe EpiSurveyor::SurveyResponse do
       @survey_response.should_receive(:lookup).with(@field_mapping).and_return(1)
       @survey_response.value_for(@field_mapping).should == 1
     end
+    
+    it 'should return predefined value when lookup type is predefined_value' do
+      @field_mapping.predefined_value = 'a preset value'
+      @field_mapping.should_receive(:predefined_value?).and_return(true)
+      @survey_response.value_for(@field_mapping).should == 'a preset value'      
+    end
+    
   end
   
   describe 'formatted_answer' do

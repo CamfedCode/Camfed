@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110302155144) do
+ActiveRecord::Schema.define(:version => 20110604015837) do
 
   create_table "add_default_value_to_field_mapppings", :force => true do |t|
     t.datetime "created_at"
@@ -37,6 +37,8 @@ ActiveRecord::Schema.define(:version => 20110302155144) do
     t.string  "lookup_object_name"
     t.string  "lookup_condition"
     t.boolean "is_lookup"
+    t.string  "predefined_value"
+    t.string  "lookup_type"
   end
 
   create_table "import_histories", :force => true do |t|

@@ -1,4 +1,8 @@
 class FieldMapping < ActiveRecord::Base
+  QUESTION = "Question"
+  PREDEFINED_VALUE = "PredefinedValue"
+  LOOKUP = "Lookup"
+  
   belongs_to :object_mapping
   validates :field_name, :presence => true
   
@@ -8,8 +12,20 @@ class FieldMapping < ActiveRecord::Base
     cloned_field_mapping
   end
   
+  def self.lookup_types
+    [QUESTION, LOOKUP, PREDEFINED_VALUE]
+  end
+  
   def lookup?
-    !question_name.present?
+    lookup_type == LOOKUP
+  end
+  
+  def predefined_value?
+    lookup_type == PREDEFINED_VALUE
+  end
+
+  def question?
+    lookup_type == QUESTION
   end
   
   

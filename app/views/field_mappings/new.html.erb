@@ -1,33 +1,38 @@
 <script type="text/javascript">
 	document.observe("dom:loaded", function() {
-		listenIsLookupClick();
-		showHideBasedOnLookup();
+		showHideBasedOnLookupType();
+		listenToLookupTypeChange();
 		hideHelp();
 		listenToHelpChange();
 	})
 	
-	function listenIsLookupClick(){
-		$$("input.is_lookup").each(function(is_lookup){
-				$(is_lookup).observe("click", function(event){
-					displayLookupOrQuestion(this);
+	function listenToLookupTypeChange(){
+		$$("select.lookup_type").each(function(lookup_type){
+				$(lookup_type).observe("change", function(event){
+					displayForLookupType(this);
 				});
 		});
 	}
 	
-	function displayLookupOrQuestion(is_lookup){
-		var field_mapping = $(is_lookup).ancestors().first().ancestors().first();
+	function displayForLookupType(lookup_type_select){
+		
+		var field_mapping = $(lookup_type_select).ancestors().first().ancestors().first();
 		var question_name = field_mapping.select("div.question_name").first();
 		var lookup_object_name = field_mapping.select("div.lookup_object_name").first();
 		var lookup_condition = field_mapping.select("div.lookup_condition").first();
+		var lookup_value = field_mapping.select("div.lookup_value").first();
 		
-		display(question_name, !is_lookup.checked);
-		display(lookup_object_name, is_lookup.checked);
-		display(lookup_condition, is_lookup.checked);
+		var lookup_type = lookup_type_select.value;
+		
+		display(question_name, lookup_type == '<%= FieldMapping::QUESTION %>');
+		display(lookup_object_name, lookup_type == '<%= FieldMapping::LOOKUP %>' );
+		display(lookup_condition, lookup_type == '<%= FieldMapping::LOOKUP %>');
+		display(lookup_value, lookup_type == '<%= FieldMapping::PREDEFINED_VALUE %>');		
 	}
 	
-	function showHideBasedOnLookup(){
-		$$("input.is_lookup").each(function(is_lookup){
-			displayLookupOrQuestion(is_lookup);
+	function showHideBasedOnLookupType(){
+		$$("select.lookup_type").each(function(lookup_type){
+			displayForLookupType(lookup_type);
 		});
 	}
 	
@@ -84,7 +89,7 @@
 		<div class="field_mappings">	
 			<div class="field_mapping_header">
 				<div class="field_name"><h3>Field Name</h3></div>
-				<div class="is_lookup"><h3>Lookup?</h3></div>	
+				<div class="lookup_type"><h3>Lookup Type</h3></div>	
 				<div class="question_name">&nbsp;</div>
 				<div class="clear"></div>
 			</div>		
@@ -96,8 +101,10 @@
 					<%= field_mapping_form.hidden_field :field_name %> 
 					<%= field_mapping_form.object.field_name %> 
 				</div>
-				<div class="is_lookup">	
-					<%= field_mapping_form.check_box :is_lookup, :class => 'is_lookup' %>
+				<div class="lookup_type">	
+					<!-- <%= field_mapping_form.check_box :is_lookup, :class => 'is_lookup' %> -->
+					<%= field_mapping_form.select :lookup_type, FieldMapping.lookup_types, {}, :class=> 'lookup_type' %>
+					
 				</div>
 				<div class="question_name">	
 					<%= field_mapping_form.select :question_name, questions_for_select, :include_blank => 'Please select a question' %>
@@ -108,6 +115,10 @@
 
 				<div class="lookup_condition">	
 					Condition: <%= field_mapping_form.text_field :lookup_condition, :size => 50 %>
+				</div>
+
+				<div class="lookup_value">	
+					Predefined Value: <%= field_mapping_form.text_field :predefined_value, :size => 50 %>
 				</div>
 
 				<div class="clear"></div>

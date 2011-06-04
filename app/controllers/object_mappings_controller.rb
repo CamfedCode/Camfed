@@ -53,7 +53,7 @@ class ObjectMappingsController < AuthenticatedController
   def sanitized_params
     new_params = params[:object_mapping]
     params[:object_mapping][:field_mappings_attributes].each_pair do |key, value|
-      if(value[:question_name].blank? && value[:lookup_object_name].blank?)
+      if(value[:question_name].blank? && value[:lookup_object_name].blank? && value[:predefined_value].blank? )
         new_params[:field_mappings_attributes].delete(key) 
       end
     end
