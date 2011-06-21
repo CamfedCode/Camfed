@@ -102,9 +102,7 @@
 					<%= field_mapping_form.object.field_name %> 
 				</div>
 				<div class="lookup_type">	
-					<!-- <%= field_mapping_form.check_box :is_lookup, :class => 'is_lookup' %> -->
-					<%= field_mapping_form.select :lookup_type, FieldMapping.lookup_types, {}, :class=> 'lookup_type' %>
-					
+					<%= field_mapping_form.select :lookup_type, FieldMapping.lookup_types, {}, :class=> 'lookup_type' %>					
 				</div>
 				<div class="question_name">	
 					<%= field_mapping_form.select :question_name, questions_for_select, :include_blank => 'Please select a question' %>
