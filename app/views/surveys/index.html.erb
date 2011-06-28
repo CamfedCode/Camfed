@@ -68,10 +68,11 @@ function listenDeleteSelected()
 					<span><%= survey.name %></span>
 					<%= "Imported #{distance_of_time_in_words(Time.now, survey.last_imported_at)} ago" if survey.last_imported_at%>
 				</div>
-				<div class="actions">
+				<div class="actions">					
 					<%= link_to 'Mappings', survey_mappings_path(survey.id) %> |
 					<%= link_to 'History', survey_import_histories_path(survey.id) %> |
-					<%= link_to 'Questions', survey_questions_path(survey.id) %>
+					<%= link_to 'Questions', survey_questions_path(survey.id) %> |
+					<%= link_to 'Notification', edit_survey_path(survey.id) %>
 				</div>
 				<div class="clear"></div>
 			</div>

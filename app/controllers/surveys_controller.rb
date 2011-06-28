@@ -5,6 +5,25 @@ class SurveysController < AuthenticatedController
     add_crumb 'Surveys'
   end
   
+  def edit
+    @survey = EpiSurveyor::Survey.find params[:id]
+    add_crumb 'Surveys', surveys_path
+    add_crumb @survey.name
+  end
+  
+  def update
+    @survey = EpiSurveyor::Survey.find params[:id]
+    
+    if @survey.update_attributes(params[:epi_surveyor_survey])
+      flash[:notice] = "The sync results for #{@survey.name} will now be sent to #{@survey.notification_email}."
+      redirect_to root_path
+    else
+      flash[:error] = "Could not update the notification email."
+      logger.error "Error in saving survey. MESSAGE: #{@survey.errors.inspect}"
+      render 'edit'
+    end    
+  end
+  
   def import_selected
     begin
       @surveys = EpiSurveyor::Survey.find(params[:survey_ids])

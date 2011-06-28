@@ -1,0 +1,17 @@
+<%= title "Edit Notification" %>
+
+<%= form_for @survey, :url => survey_path(@survey), :method => :put do |f|%>
+	<div class="survey_form">
+	  <div class="field">
+			<div class="label"><%= f.label :notification_email %></div>
+	    	<div class="input"><%= f.text_field :notification_email, :size => 60 %></div>
+			<div class="clear"></div>
+	  </div>
+	
+	  <div class="actions">
+	    <%=link_to 'Back to Home', root_path%>
+		<%= f.submit %>		
+	  </div>
+	
+	</div>
+<% end %>

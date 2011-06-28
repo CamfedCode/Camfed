@@ -148,13 +148,38 @@ describe EpiSurveyor::Survey do
   describe 'sync_and_notify!' do
     it 'should call sync! on all surveys and notify on all sync histories' do
       surveys = [EpiSurveyor::Survey.new, EpiSurveyor::Survey.new]
-      surveys.each{|survey| survey.should_receive(:sync!).and_return([1])}
+      surveys.each do |survey| 
+        survey.should_receive(:sync!).and_return([1])
+        survey.notification_email = 'admin@example.com'
+      end
       EpiSurveyor::Survey.should_receive(:all).and_return(surveys)
       sync_email = ''
-      Notifier.should_receive(:sync_email).with([1, 1]).and_return(sync_email)
+      Notifier.should_receive(:sync_email).with([1, 1], "admin@example.com").and_return(sync_email)
       sync_email.should_receive(:deliver)
       EpiSurveyor::Survey.sync_and_notify!.should == [1, 1]
     end
+
+    it 'should call sync! on all surveys and notify on all sync histories to their configured emails' do
+      survey_1 = EpiSurveyor::Survey.new
+      survey_2 = EpiSurveyor::Survey.new
+      survey_1.notification_email = 'survey1@example.com'
+      survey_2.notification_email = 'survey2@example.com'
+      
+      surveys = [survey_1, survey_2]
+      surveys.each do |survey| 
+        survey.should_receive(:sync!).and_return([1])
+      end
+      
+      EpiSurveyor::Survey.should_receive(:all).and_return(surveys)
+      sync_email_1 = ''
+      sync_email_2 = ''      
+      Notifier.should_receive(:sync_email).with([1], "survey1@example.com").and_return(sync_email_1)
+      Notifier.should_receive(:sync_email).with([1], "survey2@example.com").and_return(sync_email_2)      
+      sync_email_1.should_receive(:deliver)
+      sync_email_2.should_receive(:deliver)      
+      EpiSurveyor::Survey.sync_and_notify!.should == [1, 1]
+    end
+
     
   end
   

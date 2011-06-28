@@ -7,7 +7,7 @@ module EpiSurveyor
     has_many :object_mappings, :dependent => :destroy    
     has_many :import_histories, :dependent => :destroy
     
-    attr_accessible :id
+    attr_accessible :id, :notification_email
     attr_accessor :responses
   
     def test
@@ -73,10 +73,19 @@ module EpiSurveyor
     
     def self.sync_and_notify!
       all_histories = []
+      recipient_histories = {}
+      
       all.each do |survey|
-        all_histories += survey.sync!
+        sync_results = survey.sync!
+        all_histories += sync_results
+        recipient_histories[survey.notification_email] ||= []
+        recipient_histories[survey.notification_email] += sync_results
       end
-      Notifier.sync_email(all_histories).deliver
+      
+      recipient_histories.each_pair do |to_email, histories|
+        Notifier.sync_email(histories, to_email).deliver        
+      end
+
       all_histories
     end
   end

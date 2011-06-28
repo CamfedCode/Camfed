@@ -17,6 +17,29 @@ describe SurveysController do
     
   end
   
+  describe "GET 'edit'" do
+    it "should get a survey" do
+      survey = EpiSurveyor::Survey.new
+      EpiSurveyor::Survey.should_receive(:find).with(1).and_return(survey)
+      get 'edit', :id => 1      
+      response.should be_success
+      assigns[:survey].should == survey      
+    end
+    
+  end
+
+  describe "PUT 'update'" do
+    it "should update a survey" do
+      survey = EpiSurveyor::Survey.new
+      EpiSurveyor::Survey.should_receive(:find).with(1).and_return(survey)
+      put 'update', :id => 1, :epi_surveyor_survey => {:notification_email => 'hello@example.com'}
+      assigns[:survey].notification_email.should == 'hello@example.com'      
+      response.should redirect_to root_path
+    end
+    
+  end
+  
+  
   describe 'after select many' do
     before(:each) do
       @surveys = [EpiSurveyor::Survey.new, EpiSurveyor::Survey.new]

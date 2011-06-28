@@ -9,6 +9,12 @@ Camfed::Application.routes.draw do
       get 'search'
       delete 'destroy_selected'
     end
+    
+    member do
+      get 'edit'
+      put 'update'
+    end
+    
     resources :import_histories
     resources :questions
     resources :mappings do
