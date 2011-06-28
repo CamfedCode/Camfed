@@ -1,3 +1,0 @@
-Camfed Features
----------------
-* TODO
