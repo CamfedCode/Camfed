@@ -13,9 +13,11 @@ module Salesforce
         
         raise_if_fault response, raw_request
 
-        if response.createResponse.result.success.to_s == false.to_s
-          raise SyncException.new(SyncError.new(:raw_request => raw_request, 
-                :raw_response => response.createResponse.result.errors.message, :salesforce_object => self.name))
+        if response.createResponse.result.success.to_s.downcase == false.to_s
+          sync_error = SyncError.new(:raw_request => raw_request,
+            :raw_response => response.createResponse.result.errors.message,
+            :salesforce_object => self.name)
+          raise SyncException.new(sync_error)
         end
 
         self.salesforce_id = response.createResponse.result.id
@@ -29,9 +31,11 @@ module Salesforce
 
         raise_if_fault response, raw_request
 
-        if response.updateResponse.result.success.to_s == false.to_s
-          raise SyncException.new(SyncError.new(:raw_request => raw_request, 
-                :raw_response => response.updateResponse.result.errors.message, :salesforce_object => self.name))
+        if response.updateResponse.result.success.to_s.downcase == false.to_s
+          sync_error = SyncError.new(:raw_request => raw_request, 
+            :raw_response => response.updateResponse.result.errors.message,
+            :salesforce_object => self.name)
+          raise SyncException.new(sync_error)
         end
 
         self.salesforce_id = response.updateResponse.result.id
@@ -54,13 +58,12 @@ module Salesforce
           next if value.nil?
           the_value = value.to_s.strip
           
-          #Skip ~ since EpiSurveyor uses this value when it's don't care because of an answer to a previous question
+          #Skip EpiSurveyor uses "~" when a previous answer invalidates the question
           #E.g.   
           #     Q1: Did you receive SNF? A: No
           #     Q2: What amount was Received? A: ~, since Q1 was No
           
           field_values[field] = nil if the_value == '~'
-          
           field_values[field] = 'true' if the_value.downcase == 'yes'
           field_values[field] = 'false' if the_value.downcase == 'no'
           field_values[field] = nil if the_value.downcase == 'n/a'        
@@ -70,8 +73,10 @@ module Salesforce
             
       def raise_if_fault response, raw_request
         if response.try(:Fault).try(:faultstring)
-          raise SyncException.new(SyncError.new(:raw_request => raw_request, 
-                :raw_response => response.Fault.faultstring, :salesforce_object => self.name))
+          sync_error = SyncError.new(:raw_request => raw_request, 
+            :raw_response => response.Fault.faultstring,
+            :salesforce_object => self.name)
+          raise SyncException.new(sync_error)
         end
         
       end
@@ -93,7 +98,6 @@ module Salesforce
         
         Rails.logger.debug "Answer=#{answer}"
         
-        
         records = answer.queryResponse.result.records
         
         return [] if records.nil?
@@ -102,13 +106,17 @@ module Salesforce
       
       def fetch_all_objects
         response = Salesforce::Binding.instance.describeGlobal({})
-        all_objects = response.describeGlobalResponse.result.sobjects.collect{|description| new(:name => description.name, :label => description.label)}
+        
+        all_objects = response.describeGlobalResponse.result.sobjects.collect do |description|
+          new(:name => description.name, :label => description.label)
+        end
         
         all_objects.each do |an_object|
           unless where(:name => an_object.name).present?
             an_object.save!
           end
         end
+        
         all
       end
     end

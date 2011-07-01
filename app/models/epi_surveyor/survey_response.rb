@@ -85,13 +85,21 @@ module EpiSurveyor
     end
     
     def replace_with_answers condition_string
-      #[<a_question>,...]
+      
       question_nodes = condition_string.scan(/\<[^\>]*\>/)
       
       replaced_condition_string = condition_string.clone
       
       question_nodes.each do |question_node|
         question_name = question_node[1..-2]
+        
+        # Sohan, this needs something like if not first quote (\A') and 
+        # not last quote (\'\Z) then replace quote with \'
+        # I checked with salesforce and that is their expected escape sequence
+        
+        cleaned_query = formatted_answer(self[question_name]).sub("'", "TAKE'")
+        Rails.logger.debug "cleaned_query=[#{cleaned_query}]"
+        
         replaced_condition_string.gsub!(/(\'?)#{question_node}(\'?)/, formatted_answer(self[question_name]))
       end
       
