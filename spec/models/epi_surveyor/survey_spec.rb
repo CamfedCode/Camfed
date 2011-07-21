@@ -80,6 +80,24 @@ describe EpiSurveyor::Survey do
       EpiSurveyor::Survey.new.sync!.should == []
     end
     
+    it 'should continue syncing records even if some hit exceptions' do
+      response_a = EpiSurveyor::SurveyResponse.new
+      response_b = EpiSurveyor::SurveyResponse.new
+      survey = EpiSurveyor::Survey.new
+      mappings = [ObjectMapping.new]
+      survey.should_receive(:object_mappings).and_return(mappings)
+      responses = [response_a, response_b]
+      
+      survey.should_receive(:responses).and_return(responses)
+      response_a.should_receive(:sync!).with(mappings).and_raise('sync failed')
+      response_b.should_receive(:sync!).with(mappings).and_return(ImportHistory.new)
+      import_histories = survey.sync!
+      import_histories.should have(2).things
+      import_histories.first.is_a?(ImportHistory).should be true
+      import_histories.last.is_a?(ImportHistory).should be true      
+      
+    end
+    
     it 'should call sync! of its responses' do
       response_a = EpiSurveyor::SurveyResponse.new
       response_b = EpiSurveyor::SurveyResponse.new

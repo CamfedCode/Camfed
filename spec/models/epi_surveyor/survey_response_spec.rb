@@ -226,6 +226,10 @@ describe EpiSurveyor::SurveyResponse do
     it 'should quote non date fields' do
       EpiSurveyor::SurveyResponse.new.formatted_answer('2011-13-18').should == "'2011-13-18'"
     end
+    
+    it 'should escape answer with a quote' do
+      EpiSurveyor::SurveyResponse.new.formatted_answer("h'ello").should == "'h\\'ello'"
+    end
   end
   
 end

@@ -41,7 +41,27 @@ module EpiSurveyor
     def sync!
       mappings = object_mappings
       return [] if mappings.blank?
-      import_histories = responses.collect {|response| response.sync!(mappings)}.select{|import_history| import_history.present?}
+      import_histories = []
+      # responses.collect {|response| response.sync!(mappings)}.select{|import_history| import_history.present?}
+      
+      responses.each do |response|
+        begin
+          import_history = response.sync!(mappings)
+          import_histories << import_history if import_history.present?
+        rescue Exception => error
+          import_history = ImportHistory.new(:survey_id => self.id, :survey_response_id => response.id)
+          sync_error = SyncError.new(:raw_request => response.inspect,
+            :raw_response => error.message,
+            :salesforce_object => "")
+          
+          import_history.sync_errors << sync_error
+          import_histories << import_history
+          logger.error "Could not sync because of #{error.message} #{error.backtrace.join}"
+          
+        end
+      end
+      
+      
       touch(:last_imported_at)
       import_histories
     end
