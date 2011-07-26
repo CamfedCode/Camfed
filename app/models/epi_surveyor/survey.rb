@@ -10,10 +10,6 @@ module EpiSurveyor
     attr_accessible :id, :notification_email
     attr_accessor :responses
   
-    def test
-      Survey.find_by_name('MV-Dist-Info5').sync!
-    end
-    
     def responses
       @responses ||= SurveyResponse.find_all_by_survey(self)
     end
