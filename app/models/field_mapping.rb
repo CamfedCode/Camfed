@@ -28,5 +28,4 @@ class FieldMapping < ActiveRecord::Base
     lookup_type == QUESTION
   end
   
-  
 end

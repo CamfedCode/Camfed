@@ -57,7 +57,6 @@ module EpiSurveyor
         end
       end
       
-      
       touch(:last_imported_at)
       import_histories
     end
@@ -77,6 +76,7 @@ module EpiSurveyor
     def missing_questions other_survey
       question_names = questions.map(&:name)
       missing_ones = []
+      
       other_survey.object_mappings.each do |object_mapping|
         object_mapping.field_mappings.each do |field_mapping| 
           if field_mapping.question_name.present? && question_names.exclude?(field_mapping.question_name)
@@ -84,6 +84,7 @@ module EpiSurveyor
           end
         end
       end
+      
       missing_ones
     end
     
