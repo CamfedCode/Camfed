@@ -27,11 +27,9 @@ module EpiSurveyor
       questions
     end
     
-    
     def ==(other)
       other.present? && self.id == other.id
     end
-    
     
   end
 end

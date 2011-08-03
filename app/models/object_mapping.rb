@@ -26,5 +26,4 @@ class ObjectMapping < ActiveRecord::Base
     
     cloned_object_mapping
   end
-
 end
