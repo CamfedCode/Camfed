@@ -1,12 +1,13 @@
 class ImportHistoriesController < AuthenticatedController
   
   def index
-    if params[:survey_id].present?
-      @survey = EpiSurveyor::Survey.find(params[:survey_id])
-      @import_histories = @survey.import_histories
-    else
-      @import_histories = ImportHistory.all
-    end
+    #if params[:survey_id].present?
+    #  @survey = EpiSurveyor::Survey.find(params[:survey_id])
+    #  @import_histories = @survey.import_histories
+    #else
+    #  @import_histories = ImportHistory.all
+    #end
+    @import_histories = ImportHistory.get_by_status(params[:survey_id],params[:status])
 
     add_crumb 'Surveys', surveys_path
     add_crumb 'Histories'

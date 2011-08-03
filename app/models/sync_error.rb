@@ -4,4 +4,5 @@ class SyncError < ActiveRecord::Base
   def to_s
     "SyncError: Salesforce sync error. Salesforce Object:#{salesforce_object} Request:#{raw_request} Response:#{raw_response}"
   end
+
 end

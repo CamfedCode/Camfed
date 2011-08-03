@@ -13,4 +13,21 @@ class ImportHistory < ActiveRecord::Base
     return 'Incomplete' if object_histories.present?
     'Failed'
   end
+
+  def self.get_by_status(survey_id, status)
+
+    condition =  { }
+    condition =  {:survey_id => survey_id } if not survey_id.nil?
+
+    filter = lambda {|history| true }
+    filter = lambda {|history| history.sync_errors.blank? }  if status=="Success"
+    filter = lambda {|history| !history.sync_errors.blank? } if status=="Failure"
+    #:conditions => {:survey_id => survey_id }
+
+    ImportHistory.all(:include => "sync_errors",
+                      :conditions => condition
+    )
+    .select{|history| filter.call(history) }
+
+  end
 end

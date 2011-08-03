@@ -1,5 +1,11 @@
 <%= title "Import Histories #{("for " + @survey.name) if defined?(@survey)}", true %>
+ <%= form_tag("", :method => "get") do %>
 
+	Filter by Status: <%= select_tag(:status,
+            options_for_select(['All', 'Success', 'Failure'], params[:status])) %>
+    <%= submit_tag("Filter") %>
+
+<% end %>
 <table class="import_histories">
   <tr>
 		<% unless defined?(@survey) %>
