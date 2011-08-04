@@ -22,6 +22,8 @@ class ImportHistory < ActiveRecord::Base
 
   def self.get_by_filter(survey_id, status,start_date,end_date)
 
+    end_date = end_date.to_time.advance(:days => 1).to_date unless end_date.nil?
+
     query_scope = ImportHistory.scoped({})
     query_scope = query_scope.where("import_histories.created_at between ? AND ?", start_date, end_date)   unless start_date.nil? or end_date.nil?
     query_scope = query_scope.where("import_histories.survey_id = ?", survey_id) unless survey_id.nil?
