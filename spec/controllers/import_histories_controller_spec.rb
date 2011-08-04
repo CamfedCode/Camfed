@@ -6,10 +6,6 @@ describe ImportHistoriesController do
     sign_on
   end
 
-  def mock_import_history(stubs={})
-    @mock_import_history ||= mock_model(ImportHistory, stubs).as_null_object
-  end
-
   describe "GET index" do
     it "assigns all import_histories as @import_histories" do
       ImportHistory.should_receive(:get_by_filter).with(1, "All", "2011/07/20", "2011/07/21").and_return([mock_import_history])

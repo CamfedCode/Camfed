@@ -46,7 +46,7 @@ describe ImportHistory do
       ImportHistory.should_receive(:scoped).with(any_args).and_return(mock_scope)
       mock_scope.should_receive(:all).with({:include=>"sync_errors"}).and_return(@import_histories)
       mock_scope.should_receive(:where).with("import_histories.survey_id = ?", @survey_id).and_return(mock_scope)
-      mock_scope.should_receive(:where).with("import_histories.created_at between ? AND ?", start_date, end_date).and_return(mock_scope)
+      mock_scope.should_receive(:where).with("import_histories.created_at between ? AND ?", start_date, end_date.to_time.advance(:days => 1).to_date).and_return(mock_scope)
       result = ImportHistory.get_by_filter(@survey_id, "All", start_date, end_date)
       result.count.should be 3
     end
