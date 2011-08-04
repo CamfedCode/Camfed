@@ -12,17 +12,21 @@ describe ImportHistoriesController do
 
   describe "GET index" do
     it "assigns all import_histories as @import_histories" do
-      survey = ''
-      survey.should_receive(:import_histories).and_return([mock_import_history])
-      EpiSurveyor::Survey.should_receive(:find).with(1).and_return(survey)
-      get :index, :survey_id => 1
+      ImportHistory.should_receive(:get_by_filter).with(1, "All", "2011/07/20", "2011/07/21").and_return([mock_import_history])
+      get :index, :survey_id => 1, :status => "All", :start_date => "2011/07/20", :end_date => "2011/07/21"
       assigns(:import_histories).should eq([mock_import_history])
     end
     
-    it 'call ImportHistory.all if survey_id is nil' do
-      ImportHistory.should_receive(:all).and_return([])
-      get :index
-      assigns(:import_histories).should == []
+    it 'should return all import histories when no filter criteria is specified' do
+      ImportHistory.should_receive(:get_by_filter).with(nil, "All", nil, nil).and_return([mock_import_history])
+      get :index, :survey_id => nil, :status => "All", :start_date => "", :end_date => ""
+      assigns(:import_histories).should eq([mock_import_history])
+    end
+
+    it 'should set end date to now if the start date is specified but the end date is not' do
+      ImportHistory.should_receive(:get_by_filter).with(nil, "All", "2011/07/20", an_instance_of(Time)).and_return([mock_import_history])
+      get :index, :survey_id => nil, :status => "All", :start_date => "2011/07/20", :end_date => ""
+      assigns(:import_histories).should eq([mock_import_history])
     end
   end
 

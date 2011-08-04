@@ -7,6 +7,12 @@ class ImportHistory < ActiveRecord::Base
   validates :survey_response_id, :presence => true
   
   default_scope :order => 'import_histories.created_at DESC'
+  scope :survey_scope, lambda { |survey_id|
+    where("import_histories.survey_id = ?", survey_id)
+  }
+  scope :date_range_scope, lambda {|start_date,end_date|
+     where("import_histories.created_at between ? AND ?", start_date, end_date)
+  }
 
   def status
     return 'Success' if sync_errors.blank?
@@ -14,20 +20,18 @@ class ImportHistory < ActiveRecord::Base
     'Failed'
   end
 
-  def self.get_by_status(survey_id, status)
+  def self.get_by_filter(survey_id, status,start_date,end_date)
 
-    condition =  { }
-    condition =  {:survey_id => survey_id } if not survey_id.nil?
+    query_scope = ImportHistory.scoped({})
+    query_scope = query_scope.where("import_histories.created_at between ? AND ?", start_date, end_date)   unless start_date.nil? or end_date.nil?
+    query_scope = query_scope.where("import_histories.survey_id = ?", survey_id) unless survey_id.nil?
 
     filter = lambda {|history| true }
     filter = lambda {|history| history.sync_errors.blank? }  if status=="Success"
     filter = lambda {|history| !history.sync_errors.blank? } if status=="Failure"
-    #:conditions => {:survey_id => survey_id }
 
-    ImportHistory.all(:include => "sync_errors",
-                      :conditions => condition
-    )
-    .select{|history| filter.call(history) }
+    query_scope.all(:include => "sync_errors")
+   .select{|history| filter.call(history) }
 
   end
 end

@@ -1,35 +1,48 @@
 <%= title "Import Histories #{("for " + @survey.name) if defined?(@survey)}", true %>
- <%= form_tag("", :method => "get") do %>
+<%= stylesheet_link_tag "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/themes/redmond/jquery-ui.css", "application" %>
+<%= javascript_include_tag "https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js",
+                           "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js", "application" %>
+<script language="javascript">
+    var $$=jQuery.noConflict();
+    $$(document).ready(function() {
+        $$('#start_date').datepicker({dateFormat: 'yy-mm-dd'});
+        $$('#end_date').datepicker({dateFormat: 'yy-mm-dd'});
+        $$('#start_date').datepicker('setDate', getParameterByName('start_date'));
+        $$('#end_date').datepicker('setDate', getParameterByName('end_date'));
+    });
+</script>
+<%= form_tag("", :method => "get") do %>
 
-	Filter by Status: <%= select_tag(:status,
-            options_for_select(['All', 'Success', 'Failure'], params[:status])) %>
+    Status: <%= select_tag(:status,
+                           options_for_select(['All', 'Success', 'Failure'], params[:status])) %>
+    Date Range: <%= text_field_tag("start_date") %> - <%= text_field_tag("end_date") %>
     <%= submit_tag("Filter") %>
 
 <% end %>
 <table class="import_histories">
   <tr>
-		<% unless defined?(@survey) %>
-			<th>Survey</th>
-		<%end%>
-		<th>ID</th>
-		<th>Import Time</th>
+    <% unless defined?(@survey) %>
+        <th>Survey</th>
+    <% end %>
+    <th>ID</th>
+    <th>Import Time</th>
     <th>Status</th>
     <th></th>
     <th></th>
   </tr>
 
-<% @import_histories.each do |import_history| %>
-  <tr class="import_history <%= import_history.status.downcase %>">
-		<% unless defined?(@survey) %>
-			<td><%= import_history.survey.name %></td>
-		<%end%>
+  <% @import_histories.each do |import_history| %>
+      <tr class="import_history <%= import_history.status.downcase %>">
+        <% unless defined?(@survey) %>
+            <td><%= import_history.survey.name %></td>
+        <% end %>
 
-    <td><%= import_history.survey_response_id %></td>
-   	<td><%=time import_history.created_at %></td>
+        <td><%= import_history.survey_response_id %></td>
+        <td><%= time import_history.created_at %></td>
 
-    <td><%= import_history.status %></td>
-    <td><%= link_to 'Show', import_history %></td>
-    <td><%= link_to 'Destroy', import_history, :confirm => 'Are you sure?', :method => :delete %></td>
-  </tr>
-<% end %>
+        <td><%= import_history.status %></td>
+        <td><%= link_to 'Show', import_history %></td>
+        <td><%= link_to 'Destroy', import_history, :confirm => 'Are you sure?', :method => :delete %></td>
+      </tr>
+  <% end %>
 </table>
