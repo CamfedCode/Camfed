@@ -2,22 +2,77 @@
 <%= stylesheet_link_tag "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/themes/redmond/jquery-ui.css", "application" %>
 <%= javascript_include_tag "https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js",
                            "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js", "application" %>
+<script type="text/javascript" src="/javascripts/jquery.validate.js"></script>
 <script language="javascript">
     var $$=jQuery.noConflict();
     $$(document).ready(function() {
-        $$('#start_date').datepicker({dateFormat: 'yy-mm-dd'});
+		$$('#start_date').datepicker({dateFormat: 'yy-mm-dd'});
         $$('#end_date').datepicker({dateFormat: 'yy-mm-dd'});
         $$('#start_date').datepicker('setDate', getParameterByName('start_date'));
         $$('#end_date').datepicker('setDate', getParameterByName('end_date'));
+		$$("#filter_form").validate({
+			rules: 
+			{ 'start_date': { formatDate: true },
+			  'end_date': { formatDate: true,
+							greaterThan: "#start_date"
+						  } 
+			},
+			errorPlacement: function(error, element) {
+		    
+		 	if (element.attr("name") == "start_date")
+			{
+				error.insertAfter("#start_date_error");
+			}
+			else if (element.attr("name") == "end_date")
+			{
+				error.insertAfter("#end_date_error");
+			}
+			else 
+			   error.insertAfter(element);
+	}});
+	
+		$$.validator.addMethod(
+			"formatDate",
+			function(value, element) {
+				if (value == "")  return true; 
+		        return value.match(/^\d\d\d\d?\-\d\d?\-\d\d$/);
+		    },
+		    "Format yyyy-mm-dd"
+		);
+		$$.validator.addMethod("greaterThan", function(value, element, params) {
+				element_id=params;
+				if (value == "")  return true; 
+		        if (!/Invalid|NaN/.test(new Date(value))) {
+		            return new Date(value) > new Date($$(element_id).val());
+		        }
+	
+		        return isNaN(value) && isNaN($(element_id).val()) || (parseFloat(value) > parseFloat($$(element_id).val())); 
+		
+		    },'Must be greater than start date');
     });
 </script>
-<%= form_tag("", :method => "get") do %>
 
-    Status: <%= select_tag(:status,
-                           options_for_select(['All', 'Success', 'Failure'], params[:status])) %>
-    Date Range: <%= text_field_tag("start_date") %> - <%= text_field_tag("end_date") %>
-    <%= submit_tag("Filter") %>
+<%= form_tag("", :method => "get", :id => "filter_form") do %>
 
+<table><tr>
+	<td>Status:</td>
+	<td><%= select_tag(:status,options_for_select(['All', 'Success', 'Failed'], params[:status])) %></td>
+	<td>Date Range:</td>
+	<td><%= text_field_tag("start_date") %></td>
+	<td><%= text_field_tag("end_date") %></td>
+	<td><%= submit_tag("Filter") %></td>
+</tr><tr>
+		<td></td>
+		<td></td>
+		<td></td>
+		<td><div id="start_date_error"/></td>
+		<td><div id="end_date_error"/></td>
+		<td></td>
+	</tr>
+</table>
+	<div><span style="display:block;margin-left:195px;" id="start_date_error"></span>
+	<span style="margin-left:22px;" id="end_date_error"></span>
+</div>
 <% end %>
 <table class="import_histories">
   <tr>
@@ -33,7 +88,7 @@
 
   <% @import_histories.each do |import_history| %>
       <tr class="import_history <%= import_history.status.downcase %>">
-        <% unless defined?(@survey) %>
+  		<% unless defined?(@survey) %>
             <td><%= import_history.survey.name %></td>
         <% end %>
 

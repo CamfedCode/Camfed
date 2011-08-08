@@ -55,7 +55,7 @@ describe ImportHistory do
       mock_scope = mock(anything)
       ImportHistory.should_receive(:scoped).with(any_args).and_return(mock_scope)
       mock_scope.should_receive(:all).with({:include=>"sync_errors"}).and_return(@import_histories)
-      result = ImportHistory.get_by_filter(nil, "Failure", nil, nil)
+      result = ImportHistory.get_by_filter(nil, "Failed", nil, nil)
       result.count.should be 2
     end
 

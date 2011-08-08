@@ -325,3 +325,9 @@ div.help{
 div.help h3, div.help h4{
 	font-weight: bold;
 }
+
+input.error { border: 1px solid red; }
+
+label.error {
+		color: red;
+	}

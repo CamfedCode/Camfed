@@ -30,7 +30,7 @@ class ImportHistory < ActiveRecord::Base
 
     filter = lambda {|history| true }
     filter = lambda {|history| history.sync_errors.blank? }  if status=="Success"
-    filter = lambda {|history| !history.sync_errors.blank? } if status=="Failure"
+    filter = lambda {|history| !history.sync_errors.blank? } if status=="Failed"
 
     query_scope.all(:include => "sync_errors")
    .select{|history| filter.call(history) }
