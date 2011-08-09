@@ -43,7 +43,7 @@
 				element_id=params;
 				if (value == "")  return true; 
 		        if (!/Invalid|NaN/.test(new Date(value))) {
-		            return new Date(value) > new Date($$(element_id).val());
+		            return new Date(value) >= new Date($$(element_id).val());
 		        }
 	
 		        return isNaN(value) && isNaN($(element_id).val()) || (parseFloat(value) > parseFloat($$(element_id).val())); 
