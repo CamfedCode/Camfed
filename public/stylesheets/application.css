@@ -330,4 +330,10 @@ input.error { border: 1px solid red; }
 
 label.error {
 		color: red;
-	}
+}
+	
+span.survey_last_modified{
+		font-style: italic;
+		font-weight: normal;
+		color: #F7403A;
+}

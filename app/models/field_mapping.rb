@@ -3,7 +3,7 @@ class FieldMapping < ActiveRecord::Base
   PREDEFINED_VALUE = "PredefinedValue"
   LOOKUP = "Lookup"
   
-  belongs_to :object_mapping
+  belongs_to :object_mapping, :touch => true
   validates :field_name, :presence => true
   
   def deep_clone

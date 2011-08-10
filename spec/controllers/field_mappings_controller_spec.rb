@@ -31,7 +31,8 @@ describe FieldMappingsController do
       @field_mapping = FieldMapping.create(:field_name => 'a_field', :question_name => 'a_question')
       FieldMapping.should_receive(:find).with(@field_mapping.id).and_return(@field_mapping)
       object_mapping = ''
-      @field_mapping.should_receive(:object_mapping).and_return(object_mapping)
+      @field_mapping.should_receive(:object_mapping).twice.and_return(object_mapping)
+      object_mapping.should_receive(:touch)
       object_mapping.should_receive(:survey_id).and_return(1)
     end
     
@@ -49,8 +50,15 @@ describe FieldMappingsController do
       delete :destroy, :id => @field_mapping.id
       response.should redirect_to(survey_mappings_path(1))
     end
-    
+end
+
+  describe 'destroy error' do  
     it 'should set the flash error when there is an error' do
+      @field_mapping = FieldMapping.create(:field_name => 'a_field', :question_name => 'a_question')
+      FieldMapping.should_receive(:find).with(@field_mapping.id).and_return(@field_mapping)
+      object_mapping = ''
+      @field_mapping.should_receive(:object_mapping).and_return(object_mapping)
+      object_mapping.should_receive(:survey_id).and_return(1)
       @field_mapping.should_receive(:destroy).and_return(false)
       delete :destroy, :id => @field_mapping.id
       flash[:error].should_not be nil
