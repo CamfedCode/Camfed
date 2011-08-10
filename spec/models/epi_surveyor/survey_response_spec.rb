@@ -230,6 +230,10 @@ describe EpiSurveyor::SurveyResponse do
     it 'should escape answer with a quote' do
       EpiSurveyor::SurveyResponse.new.formatted_answer("h'ello").should == "'h\\'ello'"
     end
+    
+    it 'should escape answer with a back quote' do
+      EpiSurveyor::SurveyResponse.new.formatted_answer("h`ello").should == "'h`ello'"
+    end
   end
   
 end
