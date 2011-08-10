@@ -15,7 +15,12 @@ Camfed::Application.routes.draw do
       put 'update'
     end
     
-    resources :import_histories
+    resources :import_histories do
+      collection do
+        delete 'destroy_selected'
+      end
+    end
+    
     resources :questions
     resources :mappings do
       collection do
@@ -30,7 +35,11 @@ Camfed::Application.routes.draw do
     end
   end
   
-  resources :import_histories
+  resources :import_histories do
+    collection do
+      delete 'destroy_selected'
+    end
+  end
   
   resources :object_mappings do
     resources :field_mappings

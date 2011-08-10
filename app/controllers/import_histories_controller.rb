@@ -18,11 +18,16 @@ class ImportHistoriesController < AuthenticatedController
     add_crumb 'Histories', survey_import_histories_path(@import_history.survey_id)
     add_crumb 'History'
   end
-
-  def destroy
-    @import_history = ImportHistory.find(params[:id])
-    @import_history.destroy
-    flash[:notice] = 'The record was successfully deleted'
+  
+  def destroy_selected
+    begin
+      @import_histories = ImportHistory.find(params[:import_history_ids])
+      @import_histories.collect{|import_history| import_history.destroy}
+      flash[:notice] = "Successfully Deleted #{@import_histories.length} import histories."
+    rescue Exception => error
+      flash[:error] = 'Failed to Sync because of ' + error.message
+      logger.error "Error in importing histories #{@import_histories.inspect}. MESSAGE: #{error.message} AT: #{error.backtrace.join(' ')}"
+    end
     redirect_to :back
   end
 end

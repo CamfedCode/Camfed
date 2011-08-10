@@ -4,6 +4,10 @@ function selectSurveyIds(checked){
 	$$('div.survey_name input').each(function(check_box) {check_box.checked = checked })
 }
 
+function selectImportHistoryIds(checked){
+	$$('div.import_history_div input').each(function(check_box) {check_box.checked = checked })
+}
+
 function showHideHelp(){
 	$$('div.help').each(function(help) {help.toggle(); });
 }

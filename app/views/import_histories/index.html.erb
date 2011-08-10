@@ -3,14 +3,44 @@
 <%= javascript_include_tag "https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js",
                            "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js", "application" %>
 <script type="text/javascript" src="/javascripts/jquery.validate.js"></script>
+<script type="text/javascript">
+
+document.observe("dom:loaded", function() {
+		listenDeleteSelected();
+})
+
+function listenDeleteSelected()
+{
+	$$('input.delete_selected').each(function(delete_selected){
+		$(delete_selected).observe("click", function(event){
+			if(confirm('Are you sure you want to delete the selected history data?'))
+			{
+				var form = $(delete_selected).form
+				form.action = '/import_histories/destroy_selected'
+				var m = document.createElement('input');
+		    m.setAttribute('type', 'hidden');
+		    m.setAttribute('name', '_method');
+		    m.setAttribute('value', 'delete');
+		    form.appendChild(m);
+			}
+			else
+			{
+				Event.stop(event);
+			}
+		})
+	})
+}
+</script>
+
 <script language="javascript">
-    var $$=jQuery.noConflict();
-    $$(document).ready(function() {
-		$$('#start_date').datepicker({dateFormat: 'yy-mm-dd'});
-        $$('#end_date').datepicker({dateFormat: 'yy-mm-dd'});
-        $$('#start_date').datepicker('setDate', getParameterByName('start_date'));
-        $$('#end_date').datepicker('setDate', getParameterByName('end_date'));
-		$$("#filter_form").validate({
+    var j$=jQuery.noConflict();
+    j$(document).ready(function() {
+		listenDeleteSelected();
+		j$('#start_date').datepicker({dateFormat: 'yy-mm-dd'});
+        j$('#end_date').datepicker({dateFormat: 'yy-mm-dd'});
+        j$('#start_date').datepicker('setDate', getParameterByName('start_date'));
+        j$('#end_date').datepicker('setDate', getParameterByName('end_date'));
+		j$("#filter_form").validate({
 			rules: 
 			{ 'start_date': { formatDate: true },
 			  'end_date': { formatDate: true,
@@ -31,7 +61,7 @@
 			   error.insertAfter(element);
 	}});
 	
-		$$.validator.addMethod(
+		j$.validator.addMethod(
 			"formatDate",
 			function(value, element) {
 				if (value == "")  return true; 
@@ -39,14 +69,14 @@
 		    },
 		    "Format yyyy-mm-dd"
 		);
-		$$.validator.addMethod("greaterThan", function(value, element, params) {
+		j$.validator.addMethod("greaterThan", function(value, element, params) {
 				element_id=params;
 				if (value == "")  return true; 
 		        if (!/Invalid|NaN/.test(new Date(value))) {
-		            return new Date(value) >= new Date($$(element_id).val());
+		            return new Date(value) >= new Date(j$(element_id).val());
 		        }
 	
-		        return isNaN(value) && isNaN($(element_id).val()) || (parseFloat(value) > parseFloat($$(element_id).val())); 
+		        return isNaN(value) && isNaN($(element_id).val()) || (parseFloat(value) > parseFloat(j$(element_id).val())); 
 		
 		    },'Must be greater than start date');
     });
@@ -74,6 +104,10 @@
 	<span style="margin-left:22px;" id="end_date_error"></span>
 </div>
 <% end %>
+
+<%= form_tag do %>
+
+<%= render :partial => 'select_and_delete' %>
 <table class="import_histories">
   <tr>
     <% unless defined?(@survey) %>
@@ -88,16 +122,19 @@
 
   <% @import_histories.each do |import_history| %>
       <tr class="import_history <%= import_history.status.downcase %>">
+		
+		<td><div class="import_history_div"><%= check_box_tag 'import_history_ids[]', import_history.id %>
   		<% unless defined?(@survey) %>
-            <td><%= import_history.survey.name %></td>
+            <%= import_history.survey.name %>
         <% end %>
-
+		</td>
+		
         <td><%= import_history.survey_response_id %></td>
         <td><%= time import_history.created_at %></td>
 
         <td><%= import_history.status %></td>
         <td><%= link_to 'Show', import_history %></td>
-        <td><%= link_to 'Destroy', import_history, :confirm => 'Are you sure?', :method => :delete %></td>
       </tr>
   <% end %>
 </table>
+<% end %>

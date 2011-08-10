@@ -40,11 +40,10 @@ describe ImportHistoriesController do
 
   describe "DELETE destroy" do
     
-    it "destroys the requested import_history" do
+    it "destroys the requested import_histories" do
       ImportHistory.stub(:find).with("37") { mock_import_history }
-      mock_import_history.should_receive(:destroy)
       request.env["HTTP_REFERER"] = import_histories_path
-      delete :destroy, :id => "37"
+      delete :destroy_selected, :id => "37"
       response.should redirect_to import_histories_path
     end
 
