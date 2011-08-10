@@ -107,6 +107,8 @@ module EpiSurveyor
       y, m, d = answer.to_s.split('-')        
       
       escaped_answer = answer.gsub "'", "\\\\'"
+      escaped_answer = escaped_answer.gsub "`", "\\\\'"
+
       
       Date.valid_date?(y.to_i, m.to_i, d.to_i) ? answer : "'#{escaped_answer}'"
     end
