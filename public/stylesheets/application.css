@@ -230,7 +230,7 @@ table.import_histories td{
 }
 
 table.import_histories th{
-	font-weight: normal;
+	font-weight: bold;
 	text-align: left;
 }
 
