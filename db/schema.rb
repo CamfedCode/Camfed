@@ -10,100 +10,101 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110729223926) do
+ActiveRecord::Schema.define(:version => 20110815203502) do
 
   create_table "add_default_value_to_field_mapppings", :force => true do |t|
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   create_table "configurations", :force => true do |t|
-    t.string   "epi_surveyor_url"
-    t.string   "epi_surveyor_user"
-    t.string   "epi_surveyor_token"
-    t.string   "salesforce_url"
-    t.string   "salesforce_user"
-    t.string   "salesforce_token"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "salesforce_browse_url"
+    t.string    "epi_surveyor_url"
+    t.string    "epi_surveyor_user"
+    t.string    "epi_surveyor_token"
+    t.string    "salesforce_url"
+    t.string    "salesforce_user"
+    t.string    "salesforce_token"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
+    t.string    "salesforce_browse_url"
   end
 
   create_table "field_mappings", :force => true do |t|
-    t.integer  "object_mapping_id"
-    t.string   "field_name"
-    t.string   "question_name"
-    t.string   "lookup_object_name"
-    t.string   "lookup_condition"
-    t.string   "predefined_value"
-    t.string   "lookup_type"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer   "object_mapping_id"
+    t.string    "field_name"
+    t.string    "question_name"
+    t.string    "lookup_object_name"
+    t.string    "lookup_condition"
+    t.string    "predefined_value"
+    t.string    "lookup_type"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   create_table "import_histories", :force => true do |t|
-    t.integer  "survey_id",          :limit => 255
-    t.string   "survey_response_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer   "survey_id"
+    t.string    "survey_response_id"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   create_table "object_histories", :force => true do |t|
-    t.integer  "import_history_id"
-    t.string   "salesforce_id"
-    t.string   "salesforce_object"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer   "import_history_id"
+    t.string    "salesforce_id"
+    t.string    "salesforce_object"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   create_table "object_mappings", :force => true do |t|
-    t.integer  "survey_id"
-    t.string   "salesforce_object_name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer   "survey_id"
+    t.string    "salesforce_object_name"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   create_table "salesforce_objects", :force => true do |t|
-    t.string   "name"
-    t.string   "label"
-    t.boolean  "enabled"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.string    "name"
+    t.string    "label"
+    t.boolean   "enabled"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   create_table "surveys", :force => true do |t|
-    t.string   "name"
-    t.datetime "last_imported_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string   "notification_email"
+    t.string    "name"
+    t.timestamp "last_imported_at"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
+    t.string    "notification_email"
+    t.datetime  "mapping_last_modified_at"
   end
 
   create_table "sync_errors", :force => true do |t|
-    t.integer  "import_history_id"
-    t.string   "salesforce_object"
-    t.text     "raw_request",       :limit => 255
-    t.text     "raw_response",      :limit => 255
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.integer   "import_history_id"
+    t.string    "salesforce_object"
+    t.text      "raw_request"
+    t.text      "raw_response"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
   end
 
   create_table "users", :force => true do |t|
-    t.string   "email",                               :default => "",    :null => false
-    t.string   "encrypted_password",   :limit => 128, :default => "",    :null => false
-    t.string   "password_salt",                       :default => "",    :null => false
-    t.string   "reset_password_token"
-    t.string   "remember_token"
-    t.datetime "remember_created_at"
-    t.integer  "sign_in_count",                       :default => 0
-    t.datetime "current_sign_in_at"
-    t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip"
-    t.string   "last_sign_in_ip"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean  "admin",                               :default => false
-    t.boolean  "verified_by_admin"
+    t.string    "email",                               :default => "",    :null => false
+    t.string    "encrypted_password",   :limit => 128, :default => "",    :null => false
+    t.string    "password_salt",                       :default => "",    :null => false
+    t.string    "reset_password_token"
+    t.string    "remember_token"
+    t.timestamp "remember_created_at"
+    t.integer   "sign_in_count",                       :default => 0
+    t.timestamp "current_sign_in_at"
+    t.timestamp "last_sign_in_at"
+    t.string    "current_sign_in_ip"
+    t.string    "last_sign_in_ip"
+    t.timestamp "created_at"
+    t.timestamp "updated_at"
+    t.boolean   "admin",                               :default => false
+    t.boolean   "verified_by_admin"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
