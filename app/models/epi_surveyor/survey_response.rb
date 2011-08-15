@@ -104,7 +104,7 @@ module EpiSurveyor
     
     #should not quote if its a date argument
     def formatted_answer answer
-      y, m, d = answer.to_s.split('-')        
+        y, m, d = answer.to_s.split('-')
       
       escaped_answer = answer.gsub "'", "\\\\'"
       escaped_answer = escaped_answer.gsub "`", "\\\\'"

@@ -1,7 +1,14 @@
 class SurveysController < AuthenticatedController
   
   def index
-    @surveys = EpiSurveyor::Survey.all
+    #start_date=params[:start_date]
+    #end_date=params[:end_date]
+    
+    #if start_date.nil? and end_date.nil?
+      @surveys = EpiSurveyor::Survey.all
+    #else
+     # @surveys = EpiSurveyor::Survey.get_by_filter(start_date, end_date)
+    #end
     add_crumb 'Surveys'
   end
   

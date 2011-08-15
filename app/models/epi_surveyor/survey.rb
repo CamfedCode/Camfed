@@ -105,5 +105,6 @@ module EpiSurveyor
 
       all_histories
     end
+    
   end
 end

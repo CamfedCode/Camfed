@@ -1,0 +1,155 @@
+<%= stylesheet_link_tag "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/themes/redmond/jquery-ui.css", "application" %>
+<%= javascript_include_tag "https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js",
+                           "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js", "application" %>
+<script type="text/javascript" src="/javascripts/jquery.validate.js"></script>
+<script type="text/javascript">
+
+document.observe("dom:loaded", function() {
+		listenImportSelected();
+		listenDeleteSelected();
+})
+
+function listenImportSelected()
+{
+	$$('input.import_selected').each(function(import_selected){
+		$(import_selected).observe("click", function(){
+			$(import_selected).form.action = '/surveys/import_selected'
+		})
+	})
+}
+
+function listenDeleteSelected()
+{
+	$$('input.delete_selected').each(function(delete_selected){
+		$(delete_selected).observe("click", function(event){
+			if(confirm('Are you sure you want to delete the selected surveys will all their data?'))
+			{
+				var form = $(delete_selected).form
+				form.action = '/surveys/destroy_selected'
+				var m = document.createElement('input');
+		    m.setAttribute('type', 'hidden');
+		    m.setAttribute('name', '_method');
+		    m.setAttribute('value', 'delete');
+		    form.appendChild(m);
+			}
+			else
+			{
+				Event.stop(event);
+			}
+		})
+	})
+}
+</script>
+
+<script language="javascript">
+    var j$=jQuery.noConflict();
+    j$(document).ready(function() {
+		listenDeleteSelected();
+		j$('#start_date').datepicker({dateFormat: 'yy-mm-dd'});
+        j$('#end_date').datepicker({dateFormat: 'yy-mm-dd'});
+        j$('#start_date').datepicker('setDate', getParameterByName('start_date'));
+        j$('#end_date').datepicker('setDate', getParameterByName('end_date'));
+		j$("#filter_form").validate({
+			rules: 
+			{ 'start_date': { formatDate: true },
+			  'end_date': { formatDate: true,
+							greaterThan: "#start_date"
+						  } 
+			},
+			errorPlacement: function(error, element) {
+		    
+		 	if (element.attr("name") == "start_date")
+			{
+				error.insertAfter("#start_date_error");
+			}
+			else if (element.attr("name") == "end_date")
+			{
+				error.insertAfter("#end_date_error");
+			}
+			else 
+			   error.insertAfter(element);
+	}});
+	
+		j$.validator.addMethod(
+			"formatDate",
+			function(value, element) {
+				if (value == "")  return true; 
+		        return value.match(/^\d\d\d\d?\-\d\d?\-\d\d$/);
+		    },
+		    "Format yyyy-mm-dd"
+		);
+		j$.validator.addMethod("greaterThan", function(value, element, params) {
+				element_id=params;
+				if (value == "")  return true; 
+		        if (!/Invalid|NaN/.test(new Date(value))) {
+		            return new Date(value) >= new Date(j$(element_id).val());
+		        }
+	
+		        return isNaN(value) && isNaN($(element_id).val()) || (parseFloat(value) > parseFloat(j$(element_id).val())); 
+		
+		    },'Must be greater than start date');
+    });
+</script>
+<% title 'Surveys' %>
+
+
+
+<% content_for :middle_right do %>
+	<div class="search_form">
+		<%= form_tag search_surveys_path, :method => :get do %>
+			<input type="search" name="query" value="<%= params[:query] %>" placeholder="Search Survey" size="20"/>
+			<%= submit_tag 'Search' %>
+		<% end %>
+	</div>
+<% end %>
+
+<%= form_tag("", :method => "get", :id => "filter_form") do %>
+
+<table><tr>
+	<td>Last modified date:</td>
+	<td><%= text_field_tag("start_date") %></td>
+	<td><%= text_field_tag("end_date") %></td>
+	<td><%= submit_tag("Filter") %></td>
+</tr><tr>
+		<td></td>
+		<td><div id="start_date_error"/></td>
+		<td><div id="end_date_error"/></td>
+		<td></td>
+	</tr>
+</table>
+	<div><span style="display:block;margin-left:195px;" id="start_date_error"></span>
+	<span style="margin-left:22px;" id="end_date_error"></span>
+</div>
+<% end %>
+
+<%= form_tag  do %>
+
+	<%= render :partial => 'select_and_import' %>
+	
+	<span class="sync_with_epi_surveyor">
+		<%= link_to 'Refresh Surveys List from EpiSurveyor', sync_with_epi_surveyor_surveys_path, :method => :post %>
+	</span>
+	
+	<ol class="surveys">
+	<% @surveys.sort_by{|survey| survey.name}.each do |survey|%>
+		<li>
+			<div class="survey">
+				<div class="survey_name">
+					<%= check_box_tag 'survey_ids[]', survey.id %>
+					<span><%= survey.name %></span> | 
+					<%= "Imported #{distance_of_time_in_words(Time.now, survey.last_imported_at)} ago" if survey.last_imported_at%> | 
+					<span class="survey_last_modified"><%= "Mapping changed #{distance_of_time_in_words(Time.now, survey.updated_at)} ago" if survey.updated_at%></span>
+				</div>
+				<div class="actions">					
+					<%= link_to 'Mappings', survey_mappings_path(survey.id) %> |
+					<%= link_to 'History', survey_import_histories_path(survey.id) %> |
+					<%= link_to 'Questions', survey_questions_path(survey.id) %> |
+					<%= link_to 'Notification', edit_survey_path(survey.id) %>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</li>
+	<%end%>
+	</ol>
+	<%= render :partial => 'select_and_import' %>
+<% end %>

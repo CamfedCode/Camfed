@@ -15,6 +15,15 @@ describe SurveysController do
       assigns[:surveys].should == surveys
     end
     
+    it "should get surveys filtered by the last modified date" do
+      pending
+      surveys = []
+      EpiSurveyor::Survey.should_receive(:get_by_filter).with("2011/07/20", "2011/07/21").and_return(surveys)
+      get 'index'      
+      response.should be_success
+      assigns[:surveys].should == surveys
+    end
+    
   end
   
   describe "GET 'edit'" do
