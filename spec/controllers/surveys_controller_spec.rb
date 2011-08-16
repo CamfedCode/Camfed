@@ -15,15 +15,23 @@ describe SurveysController do
       assigns[:surveys].should == surveys
     end
     
-    it "should get surveys filtered by the last modified date" do
-      pending
+    it "should get all surveys whose mapping was modified between the specified start and end dates" do
       surveys = []
-      EpiSurveyor::Survey.should_receive(:get_by_filter).with("2011/07/20", "2011/07/21").and_return(surveys)
-      get 'index'      
+      start_date = "2011/07/01"
+      end_date = "2011/07/15".to_time.advance(:days => 1).to_date
+      EpiSurveyor::Survey.should_receive(:where).with("surveys.mapping_last_modified_at between ? AND ?", start_date, end_date).and_return([])
+      get 'index', :start_date => '2011/07/01', :end_date => '2011/07/15'     
       response.should be_success
       assigns[:surveys].should == surveys
     end
     
+    it "should get all surveys if only the start date is specified for the mapping last modified date filter" do
+      surveys = []
+      EpiSurveyor::Survey.should_receive(:all).and_return(surveys)
+      get 'index', :start_date => '2011/07/01', :end_date => ""    
+      response.should be_success
+      assigns[:surveys].should == surveys
+    end
   end
   
   describe "GET 'edit'" do
