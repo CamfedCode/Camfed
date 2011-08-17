@@ -44,6 +44,7 @@ function listenDeleteSelected()
 <script language="javascript">
     var j$=jQuery.noConflict();
     j$(document).ready(function() {
+		listenImportSelected();
 		listenDeleteSelected();
 		j$('#start_date').datepicker({dateFormat: 'yy-mm-dd'});
         j$('#end_date').datepicker({dateFormat: 'yy-mm-dd'});
@@ -89,7 +90,7 @@ function listenDeleteSelected()
 		
 		    },'Must be greater than start date');
     });
-</script>
+</script> 
 <% title 'Surveys' %>
 
 
