@@ -1,1 +1,2 @@
-script: "rake db:migrate && rake"
+rvm: 1.9.2
+script: "bundle exec rake db:migrate spec"
