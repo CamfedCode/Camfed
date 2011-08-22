@@ -1,3 +1,6 @@
+## Build Status
+![Current Build Status](http://travis-ci.org/CamfedCode/Camfed.png)
+
 ## Environment Setup
 
 Install ruby 1.9.2-p180
