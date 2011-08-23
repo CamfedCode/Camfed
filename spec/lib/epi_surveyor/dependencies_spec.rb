@@ -1,6 +1,11 @@
 require "spec_helper"
 
 describe EpiSurveyor::Dependencies do
+  
+  before(:each) do
+    SampleEpiSurveyorClass.auth = nil
+  end
+
   describe 'auth' do
     it 'should get the values from configuration' do
       configuration = Configuration.new(:epi_surveyor_user => 'a', :epi_surveyor_token => 'b')
