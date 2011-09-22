@@ -77,17 +77,16 @@ class SurveysController < AuthenticatedController
   end
   
   def set_flash import_histories, surveys
-    survey_names = surveys.map(&:name).join(', ')
     if import_histories.length == 0
-      flash[:notice] = "There was no new responses to import for #{survey_names}"
+      flash[:notice] = "There was no new responses to import for selected surveys."
       return
     end
 
     errors_count = errors_count(import_histories)
     if errors_count > 0
-      flash[:error] = "Failed to import #{errors_count} out of #{import_histories.length} new response(s) to #{survey_names}"
+      flash[:error] = "Failed to import #{errors_count} out of #{import_histories.length} new response(s) to selected surveys."
     else
-      flash[:notice] = "Successfully imported #{import_histories.length} new response(s) to #{survey_names}"  
+      flash[:notice] = "Successfully imported #{import_histories.length} new response(s) to selected surveys."  
     end
     
   end

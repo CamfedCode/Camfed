@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(:version => 20110729223926) do
   end
 
   create_table "import_histories", :force => true do |t|
-    t.integer  "survey_id",          :limit => 255
+    t.integer  "survey_id"
     t.string   "survey_response_id"
     t.datetime "created_at"
     t.datetime "updated_at"
