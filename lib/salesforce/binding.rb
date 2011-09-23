@@ -6,8 +6,12 @@ module Salesforce
         
         user_name = Configuration.instance.salesforce_user
         salesforce_token = Configuration.instance.salesforce_token
-        
-        @@binding.login user_name, salesforce_token
+        begin
+          @@binding.login user_name, salesforce_token
+        rescue Exception=> e
+          Rails.logger.error "Could not log in with #{user_name} and #{salesforce_token}"
+          raise e
+        end
       end
       @@binding
     end
