@@ -71,7 +71,7 @@ module Salesforce
 
           ## this is important
           ## FAQ:"To prevent SOQL injection, use an escapeSingleQuotes method."
-          field_values[field] = the_value.escape_single_quotes if the_value.include?("'")
+          ##field_values[field] = the_value.escape_single_quotes if the_value.include?("'")
         end
       end
             
@@ -96,11 +96,11 @@ module Salesforce
       def all_from_salesforce field, object_name, conditions 
         query = "SELECT #{field.to_s} FROM #{object_name.to_s} WHERE #{conditions}"
 
-        Rails.logger.debug "Query= #{query}"
+        Rails.logger.info "  All From Salesforce Query: #{query}"
         
         answer = Salesforce::Binding.instance.query(:searchString => query)
         
-        Rails.logger.debug "Answer=#{answer}"
+        Rails.logger.info "  All From Salesforce Answer: #{answer}"
         
         records = answer.queryResponse.result.records
         

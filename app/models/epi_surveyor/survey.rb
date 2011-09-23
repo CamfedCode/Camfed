@@ -93,7 +93,7 @@ module EpiSurveyor
       recipient_histories = {}
       
       all.each do |survey|
-        Rails.logger.debug("Syncing survey ID #{survey.id} named #{survey.name}")
+        Rails.logger.info("Syncing survey ID #{survey.id} named #{survey.name}")
         sync_results = survey.sync!
         all_histories += sync_results
         recipient_histories[survey.notification_email] ||= []

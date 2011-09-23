@@ -83,9 +83,9 @@ module EpiSurveyor
       condition = replace_with_answers field_mapping.lookup_condition
       Salesforce::Base.first_from_salesforce(:Id, field_mapping.lookup_object_name, condition)
     end
-    
+
     def replace_with_answers condition_string
-      
+      Rails.logger.info("Input Condition String: #{condition_string}")
       question_nodes = condition_string.scan(/\<[^\>]*\>/)
       
       replaced_condition_string = condition_string.clone
@@ -94,11 +94,11 @@ module EpiSurveyor
         question_name = question_node[1..-2]
         
         cleaned_query = formatted_answer(self[question_name]).sub("'", "TAKE'")
-        Rails.logger.debug "cleaned_query=[#{cleaned_query}]"
+        Rails.logger.info "cleaned_query=[#{cleaned_query}]"
         
         replaced_condition_string.gsub!(/(\'?)#{question_node}(\'?)/, formatted_answer(self[question_name]))
       end
-      
+      Rails.logger.info("Replaced Condition String: #{replaced_condition_string}")
       replaced_condition_string
     end
     
@@ -108,8 +108,8 @@ module EpiSurveyor
       
       escaped_answer = answer.gsub "'", "\\\\'"
       escaped_answer = escaped_answer.gsub "`", "\\\\'"
-
       
+
       Date.valid_date?(y.to_i, m.to_i, d.to_i) ? answer : "'#{escaped_answer}'"
     end
   
