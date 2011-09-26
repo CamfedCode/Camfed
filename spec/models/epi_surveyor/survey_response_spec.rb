@@ -158,7 +158,9 @@ describe EpiSurveyor::SurveyResponse do
   describe 'replace_with_answers' do
     before(:each) do
       @survey_response = EpiSurveyor::SurveyResponse.new
-      @survey_response.question_answers = {'a_question' => 'an answer', 'b_question' => 'b answer'}
+      @survey_response.question_answers = {'a_question' => 'an answer',
+                                           'b_question' => 'b answer',
+                                           'c_question' => "c'answer"}
     end
     it 'should not replace if there is no token to replace' do
       @survey_response.replace_with_answers('').should == ''
@@ -177,7 +179,25 @@ describe EpiSurveyor::SurveyResponse do
       @survey_response.replace_with_answers(condition_string).should == "name='an answer' and email='b answer'"
       condition_string.should == "name=<a_question> and email=<b_question>"
     end
-    
+
+    it 'should handle strings with existing clauses' do
+      condition_string = "Name=<a_question> AND District__c='a1BC0000000QBhv'"
+      @survey_response.replace_with_answers(condition_string).should == "Name='an answer' AND District__c='a1BC0000000QBhv'"
+    end
+
+    it 'should handle apostrophes in the answers' do
+      condition_string = "Name=<c_question> AND District__c='a1BC0000000QBhv'"
+      @survey_response.replace_with_answers(condition_string).should == "Name='c\\'answer' AND District__c='a1BC0000000QBhv'"
+    end
+
+    it 'should handle apostrophes even with many answers' do
+      condition_string = "School=<a_question> AND Name=<c_question> AND District__c='a1BC0000000QBhv'"
+      @survey_response.replace_with_answers(condition_string).should == "School='an answer' AND Name='c\\'answer' AND District__c='a1BC0000000QBhv'"
+    end
+
+    it 'should handle questions nested in answers' do
+      # not sure this is a requirement yet
+    end
   end
   
   describe 'lookup' do
