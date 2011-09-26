@@ -85,19 +85,13 @@ module EpiSurveyor
     end
 
     def replace_with_answers condition_string
-      Rails.logger.info("Input Condition String: #{condition_string}")
+      Rails.logger.debug("Input Condition String: #{condition_string}")
+
       replaced_condition_string = condition_string.gsub(/\<([^\>]+)\>/) do |match|
         formatted_answer(question_answers[$1])
       end
-      # no idea what the code below is supposed to do so I replaced it with the above -KR
-#      question_nodes = condition_string.scan(/\<[^\>]*\>/)
-#      replaced_condition_string = condition_string.clone
-#      question_nodes.each do |question_node|
-#        question_name = question_node[1..-2]
-#        cleaned_query = formatted_answer(self[question_name]).sub("'", "TAKE'")
-#        replaced_condition_string.gsub!(/(\'?)#{question_node}(\'?)/, formatted_answer(self[question_name]))
-#      end
-      Rails.logger.info("Replaced Condition String: #{replaced_condition_string}")
+
+      Rails.logger.debug("Replaced Condition String: #{replaced_condition_string}")
       replaced_condition_string
     end
     

@@ -6,7 +6,7 @@ module Salesforce
   
     def replace_field_values_with_id
       self[:School__c] = self.class.first_from_salesforce(:Id, :School__c, "name='#{self[:School__c]}'")      
-      self[:RecordTypeId] = self.class.first_from_salesforce(:Id, :RecordType, "name='#{self[:RecordTypeId]}'")
+      self[:RecordTypeId] = self.class.first_from_salesforce(:Id, :RecordType, "name='#{self[:RecordTypeId]}'").gsub("'","")
     end
     
     def sync!
