@@ -100,7 +100,7 @@ module EpiSurveyor
       end
       
       recipient_histories.each_pair do |to_email, histories|
-        Notifier.sync_email(histories, to_email).deliver        
+        Notifier.sync_email(histories, to_email).deliver unless to_email.blank?
       end
 
       all_histories
