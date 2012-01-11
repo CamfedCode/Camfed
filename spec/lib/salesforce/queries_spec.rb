@@ -190,9 +190,9 @@ describe Salesforce::Queries do
       @sf_object[:CPP_placing].should == 'false'
     end
 
-    it 'should change N/A to false' do
+    it 'should retain values with N/A as is' do
       @sf_object.sanitize_values!
-      @sf_object[:TM_c].should == nil
+      @sf_object[:TM_c].should == ' N/A '
     end
 
     it 'should replace | with ;' do
