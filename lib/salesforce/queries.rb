@@ -66,7 +66,6 @@ module Salesforce
           field_values[field] = nil if the_value == '~'
           field_values[field] = 'true' if the_value.downcase == 'yes'
           field_values[field] = 'false' if the_value.downcase == 'no'
-          field_values[field] = nil if the_value.downcase == 'n/a'        
           field_values[field] = the_value.gsub(/\|/, ';') if the_value.include?("|")
 
           ## this is important
