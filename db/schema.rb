@@ -42,7 +42,7 @@ ActiveRecord::Schema.define(:version => 20110729223926) do
   end
 
   create_table "import_histories", :force => true do |t|
-    t.integer  "survey_id"
+    t.integer  "survey_id",          :limit => 255
     t.string   "survey_response_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -83,8 +83,8 @@ ActiveRecord::Schema.define(:version => 20110729223926) do
   create_table "sync_errors", :force => true do |t|
     t.integer  "import_history_id"
     t.string   "salesforce_object"
-    t.text     "raw_request"
-    t.text     "raw_response"
+    t.text     "raw_request",       :limit => 255
+    t.text     "raw_response",      :limit => 255
     t.datetime "created_at"
     t.datetime "updated_at"
   end
