@@ -178,6 +178,7 @@ describe Salesforce::Queries do
       @sf_object[:CPP_placing] = ' No '
       @sf_object[:TM_c] = ' N/A '
       @sf_object[:Docs] = 'A|B'
+      @sf_object[:CPP_maybe] = ' Yes '
     end
     
     it 'should change Yes to true' do
@@ -188,6 +189,11 @@ describe Salesforce::Queries do
     it 'should change No to false' do
       @sf_object.sanitize_values!
       @sf_object[:CPP_placing].should == 'false'
+    end
+
+    it 'should not change Yes to false for maybe fields' do
+      @sf_object.sanitize_values!
+      @sf_object[:CPP_maybe].should == ' Yes '
     end
 
     it 'should retain values with N/A as is' do

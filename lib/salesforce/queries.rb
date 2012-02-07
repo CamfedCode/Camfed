@@ -64,8 +64,9 @@ module Salesforce
           #     Q2: What amount was Received? A: ~, since Q1 was No
           
           field_values[field] = nil if the_value == '~'
-          field_values[field] = 'true' if the_value.downcase == 'yes'
-          field_values[field] = 'false' if the_value.downcase == 'no'
+          field_values[field] = 'true' if the_value.downcase == 'yes' unless /maybe/=~ field.to_s
+          field_values[field] = 'false' if the_value.downcase == 'no' unless /maybe/=~ field.to_s
+
           field_values[field] = the_value.gsub(/\|/, ';') if the_value.include?("|")
 
           ## this is important
