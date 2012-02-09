@@ -173,14 +173,22 @@ describe Salesforce::Queries do
   describe 'sanitize_values!' do
     
     before(:each) do
+      REDIS.select(8)
+      REDIS.flushdb
+      REDIS.set("pomme", "apple")
       @sf_object = SampleSalesforceObject.new
       @sf_object[:CPP] = ' Yes '
       @sf_object[:CPP_placing] = ' No '
       @sf_object[:TM_c] = ' N/A '
       @sf_object[:Docs] = 'A|B'
       @sf_object[:CPP_maybe] = ' Yes '
+      @sf_object[:Favorite_fruit] = 'pomme'
     end
     
+    after(:each) do
+      REDIS.flushdb
+    end
+
     it 'should change Yes to true' do
       @sf_object.sanitize_values!
       @sf_object[:CPP].should == 'true'
@@ -223,6 +231,15 @@ describe Salesforce::Queries do
       @sf_object[:Amount].should be nil
     end
     
+    it 'should call englishify' do
+      @sf_object.should_receive(:englishify).at_least(:once)
+      @sf_object.sanitize_values!
+    end
+
+    it 'should englishify values' do
+      @sf_object.sanitize_values!
+      @sf_object[:Favorite_fruit].should == "apple"
+    end
   end
   
 end

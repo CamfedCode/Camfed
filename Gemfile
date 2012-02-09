@@ -6,6 +6,7 @@ gem 'rforce'
 gem 'devise', '~> 1.1.7'
 gem 'httparty'
 gem 'crummy'
+gem 'redis'
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
 

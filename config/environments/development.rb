@@ -36,5 +36,9 @@ Camfed::Application.configure do
     :authentication       => 'plain',
     :enable_starttls_auto => true  }
   
+
+  #redis
+  ENV["REDISTOGO_URL"] = 'redis://localhost:6379' 
+  
 end
 

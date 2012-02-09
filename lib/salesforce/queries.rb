@@ -56,6 +56,7 @@ module Salesforce
 
         field_values.each_pair do |field, value|
           next if value.nil?
+          field_values[field] = englishify(value, value)
           the_value = value.to_s.strip
           
           #Skip EpiSurveyor uses "~" when a previous answer invalidates the question
@@ -75,6 +76,10 @@ module Salesforce
         end
       end
             
+      def englishify field, value
+        value = REDIS.get("#{field}") if REDIS.get(field)
+        value
+      end
       def raise_if_fault response, raw_request
         if response.try(:Fault).try(:faultstring)
           sync_error = SyncError.new(:raw_request => raw_request, 
