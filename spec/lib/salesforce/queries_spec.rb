@@ -173,6 +173,12 @@ describe Salesforce::Queries do
   describe 'sanitize_values!' do
     
     before(:each) do
+      REDIS.select(8)
+      REDIS.flushdb
+      REDIS.set("il ay dize air", "it is ten o'clock")
+      REDIS.set("Rouge", "Red")
+      REDIS.set("Bleu", "Blue")
+      REDIS.set("Vert", "Green")
       @sf_object = SampleSalesforceObject.new
       @sf_object[:CPP] = ' Yes '
       @sf_object[:CPP_placing] = ' No '
@@ -183,6 +189,9 @@ describe Salesforce::Queries do
       @sf_object[:Pick_three] = 'Rouge|Bleu|Vert'
     end
     
+    after(:each) do
+      REDIS.flushdb
+    end
     it 'should change Yes to true' do
       @sf_object.sanitize_values!
       @sf_object[:CPP].should == 'true'
