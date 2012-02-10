@@ -43,7 +43,6 @@ module EpiSurveyor
       responses.each do |response|
         begin
           import_history = response.sync!(mappings)
-          puts import_history.inspect
           import_histories << import_history if import_history.present?
         rescue Exception => error
           import_history = ImportHistory.new(:survey_id => self.id, :survey_response_id => response.id)

@@ -77,7 +77,7 @@ module Salesforce
       end
             
       def englishify field, value
-        value = REDIS.get("#{field}") if REDIS.get(field)
+        value = REDIS.get(field) if REDIS.get(field)
         value
       end
       def raise_if_fault response, raw_request
