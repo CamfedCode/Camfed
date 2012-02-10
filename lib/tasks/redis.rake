@@ -25,7 +25,7 @@ namespace :redis do
   desc 'sets up the test redis db'
   task :test_setup => [:flush, :load_test_db] 
   desc 'loads the qa database'
-  task :load_qa_db do
+  task :load_qa_db => :development do
     qa_data = YAML.load_file("db/redis/initial_qa_data.yml")
     qa_data.each{|k,v| REDIS.set(k,v)}
   end
