@@ -179,7 +179,8 @@ describe Salesforce::Queries do
       @sf_object[:TM_c] = ' N/A '
       @sf_object[:Docs] = 'A|B'
       @sf_object[:CPP_maybe] = ' Yes '
-      @sf_object[:What_time] = 'kell air et il'
+      @sf_object[:What_time] = 'il ay dize air'
+      @sf_object[:Pick_three] = 'Rouge|Bleu|Vert'
     end
     
     it 'should change Yes to true' do
@@ -231,7 +232,8 @@ describe Salesforce::Queries do
 
     it 'should englishify values' do
       @sf_object.sanitize_values!
-      @sf_object[:What_time].should == "what time is it"
+      @sf_object[:What_time].should == "it is ten o'clock"
+      @sf_object[:Pick_three].should == 'Red;Blue;Green'
     end
   end
   

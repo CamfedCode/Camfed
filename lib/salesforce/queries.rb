@@ -77,9 +77,16 @@ module Salesforce
       end
             
       def englishify field, value
+        if value.to_s.include?("|") then
+          find_array = value.split("|")
+          find_array.each do |val|
+            value.gsub!(val, englishify(val, val))
+          end
+        end
         value = REDIS.get(field) if REDIS.get(field)
         value
       end
+
       def raise_if_fault response, raw_request
         if response.try(:Fault).try(:faultstring)
           sync_error = SyncError.new(:raw_request => raw_request, 
