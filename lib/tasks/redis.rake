@@ -29,4 +29,10 @@ namespace :redis do
     qa_data = YAML.load_file("db/redis/initial_qa_data.yml")
     qa_data.each{|k,v| REDIS.set(k,v)}
   end
+
+  desc 'load production database'
+  task :load_production_db => :environment do
+    prod_data = YAML.load_file("db/redis/production_data.yml")
+    prod_data.each{|k,v| REDIS.set(k,v)}
+  end
 end
