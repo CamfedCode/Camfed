@@ -9,6 +9,7 @@ gem 'crummy'
 gem 'redis'
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
+gem 'heroku'
 
 group :test, :development do
   gem "rspec-rails", "~> 2.4"
