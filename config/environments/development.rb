@@ -38,7 +38,7 @@ Camfed::Application.configure do
   
 
   #redis
-  ENV["REDISTOGO_URL"] = 'redis://redistogo:141b7de5dc5bc8df970ef5d2be280ecf@stingfish.redistogo.com:9968' 
+  ENV["REDISTOGO_URL"] = 'redis://localhost:6379'
   
 end
 
