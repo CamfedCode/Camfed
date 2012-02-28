@@ -17,3 +17,7 @@ group :test, :development do
 	gem "shoulda"
 	gem "taps"
 end
+
+group :production do
+  gem 'pg'
+end
