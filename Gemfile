@@ -8,11 +8,11 @@ gem 'httparty'
 gem 'crummy'
 gem 'redis'
 
-gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'heroku'
 gem 'best_in_place'
 
 group :test, :development do
+  gem 'sqlite3-ruby', :require => 'sqlite3'
   gem "rspec-rails", "~> 2.4"
 	gem "shoulda"
 	gem "taps"
