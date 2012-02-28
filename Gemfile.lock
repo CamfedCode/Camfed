@@ -59,6 +59,7 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.16)
     oauth (0.4.5)
+    pg (0.12.2)
     polyglot (0.3.1)
     rack (1.2.3)
     rack-mount (0.6.14)
@@ -131,6 +132,7 @@ DEPENDENCIES
   devise (~> 1.1.7)
   heroku
   httparty
+  pg
   rails (~> 3.0.4)
   redis
   rforce
