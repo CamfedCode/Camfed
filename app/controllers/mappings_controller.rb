@@ -2,10 +2,11 @@ class MappingsController < AuthenticatedController
 
   def index
     @survey = EpiSurveyor::Survey.find(params[:survey_id])
+    @questions_for_select = @survey.questions.collect{|question| [question.name, question.prompt]}
     add_crumb 'Surveys', surveys_path
     add_crumb 'Mappings'
   end
-  
+
   def source
     @survey  = EpiSurveyor::Survey.find(params[:survey_id])
     @surveys = EpiSurveyor::Survey.all.reject{|survey| survey == @survey}.sort_by{|survey| survey.name }

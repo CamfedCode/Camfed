@@ -14,6 +14,7 @@ describe MappingsController do
     it 'should populate survey' do
       survey = EpiSurveyor::Survey.new
       EpiSurveyor::Survey.should_receive(:find).with("1").and_return(survey)
+      survey.should_receive(:questions).and_return []
       get :index, :survey_id => "1"
       response.should be_success
       assigns[:survey].should == survey
