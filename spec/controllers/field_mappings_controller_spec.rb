@@ -64,5 +64,36 @@ end
       flash[:error].should_not be nil
     end
   end
-  
+
+  describe 'update' do
+    let(:field_mapping) { stub_model FieldMapping }
+
+    before do
+      FieldMapping.stub!(:find).and_return field_mapping
+    end
+
+    it 'should find existing mapping' do
+      FieldMapping.should_receive(:find).with 1
+      post :update, id: 1, format: :json
+    end
+
+    it 'should update mapping from params' do
+      field_mapping.should_receive(:update_attributes).with({'key' => 'value'})
+      post :update, id: 1, format: :json, field_mapping: {'key' => 'value'}
+    end
+
+    it 'should return unprocessable_entity if invalid update' do
+      field_mapping.stub!(:update_attributes).and_return false
+      post :update, id: 1, format: :json, field_mapping: {'key' => 'value'}
+      response.status.should == 422
+    end
+
+    it 'should render errrs if invalid update' do
+      errors = {'field' => 'error'}
+      field_mapping.stub!(:update_attributes).and_return false
+      field_mapping.stub!(:errors).and_return errors
+      post :update, id: 1, format: :json, field_mapping: {'key' => 'value'}
+      response.body.should == errors.to_json
+    end
+  end
 end

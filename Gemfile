@@ -10,6 +10,7 @@ gem 'redis'
 
 gem 'sqlite3-ruby', :require => 'sqlite3'
 gem 'heroku'
+gem 'best_in_place'
 
 group :test, :development do
   gem "rspec-rails", "~> 2.4"

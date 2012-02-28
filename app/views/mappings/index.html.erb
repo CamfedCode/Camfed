@@ -1,3 +1,6 @@
+<%= javascript_include_tag 'https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js',
+'jquery.purr', 'best_in_place', 'bip' %>
+
 <%= title "Listing mappings for #{@survey.name}", true %>
 
 <%= render :partial => 'edit_links' %>
@@ -22,9 +25,9 @@
 							<strong>
 								<%= field_mapping.field_name %> - 
 								<% if field_mapping.lookup? %>
-									<%= field_mapping.lookup_object_name %> WHERE <%=field_mapping.lookup_condition %> 
+									<%= field_mapping.lookup_object_name %> WHERE <%=field_mapping.lookup_condition %>
 								<% elsif field_mapping.predefined_value? %>
-									<%= field_mapping.predefined_value %>
+									<%= best_in_place field_mapping, :predefined_value, :type => :input %>
 								<% elsif field_mapping.question? %>
 									<%= field_mapping.question_name %>
 								<% end %>
