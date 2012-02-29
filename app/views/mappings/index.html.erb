@@ -30,11 +30,11 @@
 					<div class="field_name"><%= field_mapping.field_name %></div>
 					<div class="field_name">
 								<% if field_mapping.lookup? %>
-									<%= field_mapping.lookup_object_name %> WHERE <%=field_mapping.lookup_condition %>
+									<%= field_mapping.lookup_object_name %> WHERE <%= best_in_place field_mapping, :lookup_condition, type: :input %>
 								<% elsif field_mapping.predefined_value? %>
-									<%= best_in_place field_mapping, :predefined_value, :type => :input %>
+									<%= best_in_place field_mapping, :predefined_value, type: :input %>
 								<% elsif field_mapping.question? %>
-								  <%= best_in_place field_mapping, :question_name, :type => :select, :collection => @questions_for_select %>
+								  <%= best_in_place field_mapping, :question_name, type: :select, collection: @questions_for_select %>
 								<% end %>
 					</div>
 					<div class="field_name">Changed <%= distance_of_time_in_words(Time.now, field_mapping.updated_at) %> ago</div>
