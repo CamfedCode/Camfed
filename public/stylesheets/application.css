@@ -338,6 +338,23 @@ span.survey_last_modified{
 		color: #F7403A;
 }
 
+.best_in_place {
+  padding: .1m;
+  cursor: hand;
+  cursor: pointer;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  border-radius: 5px;
+  background-color: #bbb;
+}
+
+.best_in_place:hover, #user_account .do_hover {
+  background-color: #aaa;
+}
+
 .purr {
   position: fixed;
   width: 324px;
