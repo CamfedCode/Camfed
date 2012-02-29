@@ -1,9 +1,12 @@
-<%= javascript_include_tag \
-'https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js',
-'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js',
-'jquery.purr',
-'best_in_place',
-'bip' %>
+<% content_for :javascripts do %>
+	<%= javascript_include_tag \
+	'https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js',
+	'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js',
+	'jquery.rails',
+	'jquery.purr',
+	'best_in_place',
+	'bip' %>
+<% end %>
 
 <%= title "Listing mappings for #{@survey.name}", true %>
 
