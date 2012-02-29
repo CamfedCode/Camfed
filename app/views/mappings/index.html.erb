@@ -30,9 +30,11 @@
 					<div class="field_name"><%= field_mapping.field_name %></div>
 					<div class="field_name">
 						<% if field_mapping.lookup? %>
-							<%= field_mapping.lookup_object_name %> WHERE <%= best_in_place field_mapping, :lookup_condition, type: :input, sanitize: false %>
+							<%= best_in_place field_mapping, :lookup_object_name, type: :select, collection: @sfobjects_for_select %>
+							WHERE
+							<%= best_in_place field_mapping, :lookup_condition %>
 						<% elsif field_mapping.predefined_value? %>
-							<%= best_in_place field_mapping, :predefined_value, type: :input %>
+							<%= best_in_place field_mapping, :predefined_value %>
 						<% elsif field_mapping.question? %>
 						  <%= best_in_place field_mapping, :question_name, type: :select, collection: @questions_for_select %>
 						<% end %>

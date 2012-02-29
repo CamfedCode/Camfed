@@ -2,7 +2,12 @@ class MappingsController < AuthenticatedController
 
   def index
     @survey = EpiSurveyor::Survey.find(params[:survey_id])
-    @questions_for_select = @survey.questions.collect{|question| [question.name, question.prompt]}
+    @questions_for_select = @survey.questions.map do |question|
+      [question.name, question.prompt]
+    end
+    @sfobjects_for_select = Salesforce::Base.where(:enabled => true).map do |sfobject|
+      [sfobject.name, sfobject.label]
+    end
     add_crumb 'Surveys', surveys_path
     add_crumb 'Mappings'
   end
