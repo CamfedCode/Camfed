@@ -168,7 +168,7 @@ BestInPlaceEditor.prototype = {
     csrf_param = $('meta[name=csrf-param]').attr('content');
 
     var data = "_method=put";
-    data += "&" + this.objectName + '[' + this.attributeName + ']=' + encodeURIComponent(this.getValue());
+    data += "&" + this.objectName + '[' + this.attributeName + ']=' + encodeURIComponent(this.unescapeHtml(this.getValue()));
 
     if (csrf_param !== undefined && csrf_token !== undefined) {
       data += "&" + csrf_param + "=" + encodeURIComponent(csrf_token);
