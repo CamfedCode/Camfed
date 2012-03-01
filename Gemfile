@@ -13,6 +13,9 @@ gem 'heroku'
 
 group :test, :development do
   gem "rspec-rails", "~> 2.4"
-	gem "shoulda"
-	gem "taps"
+  gem "shoulda"
+  gem "taps"
+  gem "cucumber"
+  gem "watir-webdriver"
+  gem "watir-page-helper"
 end
