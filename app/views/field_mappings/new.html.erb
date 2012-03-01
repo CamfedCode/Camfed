@@ -79,43 +79,40 @@
 
 <%= title "Mapping between #{@object_mapping.survey.name} and #{@object_mapping.salesforce_object_name}", true %>
 
-<% questions_for_select = @questions.collect{|question| [truncate(question.prompt, :length => 40), question.name]}%>
-
 <%= render :partial => 'help' %>
-
 
 <%= form_for @object_mapping do |object_mapping_form| %>
 	<div class="field_mapping_form">
-		<div class="field_mappings">	
+		<div class="field_mappings">
 			<div class="field_mapping_header">
 				<div class="field_name"><h3>Field Name</h3></div>
-				<div class="lookup_type"><h3>Lookup Type</h3></div>	
+				<div class="lookup_type"><h3>Lookup Type</h3></div>
 				<div class="question_name">&nbsp;</div>
 				<div class="clear"></div>
-			</div>		
-			
+			</div>
+
 	  <%= object_mapping_form.fields_for :field_mappings do |field_mapping_form| %>
 			<div class="field_mapping">
 				<div class="field_name">
-					<%= field_mapping_form.hidden_field :id %> 
-					<%= field_mapping_form.hidden_field :field_name %> 
-					<%= field_mapping_form.object.field_name %> 
+					<%= field_mapping_form.hidden_field :id %>
+					<%= field_mapping_form.hidden_field :field_name %>
+					<%= field_mapping_form.object.field_name %>
 				</div>
-				<div class="lookup_type">	
-					<%= field_mapping_form.select :lookup_type, FieldMapping.lookup_types, {}, :class=> 'lookup_type' %>					
+				<div class="lookup_type">
+					<%= field_mapping_form.select :lookup_type, FieldMapping.lookup_types, {}, :class=> 'lookup_type' %>
 				</div>
-				<div class="question_name">	
-					<%= field_mapping_form.select :question_name, questions_for_select, :include_blank => 'Please select a question' %>
+				<div class="question_name">
+					<%= field_mapping_form.select :question_name, @questions_for_select, :include_blank => 'Please select a question' %>
 				</div>
-				<div class="lookup_object_name">	
+				<div class="lookup_object_name">
 						<%= field_mapping_form.select :lookup_object_name, @salesforce_objects.collect{|an_object| [an_object.label, an_object.name]}, :include_blank => 'Please select an Object' %>
 				</div>
 
-				<div class="lookup_condition">	
+				<div class="lookup_condition">
 					Condition: <%= field_mapping_form.text_field :lookup_condition, :size => 50 %>
 				</div>
 
-				<div class="lookup_value">	
+				<div class="lookup_value">
 					Predefined Value: <%= field_mapping_form.text_field :predefined_value, :size => 50 %>
 				</div>
 
@@ -125,7 +122,7 @@
 		</div>
 		<div class="actions">
 			<%= link_to 'Back to List', survey_mappings_path(@object_mapping.survey) %>
-			<%= object_mapping_form.submit %>			
+			<%= object_mapping_form.submit %>
 		</div>
 	</div>
 <% end %>

@@ -5,27 +5,25 @@ describe FieldMappingsController do
   before(:each) do
     sign_on
   end
-  
+
   describe 'new' do
+    let(:object_mapping) { stub_model ObjectMapping, survey: survey, salesforce_object_name: 'MonitoringVisit' }
+    let(:survey) { stub_model EpiSurveyor::Survey, questions: [question] }
+    let(:question) { stub 'question', name: 'name' }
+
     it 'should populate object mapping and questions' do
+      ObjectMapping.should_receive(:find).with(2).and_return object_mapping
+      object_mapping.should_receive :build_unmapped_field_mappings
 
-      object_mapping = ObjectMapping.create(:survey_id => 1, :salesforce_object_name => 'MonitoringVisit')
-      object_mapping.should_receive(:build_unmapped_field_mappings)
-      ObjectMapping.should_receive(:find).with(object_mapping.id).and_return(object_mapping)
+      get :new, :object_mapping_id => 2
 
-
-      survey = ''
-      object_mapping.should_receive(:survey).and_return(survey)
-      survey.should_receive(:questions).and_return([])
-      
-      get :new, :object_mapping_id => object_mapping.id
-      
       response.should be_success
       assigns[:object_mapping].should == object_mapping
-      assigns[:questions].should == []
+      assigns[:questions].should == [question]
+      assigns[:questions_for_select].should == [['name', 'name']]
     end
   end
-  
+
   describe 'destroy' do
     before(:each) do
       @field_mapping = FieldMapping.create(:field_name => 'a_field', :question_name => 'a_question')
