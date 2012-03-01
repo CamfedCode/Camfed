@@ -10,17 +10,33 @@ describe MappingsController do
   end
 
   describe 'index' do
-    
+    let(:survey) { stub_model EpiSurveyor::Survey, questions: [question] }
+    let(:sf_object) { stub_model Salesforce::Base, name: 'name', label: 'label'}
+    let(:question) { stub 'question', name: 'name' }
+
+    before do
+      EpiSurveyor::Survey.stub!(:find).and_return survey
+      Salesforce::Base.stub!(:where).with(enabled: true).and_return [sf_object]
+    end
+
     it 'should populate survey' do
-      survey = EpiSurveyor::Survey.new
-      EpiSurveyor::Survey.should_receive(:find).with("1").and_return(survey)
-      survey.should_receive(:questions).and_return []
+      EpiSurveyor::Survey.should_receive(:find).with("1").and_return survey
       get :index, :survey_id => "1"
       response.should be_success
       assigns[:survey].should == survey
     end
+
+    it 'should retrieve select list for selecting questions' do
+      get :index, :survey_id => "1"
+      assigns[:questions_for_select].should == [['name', 'name']]
+    end
+
+    it 'should retrieve select list for selecting active salesforce objects' do
+      get :index, :survey_id => "1"
+      assigns[:sfobjects_for_select].should == [['name', 'label']]
+    end
   end
-  
+
   describe 'source' do
     it 'should get the list of all surveys excluding the current survey' do
       current_survey = EpiSurveyor::Survey.new(:id => 1)
