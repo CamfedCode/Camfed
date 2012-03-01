@@ -31,6 +31,8 @@ GEM
     addressable (2.2.6)
     arel (2.0.10)
     bcrypt-ruby (2.1.4)
+    best_in_place (0.2.3)
+      rails (>= 3.0.0)
     builder (2.1.2)
     crack (0.1.8)
     crummy (1.2)
@@ -57,6 +59,7 @@ GEM
       treetop (~> 1.4.8)
     mime-types (1.16)
     oauth (0.4.5)
+    pg (0.12.2)
     polyglot (0.3.1)
     rack (1.2.3)
     rack-mount (0.6.14)
@@ -124,10 +127,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  best_in_place
   crummy
   devise (~> 1.1.7)
   heroku
   httparty
+  pg
   rails (~> 3.0.4)
   redis
   rforce

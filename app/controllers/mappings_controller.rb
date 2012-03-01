@@ -2,10 +2,16 @@ class MappingsController < AuthenticatedController
 
   def index
     @survey = EpiSurveyor::Survey.find(params[:survey_id])
+    @questions_for_select = @survey.questions.map do |question|
+      [question.name, question.name]
+    end
+    @sfobjects_for_select = Salesforce::Base.where(:enabled => true).map do |sfobject|
+      [sfobject.name, sfobject.label]
+    end
     add_crumb 'Surveys', surveys_path
     add_crumb 'Mappings'
   end
-  
+
   def source
     @survey  = EpiSurveyor::Survey.find(params[:survey_id])
     @surveys = EpiSurveyor::Survey.all.reject{|survey| survey == @survey}.sort_by{|survey| survey.name }
@@ -13,7 +19,7 @@ class MappingsController < AuthenticatedController
     add_crumb 'Mappings', survey_mappings_path(@survey)
     add_crumb 'Clone from Another Survey'
   end
-  
+
   def clone
     begin
       source_survey = EpiSurveyor::Survey.find(params[:source_survey_id])
