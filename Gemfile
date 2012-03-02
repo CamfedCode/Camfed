@@ -9,7 +9,7 @@ gem 'crummy'
 gem 'redis'
 
 gem 'heroku'
-gem 'best_in_place'
+gem 'best_in_place', :path => "vendor/gems/best_in_place-0.2.3"
 
 group :test, :development do
   gem 'sqlite3-ruby', :require => 'sqlite3'

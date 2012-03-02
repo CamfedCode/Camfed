@@ -1,0 +1,79 @@
+/* ======================================================= */
+/*                      User Account                       */
+/* ======================================================= */
+table {
+  margin-left: 5em;
+  width: 50em;
+  border: 1px solid #CCC;
+  background-color: #f5f5f5;
+}
+table td:first-child {
+  width: 12em;
+  padding: 0.5em;
+}
+table th {
+  text-align: left;
+}
+input {
+  width: 80%;
+}
+input[type=submit] {
+  width: 5em;
+}
+input[type=checkbox] {
+  width: 1em;
+}
+textarea {
+  max-height:15em;
+  min-width: 40em;
+}
+.best_in_place {
+  padding: .1m;
+  cursor: hand;
+  cursor: pointer;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  border-radius: 5px;
+}
+.best_in_place:hover, #user_account .do_hover {
+  padding-right: 1.5em;
+  background: url("/images/red_pen.png") no-repeat right;
+  background-color: #CCC;
+}
+.info_edit {
+  float: right;
+  cursor: hand;
+  cursor: pointer;
+}
+
+/* Missatges Flotants */
+
+.purr {
+  position: fixed;
+  width: 324px;
+  top: 20px;
+  right: 15px;
+  padding: 20px;
+  background-color: #000000;
+  color: #FFFFFF;
+  border: 2px solid #AAA;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -o-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -khtml-border-radius: 10px;
+  border-radius: 10px;
+}
+.purr:hover .close  {
+  position: absolute;
+  top: 5px;
+  right: 3px;
+  display: block;
+  width: 25px;
+  height: 25px;
+  text-indent: -9999px;
+  background: url("/images/close-button.gif") no-repeat;
+}
