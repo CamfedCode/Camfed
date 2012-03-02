@@ -142,6 +142,14 @@ BestInPlaceEditor.prototype = {
     alert("The form was not properly initialized. getValue is unbound");
   },
 
+  escapeHtml : function(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  },
+
+  unescapeHtml : function(s) {
+    return s.replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">");
+  },
+
   // Trim and Strips HTML from text
   sanitizeValue : function(s) {
     if (this.sanitize)
@@ -160,7 +168,7 @@ BestInPlaceEditor.prototype = {
     csrf_param = $('meta[name=csrf-param]').attr('content');
 
     var data = "_method=put";
-    data += "&" + this.objectName + '[' + this.attributeName + ']=' + encodeURIComponent(this.getValue());
+    data += "&" + this.objectName + '[' + this.attributeName + ']=' + encodeURIComponent(this.unescapeHtml(this.getValue()));
 
     if (csrf_param !== undefined && csrf_token !== undefined) {
       data += "&" + csrf_param + "=" + encodeURIComponent(csrf_token);
@@ -216,7 +224,7 @@ BestInPlaceEditor.forms = {
   "input" : {
     activateForm : function() {
       var output = '<form class="form_in_place" action="javascript:void(0)" style="display:inline;">';
-      output += '<input type="text" name="'+ this.attributeName + '" value="' + this.sanitizeValue(this.oldValue) + '"';
+      output += '<input type="text" name="'+ this.attributeName + '" value="' + this.unescapeHtml(this.oldValue) + '"';
       if (this.inner_class != null) {
         output += ' class="' + this.inner_class + '"';
       }
@@ -230,7 +238,7 @@ BestInPlaceEditor.forms = {
     },
 
     getValue :  function() {
-      return this.sanitizeValue(this.element.find("input").val());
+      return this.escapeHtml(this.element.find("input").val());
     },
 
     inputBlurHandler : function(event) {
