@@ -1,99 +1,15 @@
-<%= stylesheet_link_tag "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/themes/redmond/jquery-ui.css", "application" %>
-<%= javascript_include_tag "https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js",
-                           "https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js", "application" %>
-<script type="text/javascript" src="/javascripts/jquery.validate.js"></script>
-<script type="text/javascript">
+<%= stylesheet_link_tag \
+"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/themes/redmond/jquery-ui.css"
+%>
+<%= javascript_include_tag \
+"https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js",
+"https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js",
+"jquery.validate",
+"surveys_index_prototype",
+"surveys_index_jquery"
+%>
 
-document.observe("dom:loaded", function() {
-		listenImportSelected();
-		listenDeleteSelected();
-})
-
-function listenImportSelected()
-{
-	$$('input.import_selected').each(function(import_selected){
-		$(import_selected).observe("click", function(){
-			$(import_selected).form.action = '/surveys/import_selected'
-		})
-	})
-}
-
-function listenDeleteSelected()
-{
-	$$('input.delete_selected').each(function(delete_selected){
-		$(delete_selected).observe("click", function(event){
-			if(confirm('Are you sure you want to delete the selected surveys will all their data?'))
-			{
-				var form = $(delete_selected).form
-				form.action = '/surveys/destroy_selected'
-				var m = document.createElement('input');
-		    m.setAttribute('type', 'hidden');
-		    m.setAttribute('name', '_method');
-		    m.setAttribute('value', 'delete');
-		    form.appendChild(m);
-			}
-			else
-			{
-				Event.stop(event);
-			}
-		})
-	})
-}
-</script>
-
-<script language="javascript">
-    var j$=jQuery.noConflict();
-    j$(document).ready(function() {
-		listenImportSelected();
-		listenDeleteSelected();
-		j$('#start_date').datepicker({dateFormat: 'yy-mm-dd'});
-        j$('#end_date').datepicker({dateFormat: 'yy-mm-dd'});
-        j$('#start_date').datepicker('setDate', getParameterByName('start_date'));
-        j$('#end_date').datepicker('setDate', getParameterByName('end_date'));
-		j$("#filter_form").validate({
-			rules: 
-			{ 'start_date': { formatDate: true },
-			  'end_date': { formatDate: true,
-							greaterThan: "#start_date"
-						  } 
-			},
-			errorPlacement: function(error, element) {
-		    
-		 	if (element.attr("name") == "start_date")
-			{
-				error.insertAfter("#start_date_error");
-			}
-			else if (element.attr("name") == "end_date")
-			{
-				error.insertAfter("#end_date_error");
-			}
-			else 
-			   error.insertAfter(element);
-	}});
-	
-		j$.validator.addMethod(
-			"formatDate",
-			function(value, element) {
-				if (value == "")  return true; 
-		        return value.match(/^\d\d\d\d?\-\d\d?\-\d\d$/);
-		    },
-		    "Format yyyy-mm-dd"
-		);
-		j$.validator.addMethod("greaterThan", function(value, element, params) {
-				element_id=params;
-				if (value == "")  return true; 
-		        if (!/Invalid|NaN/.test(new Date(value))) {
-		            return new Date(value) >= new Date(j$(element_id).val());
-		        }
-	
-		        return isNaN(value) && isNaN($(element_id).val()) || (parseFloat(value) > parseFloat(j$(element_id).val())); 
-		
-		    },'Must be greater than start date');
-    });
-</script> 
 <% title 'Surveys' %>
-
-
 
 <% content_for :middle_right do %>
 	<div class="search_form">
