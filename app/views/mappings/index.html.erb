@@ -32,9 +32,9 @@
 						<% if field_mapping.lookup? %>
 							<%= best_in_place field_mapping, :lookup_object_name, type: :select, collection: @sfobjects_for_select %>
 							WHERE
-							<%= best_in_place field_mapping, :lookup_condition %>
+							<%= best_in_place field_mapping, :lookup_condition, escape: true %>
 						<% elsif field_mapping.predefined_value? %>
-							<%= best_in_place field_mapping, :predefined_value %>
+							<%= best_in_place field_mapping, :predefined_value, escape: true %>
 						<% elsif field_mapping.question? %>
 						  <%= best_in_place field_mapping, :question_name, type: :select, collection: @questions_for_select %>
 						<% end %>
