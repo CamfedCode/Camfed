@@ -1,13 +1,17 @@
-<%= stylesheet_link_tag \
-"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/themes/redmond/jquery-ui.css"
-%>
-<%= javascript_include_tag \
-"https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js",
-"https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js",
-"jquery.validate",
-"surveys_index_prototype",
-"surveys_index_jquery"
-%>
+<% content_for :stylesheets do %>
+	<%= stylesheet_link_tag :all %>
+	<%= stylesheet_link_tag	"http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/themes/redmond/jquery-ui.css" %>
+<% end %>
+
+<% content_for :javascripts do %>
+	<%= javascript_include_tag :defaults,
+		"https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js",
+		"https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js",
+		"jquery.validate",
+		"surveys_index_prototype",
+		"surveys_index_jquery"
+	%>
+<% end %>
 
 <% title 'Surveys' %>
 
