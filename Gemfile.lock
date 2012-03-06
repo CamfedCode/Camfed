@@ -1,3 +1,9 @@
+PATH
+  remote: vendor/gems/best_in_place-0.2.3
+  specs:
+    best_in_place (0.2.3)
+      rails (>= 3.0.0)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -31,8 +37,6 @@ GEM
     addressable (2.2.6)
     arel (2.0.10)
     bcrypt-ruby (2.1.4)
-    best_in_place (0.2.3)
-      rails (>= 3.0.0)
     builder (2.1.2)
     crack (0.1.8)
     crummy (1.2)
@@ -127,7 +131,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  best_in_place
+  best_in_place!
   crummy
   devise (~> 1.1.7)
   heroku
