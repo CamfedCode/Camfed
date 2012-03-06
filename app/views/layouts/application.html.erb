@@ -4,7 +4,11 @@
 		<title>
 			<%= yield_or_render :title, 'Camfed' %>
 		</title>
-		<%= stylesheet_link_tag :all %>
+    <% if content_for? :stylesheets %>
+      <%= yield :stylesheets %>
+    <% else %>
+      <%= stylesheet_link_tag :all %>
+    <% end %>
 		<% if content_for? :javascripts %>
     	<%= yield :javascripts %>
     <% else %>
