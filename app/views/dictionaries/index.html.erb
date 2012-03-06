@@ -1,0 +1,20 @@
+<%= form_tag(upload_dictionaries_path, :multipart => true) do %>
+    <label for="file">File to Upload</label> <%= file_field_tag "file" %>
+    <%= submit_tag %>
+<% end %>
+    <p/>
+    <%=  link_to "Download Sample CSV", "dictionaries/sample_download", :method => :get %>
+<p/>
+    <table class="dictionaries">
+      <tr>
+        <th>Key</th>
+        <th>Value</th>
+      </tr>
+    <% @all_translations.each { |key,value| %>
+        <tr class="<%= cycle("even","odd")%>">
+          <td><%=  key %></td>
+          <td><%=  value %></td>
+        </tr>
+
+    <% } %>
+    </table>

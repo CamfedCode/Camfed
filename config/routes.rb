@@ -67,7 +67,14 @@ Camfed::Application.routes.draw do
   end
 
   resource :home
-  
+
+  resources :dictionaries  do
+    collection do
+      post 'upload'
+      get 'sample_download'
+    end
+  end
+
   root :to => "surveys#index"
-  
+
 end
