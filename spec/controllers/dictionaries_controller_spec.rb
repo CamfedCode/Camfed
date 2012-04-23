@@ -12,7 +12,11 @@ describe DictionariesController do
   describe 'upload' do
 
   it "should read the uploaded CSV and save the translations" do
-    translation_hash = {"Shule ya Msingi"=>"Primary", "Shule ya Sekondari ya Kawaida"=>"Secondary", "Shule ya Sekondari ya Juu"=>"High", "Muhula wa 1"=>"Term 1", "Muhula wa 2"=>"Term 2", "Malezi na Ushauri Nasaha"=>"Guidance and COunselling", "Ulinzi wa Mtoto"=>"Child Protection", "Uhamasishaji wa Jamii"=>"Community Mobilisation", "Afya ya Uzazi"=>"Reproducitve Health", "Maendeleo ya Mtoto"=>"Child Development", "Mengineyo"=>"Other"}
+    translation_hash = {"Shule ya Msingi"=>"Primary", "Shule ya Sekondari ya Kawaida"=>"Secondary",
+                        "Shule ya Sekondari ya Juu"=>"High", "Muhula wa 1"=>"Term 1", "Muhula wa 2"=>"Term 2",
+                        "Malezi na Ushauri Nasaha"=>"Guidance and COunselling", "Ulinzi wa Mtoto"=>"Child Protection",
+                        "Uhamasishaji wa Jamii"=>"Community Mobilisation", "Afya ya Uzazi"=>"Reproducitve Health",
+                        "Maendeleo ya Mtoto"=>"Child Development", "Mengineyo"=>"Other", "blank value"=>""}
     Dictionary.should_receive(:save).with(translation_hash)
     post :upload , :file =>@file
     flash[:notice].should == "Translations uploaded successfully"
