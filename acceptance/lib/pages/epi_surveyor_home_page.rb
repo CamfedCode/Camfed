@@ -1,7 +1,5 @@
-require 'watir-page-helper'
-
-module WatirPageHelper::EpiSurveyorHomePage
-  extend WatirPageHelper::ClassMethods
+class EpiSurveyorHomePage
+  include PageObject
 
   direct_url EnvConfig.get :epi, :url
   expected_title 'EpiSurveyor: Mobile Data Collection Made Simple'

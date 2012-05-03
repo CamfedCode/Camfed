@@ -1,7 +1,5 @@
-require 'watir-page-helper'
-
-module WatirPageHelper::CamfedSurveysPage
-  extend WatirPageHelper::ClassMethods
+class CamfedSurveysPage
+  include PageObject
 
   expected_title 'Camfed - Surveys'
 

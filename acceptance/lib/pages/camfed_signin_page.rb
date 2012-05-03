@@ -1,7 +1,5 @@
-require 'watir-page-helper'
-
-module WatirPageHelper::CamfedSigninPage
-  extend WatirPageHelper::ClassMethods
+class CamfedSigninPage
+  include PageObject
 
   direct_url "#{EnvConfig.get :camfed, :url}/users/sign_in"
 

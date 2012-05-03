@@ -1,7 +1,5 @@
-require 'watir-page-helper'
-
-module WatirPageHelper::EpiSurveyorDashboardPage
-  extend WatirPageHelper::ClassMethods
+class EpiSurveyorDashboardPage
+  include PageObject
 
   direct_url "#{EnvConfig.get :epi, :url}/dashboard/index"
   expected_title "DataDyne's EpiSurveyor: Dashboard"
@@ -10,7 +8,7 @@ module WatirPageHelper::EpiSurveyorDashboardPage
   button :delete, :id => 'delete'
   file_field :file_location, :name => 'uploadsurveyfile'
   button :upload, :text => 'Upload'
-  li :upload_ok, :text => 'Form uploaded successfully'
+  list_item :upload_ok, :text => 'Form uploaded successfully'
 
   def upload_file file_path
     import

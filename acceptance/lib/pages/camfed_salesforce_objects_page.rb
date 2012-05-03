@@ -1,7 +1,5 @@
-require 'watir-page-helper'
-
-module WatirPageHelper::CamfedSalesforceObjectsPage
-  extend WatirPageHelper::ClassMethods
+class CamfedSalesforceObjectsPage
+  include PageObject
 
   direct_url "#{EnvConfig.get :camfed, :url}/salesforce_objects"
   div :notice, :class => 'notice'
