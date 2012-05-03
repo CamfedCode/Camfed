@@ -1,0 +1,2 @@
+default: -r features --tags ~@wip --color --format pretty --format html -o results.html
+wip: -r features --tags @wip --color --format pretty --format html -o results.html
