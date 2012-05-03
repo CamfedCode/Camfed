@@ -4,8 +4,16 @@
 		<title>
 			<%= yield_or_render :title, 'Camfed' %>
 		</title>
-		<%= stylesheet_link_tag :all %>
-		<%= javascript_include_tag :defaults %>
+    <% if content_for? :stylesheets %>
+      <%= yield :stylesheets %>
+    <% else %>
+      <%= stylesheet_link_tag :all %>
+    <% end %>
+		<% if content_for? :javascripts %>
+    	<%= yield :javascripts %>
+    <% else %>
+			<%= javascript_include_tag :defaults %>
+    <% end %>
 		<%= csrf_meta_tag %>
 	</head>
 	<body>
@@ -22,6 +30,7 @@
 							<li><%= link_to 'Surveys', surveys_path %></li>
 							<li><%= link_to 'Import Histories', import_histories_path %></li>
 							<li><%= link_to('Salesforce Objects', salesforce_objects_path) %></li>
+							<li><%= link_to('Dictionary', dictionaries_path) %></li>
 							<li><%= link_to('Settings', edit_admin_configuration_path) %></li>
 							<li><%= link_to('Users', admin_users_path)  %></li>
 						<% end %>

@@ -94,24 +94,24 @@ ol.object_mappings li.object_mapping div.object_name{
 	margin: 2px;
 }
 
-ol.salesforce_objects{
+ol.salesforce_objects, ol.dictionaries{
 	width: 60%;
 }
 
-li.object_mapping div.object_name h3, li.salesforce_object div.salesforce_object div.object_label{
+li.object_mapping div.object_name h3, li.salesforce_object div.salesforce_object div.object_label, li.dictionary div.dictionary div.object_label{
 	float: left;
 }
 
-li.object_mapping div.object_name div.actions, li.salesforce_object div.salesforce_object div.actions{
+li.object_mapping div.object_name div.actions, li.salesforce_object div.salesforce_object div.actions, li.dictionary div.dictionary div.actions{
 	float: right;
 	padding-right: 5px;
 }
 
-ol.object_mappings, ol.field_mappings, ol.salesforce_objects{
+ol.object_mappings, ol.field_mappings, ol.salesforce_objects, ol.dictionaries{
 	padding-left: 5px;
 }
 
-ol.object_mappings li, ol.field_mappings li, ol.salesforce_objects li{
+ol.object_mappings li, ol.field_mappings li, ol.salesforce_objects li, ol.dictionaries li{
 	list-style-type: none;
 }
 
@@ -246,6 +246,13 @@ table.import_histories tr.incomplete{
 	background-color: #FFFF99;
 }
 
+table.dictionaries tr.even{
+    background-color: #DFD7C8;
+}
+table.dictionaries tr.odd{
+    background-color: #E9E8E0;
+}
+
 div.menu{
 	text-align: right;
 }
@@ -278,7 +285,8 @@ ol.surveys li:nth-child(2n+1),
 	div.field_mappings div.field_mapping:nth-child(2n+1), 
 	div.configuration_form div.field:nth-child(2n+1),
 	ol.users li:nth-child(2n+1),
-	ol.salesforce_objects li:nth-child(2n+1)
+	ol.salesforce_objects li:nth-child(2n+1) ,
+    ol.dictionaries li:nth-child(2n+1)
 {
 	background-color: #DFD7C8;
 }
@@ -331,9 +339,54 @@ input.error { border: 1px solid red; }
 label.error {
 		color: red;
 }
-	
+
 span.survey_last_modified{
 		font-style: italic;
 		font-weight: normal;
 		color: #F7403A;
+}
+
+.best_in_place {
+  padding: .1m;
+  cursor: hand;
+  cursor: pointer;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  -o-border-radius: 5px;
+  -ms-border-radius: 5px;
+  -khtml-border-radius: 5px;
+  border-radius: 5px;
+  background-color: #bbb;
+}
+
+.best_in_place:hover, #user_account .do_hover {
+  background-color: #aaa;
+}
+
+.purr {
+  position: fixed;
+  width: 324px;
+  top: 50%;
+  left: 50%;
+  margin-left: -162px;
+  padding: 20px;
+  background-color: #000000;
+  color: #FFFFFF;
+  border: 2px solid #AAA;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  -o-border-radius: 10px;
+  -ms-border-radius: 10px;
+  -khtml-border-radius: 10px;
+  border-radius: 10px;
+}
+
+.purr:hover .close  {
+  position: absolute;
+  top: 5px;
+  right: 3px;
+  display: block;
+  width: 25px;
+  height: 25px;
+  text-indent: -9999px;
 }
