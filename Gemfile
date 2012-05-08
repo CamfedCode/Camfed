@@ -5,7 +5,7 @@ gem 'rails', '~> 3.0.4'
 gem 'rforce'
 gem 'devise', '~> 1.1.7'
 gem 'httparty'
-gem 'crummy'
+gem 'crummy', '1.2'
 gem 'redis'
 
 gem 'heroku'
