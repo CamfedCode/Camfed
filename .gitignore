@@ -5,3 +5,6 @@ log/*.log
 tmp/**/*
 .idea
 *.swp
+acceptance/lib/config/*.yml
+acceptance/results.html
+dump.rdb

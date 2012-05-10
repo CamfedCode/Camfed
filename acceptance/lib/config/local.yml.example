@@ -1,0 +1,12 @@
+:camfed:
+  :url: http://localhost:3000/
+  :username: admin@example.com
+  :password: admin123
+:epi:
+  :url: http://www.episurveyor.org/
+  :username:
+  :password:
+:salesforce:
+  :url: https://test.salesforce.com/
+  :username:
+  :password:
