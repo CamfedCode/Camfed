@@ -5,7 +5,7 @@ module EpiSurveyor
     FileUtils.mkdir(temp_directory) unless File.exists? temp_directory
     required_file_path = temp_directory + '/' + survey_name + File.extname(source_file_path)
     FileUtils.cp(source_file_path, required_file_path) unless required_file_path == source_file_path
-    return required_file_path
+    return File.absolute_path required_file_path
   end
 
   def self.destroy_survey_file file_path
