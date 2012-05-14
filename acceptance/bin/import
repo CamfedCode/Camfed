@@ -1,0 +1,42 @@
+#!/usr/bin/env ruby
+
+$: << File.dirname(__FILE__)+'/../lib'
+
+if ARGV.count < 3
+  puts 'usage: import <environment> <svy file> <csv file>'
+  puts '  eg. import local sample.svy surveys.csv'
+  exit 1
+end
+
+ENVIRONMENT = ARGV.shift.to_sym
+svy_path = ARGV.shift
+csv_path = ARGV.shift
+
+require 'watir-webdriver'
+require 'watir-webdriver/extensions/alerts'
+require 'page-object'
+require 'epi_surveyor'
+require 'page-object/page_factory'
+require 'env_config'
+require 'pages'
+
+driver = (ENV['WEB_DRIVER'] || :firefox).to_sym
+client = Selenium::WebDriver::Remote::Http::Default.new
+
+@browser = Watir::Browser.new driver, :http_client => client
+
+include PageObject::PageFactory
+
+visit EpiSurveyorHomePage do |page|
+  page.login_to_epi
+end
+
+File.readlines(csv_path).each do |line|
+  survey_name = line.chomp
+  puts "Creating survey #{survey_name}"
+  on EpiSurveyorDashboardPage do |page|
+    page.upload_file(EpiSurveyor::create_survey_file(survey_name)) unless page.surveys.include?(survey_name)
+  end
+end
+
+@browser.close
