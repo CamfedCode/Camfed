@@ -1,0 +1,25 @@
+#!/usr/bin/env ruby
+
+$: << File.dirname(__FILE__)+'/../lib'
+
+ENVIRONMENT = :local
+
+require 'watir-webdriver'
+require 'watir-webdriver/extensions/alerts'
+require 'page-object'
+require 'page-object/page_factory'
+require 'env_config'
+require 'pages/epi_surveyor_home_page'
+
+driver = (ENV['WEB_DRIVER'] || :firefox).to_sym
+client = Selenium::WebDriver::Remote::Http::Default.new
+
+@browser = Watir::Browser.new driver, :http_client => client
+
+include PageObject::PageFactory
+
+visit EpiSurveyorHomePage do |page|
+  page.login_to_epi
+end
+
+@browser.close
