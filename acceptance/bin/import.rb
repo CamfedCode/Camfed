@@ -12,6 +12,8 @@ ENVIRONMENT = ARGV.shift.to_sym
 svy_path = ARGV.shift
 csv_path = ARGV.shift
 
+raise "You need to create a configuration file named '#{ENVIRONMENT}.yml' under lib/config" unless File.exists? "#{File.dirname(__FILE__)}/../lib/config/#{ENVIRONMENT}.yml"
+
 raise "Could not locate survey file '#{svy_path}'" unless File.exists? svy_path
 raise "Could not locate csv file '#{svy_path}'" unless File.exists? csv_path
 
@@ -37,11 +39,20 @@ end
 File.readlines(csv_path).each do |line|
   survey_name = line.chomp
   on EpiSurveyorDashboardPage do |page|
-    unless page.surveys.include?(survey_name)
-      puts "Creating survey: '#{survey_name}'"
-      page.upload_file(EpiSurveyor::create_survey_file(survey_name, svy_path))
-    else
-      puts "Skipping survey: '#{survey_name}' as it already exists!"
+    File.open("info.log", "a+") do |f|
+      unless page.surveys.include?(survey_name)
+        page.upload_file(EpiSurveyor::create_survey_file(survey_name, svy_path))
+        if page.surveys.include? survey_name
+          puts "Created survey: '#{survey_name}'"
+          f.puts "Created survey: '#{survey_name}'"
+        else
+          puts "Didn't create survey: '#{survey_name}' because of error message: '#{page.error_message}'"
+          f.puts "Didn't create survey: '#{survey_name}' because of error message: '#{page.error_message}'"
+        end
+      else
+        puts "Skipping survey: '#{survey_name}' as it already exists!"
+        f.puts "Skipping survey: '#{survey_name}' as it already exists!"
+      end
     end
   end
 end
