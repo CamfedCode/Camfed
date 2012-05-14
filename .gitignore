@@ -7,4 +7,6 @@ tmp/**/*
 *.swp
 acceptance/lib/config/*.yml
 acceptance/results.html
+acceptance/lib/input_files/temp
 dump.rdb
+screenshots
