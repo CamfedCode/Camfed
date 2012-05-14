@@ -5,7 +5,7 @@ gem 'rails', '~> 3.0.4'
 gem 'rforce'
 gem 'devise', '~> 1.1.7'
 gem 'httparty'
-gem 'crummy', '1.2'
+gem 'crummy'
 gem 'redis'
 
 gem 'heroku'
@@ -19,6 +19,7 @@ group :test, :development do
   gem 'cucumber'
   gem 'watir-webdriver'
   gem 'page-object'
+  gem 'ocra'
 end
 
 group :production do
