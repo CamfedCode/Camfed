@@ -3,8 +3,8 @@
 $: << File.dirname(__FILE__)+'/../lib'
 
 if ARGV.count < 3
-  puts 'usage: import <environment> <svy file> <csv file>'
-  puts '  eg. import local sample.svy surveys.csv'
+  puts 'usage: import_surveys <environment> <svy file> <csv file>'
+  puts '  eg. import_surveys local sample.svy surveys.csv'
   exit 1
 end
 
