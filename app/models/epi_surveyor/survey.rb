@@ -1,23 +1,23 @@
 module EpiSurveyor
   class Survey < ActiveRecord::Base
     include HTTParty
-    base_uri Configuration.instance.epi_surveyor_url    
+    base_uri Configuration.instance.epi_surveyor_url
     extend EpiSurveyor::Dependencies::ClassMethods
 
-    has_many :object_mappings, :dependent => :destroy    
+    has_many :object_mappings, :dependent => :destroy
     has_many :import_histories, :dependent => :destroy
-    
+
     attr_accessible :id, :notification_email
     attr_accessor :responses
-  
+
     def responses
       @responses ||= SurveyResponse.find_all_by_survey(self)
     end
-    
+
     def questions
       @questions ||= Question.find_all_by_survey(self)
     end
-  
+
     def self.sync_with_epi_surveyor
       response = post('/api/surveys', :body => auth, :headers => headers)
       return [] if response.nil? || response['Surveys'].nil? || response['Surveys']['Survey'].nil?
@@ -31,15 +31,19 @@ module EpiSurveyor
         survey.save! unless Survey.exists?(:id => survey.id)
         surveys << survey
       end
+
+      Survey.all.each do |survey|
+        survey.destroy unless surveys.any? {|s| s.id == survey.id}
+      end
+
       surveys
     end
-  
+
     def sync!
       mappings = object_mappings
       return [] if mappings.blank?
       import_histories = []
-      # responses.collect {|response| response.sync!(mappings)}.select{|import_history| import_history.present?}
-      
+
       responses.each do |response|
         begin
           import_history = response.sync!(mappings)
