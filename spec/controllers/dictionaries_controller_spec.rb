@@ -5,8 +5,8 @@ describe DictionariesController do
 
   before(:each) do
     sign_on
-    @file = fixture_file_upload("#{Rails.root}/spec/fixtures/files/test_translations.csv",'text/csv')
-    @non_csv_file = fixture_file_upload("#{Rails.root}/spec/fixtures/notifier/sync_email",'text/csv')
+    @file = fixture_file_upload("/files/test_translations.csv",'text/csv')
+    @non_csv_file = fixture_file_upload("/notifier/sync_email",'text/csv')
   end
 
   describe 'upload' do
