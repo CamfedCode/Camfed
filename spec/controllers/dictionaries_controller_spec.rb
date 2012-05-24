@@ -38,6 +38,29 @@ describe DictionariesController do
       Dictionary.should_receive(:get_all_translations)
       post :index
     end
+
+    it "should return all translations in a csv file" do
+      translation_hash = {"Shule ya Msingi"=>"Primary", "Shule ya Sekondari ya Kawaida"=>"Secondary"}
+      translation_file = "English,Swahili\nPrimary,Shule ya Msingi\nSecondary,Shule ya Sekondari ya Kawaida\n"
+      Dictionary.should_receive(:get_all_translations).and_return(translation_hash)
+      controller.stub!(:render)
+      controller.should_receive(:send_data).with(translation_file, :type => "text/csv; header=present",
+                                                 :disposition => "attachment;filename=translations.csv")
+      post :index, :format => "csv"
+      assert_response(:success)
+    end
+
+    it "should return only translation heading if translations are not present " do
+      translation_hash = {}
+      translation_file = "English,Swahili\n"
+      Dictionary.should_receive(:get_all_translations).and_return(translation_hash)
+      controller.stub!(:render)
+      controller.should_receive(:send_data).with(translation_file, :type => "text/csv; header=present",
+                                                 :disposition => "attachment;filename=translations.csv")
+      post :index, :format => "csv"
+      assert_response(:success)
+
+    end
   end
 
   describe 'sample_download' do

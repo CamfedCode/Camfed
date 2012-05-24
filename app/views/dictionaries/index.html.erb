@@ -3,18 +3,20 @@
     <%= submit_tag %>
 <% end %>
     <p/>
-    <%=  link_to "Download Sample CSV", "dictionaries/sample_download", :method => :get %>
+    <%=  link_to "Download CSV", "dictionaries.csv", :method => :get %>
 <p/>
-    <table class="dictionaries">
+  <% unless @all_translations.empty? %>
+  <table class="dictionaries">
       <tr>
-        <th>Key</th>
-        <th>Value</th>
+        <th>English</th>
+        <th>Swahili</th>
       </tr>
     <% @all_translations.each { |key,value| %>
         <tr class="<%= cycle("even","odd")%>">
-          <td><%=  key %></td>
           <td><%=  value %></td>
+          <td><%=  key %></td>
         </tr>
 
     <% } %>
     </table>
+<% end %>
