@@ -1,5 +1,6 @@
 module EpiSurveyor
   class Survey < ActiveRecord::Base
+    COUNTRY_CODES = {"gh" => "233"}
     include HTTParty
     base_uri Configuration.instance.epi_surveyor_url
     extend EpiSurveyor::Dependencies::ClassMethods
@@ -105,10 +106,32 @@ module EpiSurveyor
       
       recipient_histories.each_pair do |to_email, histories|
         Notifier.sync_email(histories, to_email).deliver unless to_email.blank?
+        send_sms(extract_mobile_number(to_email),histories)
       end
 
       all_histories
     end
-    
+
+    def self.extract_mobile_number(email)
+      if  /[a-z]{2}\d{1,10}{10}@/=~ email
+        code = COUNTRY_CODES[email.slice(0..1)]
+        phone_number = code + email.slice(3..11)
+      end
+    end
+
+    def self.send_sms(mobile_number,histories)
+      begin
+        message = "Import Summary. Total surveys imported:#{histories.length}. Success:#{histories.count {|history| history.status=='Success'}}. Incomplete:#{histories.count {|history| history.status=='Incomplete'}}. Failed:#{histories.count {|history| history.status=='Failed'}}"
+        sms = Moonshado::Sms.new(mobile_number, message)
+        sms_delivery = sms.deliver_sms
+        sms_response = SmsResponse.new(:sms_id => sms_delivery.delete(:id), :properties => sms_delivery)
+        sms_response.save
+      rescue Exception => error
+        properties = {:error => error.message, :mobile_number => mobile_number}
+        sms_response = SmsResponse.new(:sms_id => "invalid", :properties => properties)
+        sms_response.save
+        logger.error "Sending SMS failed with error #{error}"
+      end
+      end
+    end
   end
-end

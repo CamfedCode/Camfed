@@ -177,19 +177,30 @@ describe EpiSurveyor::Survey do
   
   describe 'sync_and_notify!' do
     it 'should call sync! on all surveys and notify on all sync histories' do
+      import_history = ImportHistory.new(:id =>1, :created_at => "2011/07/20", :survey_id => "12515",
+                                                 :updated_at => "2012/02/22" ,:sync_errors => [SyncError.new(:id => 21)])
+      import_histories = [import_history, import_history]
       surveys = [EpiSurveyor::Survey.new, EpiSurveyor::Survey.new]
       surveys.each do |survey| 
-        survey.should_receive(:sync!).and_return([1])
+        survey.should_receive(:sync!).and_return([import_history])
         survey.notification_email = 'admin@example.com'
       end
       EpiSurveyor::Survey.should_receive(:all).and_return(surveys)
       sync_email = ''
-      Notifier.should_receive(:sync_email).with([1, 1], "admin@example.com").and_return(sync_email)
+      Notifier.should_receive(:sync_email).with(import_histories, "admin@example.com").and_return(sync_email)
       sync_email.should_receive(:deliver)
-      EpiSurveyor::Survey.sync_and_notify!.should == [1, 1]
+      mock_sms = ""
+      mock_sms_response = {:stat=>"ok", :id=>"e3debdc7f4719ec0", :credit => 500}
+      Moonshado::Sms.should_receive(:new).and_return(mock_sms)
+      mock_sms.should_receive(:deliver_sms).and_return(mock_sms_response)
+      EpiSurveyor::Survey.sync_and_notify!.should == import_histories
     end
 
     it 'should call sync! on all surveys and notify on all sync histories to their configured emails' do
+      import_history = ImportHistory.new(:id =>1, :created_at => "2011/07/20", :survey_id => "12515",
+                                                 :updated_at => "2012/02/22" ,:sync_errors => [SyncError.new(:id => 21)])
+      import_histories = [import_history, import_history]
+
       survey_1 = EpiSurveyor::Survey.new
       survey_2 = EpiSurveyor::Survey.new
       survey_1.notification_email = 'survey1@example.com'
@@ -197,20 +208,59 @@ describe EpiSurveyor::Survey do
       
       surveys = [survey_1, survey_2]
       surveys.each do |survey| 
-        survey.should_receive(:sync!).and_return([1])
+        survey.should_receive(:sync!).and_return([import_history])
       end
       
       EpiSurveyor::Survey.should_receive(:all).and_return(surveys)
       sync_email_1 = ''
       sync_email_2 = ''      
-      Notifier.should_receive(:sync_email).with([1], "survey1@example.com").and_return(sync_email_1)
-      Notifier.should_receive(:sync_email).with([1], "survey2@example.com").and_return(sync_email_2)      
+      Notifier.should_receive(:sync_email).with([import_history], "survey1@example.com").and_return(sync_email_1)
+      Notifier.should_receive(:sync_email).with([import_history], "survey2@example.com").and_return(sync_email_2)
       sync_email_1.should_receive(:deliver)
       sync_email_2.should_receive(:deliver)      
-      EpiSurveyor::Survey.sync_and_notify!.should == [1, 1]
+      mock_sms = ""
+      mock_sms_response = {:stat=>"ok", :id=>"e3debdc7f4719ec0", :credit => 500}
+      Moonshado::Sms.should_receive(:new).exactly(2).times().and_return(mock_sms)
+      mock_sms.should_receive(:deliver_sms).exactly(2).times().and_return(mock_sms_response)
+
+      EpiSurveyor::Survey.sync_and_notify!.should == import_histories
+      sms_response = SmsResponse.where(:sms_id => "e3debdc7f4719ec0").first
+      sms_response.properties.should == {:stat=>"ok", :credit => 500}
     end
 
-    
+    it "should extract phone number from email" do
+      EpiSurveyor::Survey.extract_mobile_number("gh0542208979@gmail.com<").should == "233542208979"
+    end
+
+    it "should not throw error for invalid email ids" do
+      EpiSurveyor::Survey.extract_mobile_number("abcde1!@$ads@gmail.com<").should be_nil
+    end
+
+    it "should fail and log the sms response if the mobile number is not valid" do
+      EpiSurveyor::Survey.send_sms("invalid_mobile_number",{})
+      sms_response = SmsResponse.where(:sms_id => "invalid").first
+      sms_response.properties[:error].should == "Phone number (invalid_mobile_number) is not formatted correctly"
+      sms_response.properties[:mobile_number].should == "invalid_mobile_number"
+    end
+    it "should be able to send sms" do
+      import_histories = import_histories_mock_data
+      mobile_number = "233542208979"
+      message = "Import Summary. Total surveys imported:3. Success:1. Incomplete:0. Failed:2"
+      sms_instance = ""
+      Moonshado::Sms.should_receive(:new).with(mobile_number,message).and_return(sms_instance)
+      sms_instance.should_receive(:deliver_sms)
+      EpiSurveyor::Survey.send_sms(mobile_number,import_histories)
+    end
   end
-  
+
+  private
+  def import_histories_mock_data
+    import_histories = []
+    import_histories << ImportHistory.new(:id =>1, :created_at => "2011/07/20", :survey_id => "12515",
+                                           :updated_at => "2012/02/22" ,:sync_errors => [SyncError.new(:id => 21)])
+    import_histories << ImportHistory.new(:id =>2, :created_at => "2011/07/20", :survey_id => "12515",
+                                           :updated_at => "2012/03/22", :sync_errors => [SyncError.new(:id => 22)])
+    import_histories << ImportHistory.new(:id =>3, :created_at => "2011/07/20",:survey_id => "12515",
+                                           :updated_at => "2012/02/22")
+  end
 end
