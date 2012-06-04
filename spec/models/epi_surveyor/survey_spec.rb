@@ -20,24 +20,36 @@ describe EpiSurveyor::Survey do
       EpiSurveyor::Survey.all.should have(1).things
       EpiSurveyor::Survey.find(1).name.should == "survey_one"
     end
-    
+
     it 'should return [] when no surveys found' do
       EpiSurveyor::Survey.stub!(:post).and_return(nil)
       EpiSurveyor::Survey.sync_with_epi_surveyor.should == []
-    end  
-    
+    end
+
     it 'should return [] when list is nil' do
       EpiSurveyor::Survey.stub!(:post).and_return({"Surveys" => nil })
       EpiSurveyor::Survey.sync_with_epi_surveyor.should == []
     end
-    
+
     it 'should return [] when element is nil' do
       EpiSurveyor::Survey.stub!(:post).and_return({"Surveys" => {"Survey" => nil}})
       EpiSurveyor::Survey.sync_with_epi_surveyor.should == []
     end
-    
+
+    it 'should destroy surveys that have been deleted' do
+      old_survey = stub 'old_survey', id: 4
+      existing_survey = stub 'existing_survey', id: 5
+      EpiSurveyor::Survey.should_receive(:all).and_return [old_survey, existing_survey]
+      EpiSurveyor::Survey.stub!(:post).and_return({
+        "Surveys" => {
+          "Survey" => [{"SurveyId" => 5, "SurveyName" => "existing_survey"}]
+        }
+      })
+      old_survey.should_receive(:destroy)
+      EpiSurveyor::Survey.sync_with_epi_surveyor
+    end
   end
-  
+
   describe 'responses' do
     before(:each) do
       @survey = EpiSurveyor::Survey.new

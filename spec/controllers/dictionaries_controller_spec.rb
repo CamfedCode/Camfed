@@ -5,8 +5,8 @@ describe DictionariesController do
 
   before(:each) do
     sign_on
-    @file = fixture_file_upload("#{Rails.root}/spec/fixtures/files/test_translations.csv",'text/csv')
-    @non_csv_file = fixture_file_upload("#{Rails.root}/spec/fixtures/notifier/sync_email",'text/csv')
+    @file = fixture_file_upload("/files/test_translations.csv",'text/csv')
+    @non_csv_file = fixture_file_upload("/notifier/sync_email",'text/csv')
   end
 
   describe 'upload' do
@@ -37,6 +37,29 @@ describe DictionariesController do
     it "should fetch all keys and values from translations database" do
       Dictionary.should_receive(:get_all_translations)
       post :index
+    end
+
+    it "should return all translations in a csv file" do
+      translation_hash = {"Shule ya Msingi"=>"Primary", "Shule ya Sekondari ya Kawaida"=>"Secondary"}
+      translation_file = "English,Swahili\nPrimary,Shule ya Msingi\nSecondary,Shule ya Sekondari ya Kawaida\n"
+      Dictionary.should_receive(:get_all_translations).and_return(translation_hash)
+      controller.stub!(:render)
+      controller.should_receive(:send_data).with(translation_file, :type => "text/csv; header=present",
+                                                 :disposition => "attachment;filename=translations.csv")
+      post :index, :format => "csv"
+      assert_response(:success)
+    end
+
+    it "should return only translation heading if translations are not present " do
+      translation_hash = {}
+      translation_file = "English,Swahili\n"
+      Dictionary.should_receive(:get_all_translations).and_return(translation_hash)
+      controller.stub!(:render)
+      controller.should_receive(:send_data).with(translation_file, :type => "text/csv; header=present",
+                                                 :disposition => "attachment;filename=translations.csv")
+      post :index, :format => "csv"
+      assert_response(:success)
+
     end
   end
 

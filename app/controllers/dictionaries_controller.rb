@@ -3,7 +3,17 @@ class DictionariesController < AuthenticatedController
 
   def index
     @all_translations = Dictionary.get_all_translations
-    add_crumb "Dictionary"
+    respond_to do|format|
+      format.html do
+        add_crumb "Dictionary"
+      end
+      format.csv do
+        csv_file = generate_csv
+        send_data csv_file, :type => 'text/csv; header=present',
+                  :disposition => "attachment;filename=translations.csv"
+      end
+    end
+
   end
 
   def show
@@ -33,5 +43,12 @@ class DictionariesController < AuthenticatedController
 
   def is_filename_valid(filename)
     filename.blank? ? false : (filename.original_filename.split(".").last == "csv")
+  end
+
+  def generate_csv
+    CSV.generate do |csv|
+      csv << ["English", "Swahili"]
+      @all_translations.map { |row| csv << [row[1],row[0]] }
+    end
   end
 end
