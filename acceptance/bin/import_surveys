@@ -15,7 +15,7 @@ csv_path = ARGV.shift
 raise "You need to create a configuration file named '#{ENVIRONMENT}.yml' under lib/config" unless File.exists? "#{File.dirname(__FILE__)}/../lib/config/#{ENVIRONMENT}.yml"
 
 raise "Could not locate survey file '#{svy_path}'" unless File.exists? svy_path
-raise "Could not locate csv file '#{svy_path}'" unless File.exists? csv_path
+raise "Could not locate csv file '#{csv_path}'" unless File.exists? csv_path
 
 require 'watir-webdriver'
 require 'watir-webdriver/extensions/alerts'

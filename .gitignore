@@ -9,5 +9,6 @@ acceptance/lib/config/*.yml
 acceptance/results.html
 acceptance/lib/input_files/temp
 acceptance/info.log
+acceptance/bin/info.log
 dump.rdb
 screenshots
