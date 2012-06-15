@@ -22,3 +22,5 @@ Setup database
 Seed database (settings + initial account)
 
     rake db:seed
+
+Accept the rvmrc file
