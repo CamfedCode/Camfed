@@ -9,6 +9,8 @@ class EpiSurveyorDashboardPage
   file_field :file_location, :name => 'uploadsurveyfile'
   button :upload, :text => 'Upload'
   list_item :upload_ok, :text => 'Form uploaded successfully'
+  unordered_list :input_area, :class => 'inputarea'
+  list_item(:error_message) { |page| page.input_area_element.list_item_element(:index => 7) }
 
   def upload_file file_path
     import
