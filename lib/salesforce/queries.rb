@@ -56,19 +56,19 @@ module Salesforce
 
         field_values.each_pair do |field, value|
           next if value.nil?
-          field_values[field] = englishify(value, value)
-          the_value = value.to_s.strip
-          
+          the_value = englishify(value, value)
+          field_values[field] = the_value
+
           #Skip EpiSurveyor uses "~" when a previous answer invalidates the question
           #E.g.   
           #     Q1: Did you receive SNF? A: No
           #     Q2: What amount was Received? A: ~, since Q1 was No
-          
-          field_values[field] = nil if the_value == '~'
-          field_values[field] = 'true' if the_value.downcase == 'yes' unless /maybe/=~ field.to_s
-          field_values[field] = 'false' if the_value.downcase == 'no' unless /maybe/=~ field.to_s
 
-          field_values[field] = the_value.gsub(/\|/, ';') if the_value.include?("|")
+          field_values[field] = nil if the_value == '~'
+          field_values[field] = 'true' if the_value.to_s.strip.downcase == 'yes' unless /maybe/=~ field.to_s
+          field_values[field] = 'false' if the_value.to_s.strip.downcase == 'no' unless /maybe/=~ field.to_s
+
+          field_values[field] = the_value.to_s.gsub(/\|/, ';') if the_value.to_s.include?("|")
 
           ## this is important
           ## FAQ:"To prevent SOQL injection, use an escapeSingleQuotes method."

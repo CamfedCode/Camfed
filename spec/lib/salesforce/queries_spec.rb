@@ -179,6 +179,8 @@ describe Salesforce::Queries do
       REDIS.set("Rouge", "Red")
       REDIS.set("Bleu", "Blue")
       REDIS.set("Vert", "Green")
+      REDIS.set("Hapana", "No")
+      REDIS.set("Ndiyo", "Yes")
       @sf_object = SampleSalesforceObject.new
       @sf_object[:CPP] = ' Yes '
       @sf_object[:CPP_placing] = ' No '
@@ -187,6 +189,9 @@ describe Salesforce::Queries do
       @sf_object[:CPP_maybe] = ' Yes '
       @sf_object[:What_time] = 'il ay dize air'
       @sf_object[:Pick_three] = 'Rouge|Bleu|Vert'
+      @sf_object[:Any_Other_Training_Given] = 'Hapana'
+      @sf_object[:Got_Feedback] = 'Ndiyo'
+      @sf_object[:Got_Vaccination_maybe] = 'Hapana'
     end
     
     after(:each) do
@@ -243,6 +248,9 @@ describe Salesforce::Queries do
       @sf_object.sanitize_values!
       @sf_object[:What_time].should == "it is ten o'clock"
       @sf_object[:Pick_three].should == 'Red;Blue;Green'
+      @sf_object[:Any_Other_Training_Given].should == "false"
+      @sf_object[:Got_Feedback].should == "true"
+      @sf_object[:Got_Vaccination_maybe].should == "No"
     end
   end
   
