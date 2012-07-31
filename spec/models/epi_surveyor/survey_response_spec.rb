@@ -125,7 +125,59 @@ describe EpiSurveyor::SurveyResponse do
       end
             
     end
-    
+    describe 'sync and check for import histories' do
+      before (:each) do
+        @survey_response = EpiSurveyor::SurveyResponse.new
+        @survey_response.question_answers = {'a_question' => 'an answer',
+                                             'b_question' => 'b answer',
+                                             'c_question' => "c'answer"}
+        @survey_response.id = '1'
+        @survey = EpiSurveyor::Survey.new(:name => 'a_survey', :id => '1')
+        @survey.save!
+        @survey_response.survey = @survey
+        @object_mapping = ObjectMapping.new(:id => 1, :survey_id => @survey.id, :salesforce_object_name => "School_Termly_Update__c")
+
+      end
+      it "synced? should return true if import history exists and sync errors doesnot exist" do
+            import_history = ImportHistory.new(:survey_id => @survey.id, :survey_response_id => @survey_response.id)
+            import_history.save!
+            @survey_response.synced?.should == true
+      end
+
+      it "synced? should return false if import history exists and sync errors also exist" do
+            import_history = ImportHistory.new(:survey_id => @survey.id, :survey_response_id => @survey_response.id)
+            import_history.save!
+            sync_error = SyncError.new(:salesforce_object => 'School_Termly_Update__c', :import_history_id => import_history.id)
+            sync_error.save!
+            @survey_response.synced?.should == false
+      end
+
+      it "synced? should return false if import history doesnot exist" do
+            @survey_response.synced?.should == false
+      end
+
+      it "should delete sync errors if the latest sync! is success" do
+        object_history = Salesforce::ObjectHistory.new(:salesforce_id => '1', :salesforce_object => 'AnObject')
+        mv_salesforce_object = Salesforce::Base.new
+        mv_salesforce_object.should_receive(:sync!).exactly(2).times.and_return(object_history)
+        Salesforce::Base.should_receive(:where).exactly(2).times.with(:name => 'School_Termly_Update__c').and_return([mv_salesforce_object])
+
+        @survey_response.sync! [@object_mapping]
+        import_history = ImportHistory.where(:survey_id => "1", :survey_response_id => "1").first
+        import_history.should_not be nil
+        import_history.sync_errors.should be_blank
+
+        import_history.sync_errors << SyncError.new(:salesforce_object => 'AnObject')
+        import_history.save!
+
+        @survey_response.sync! [@object_mapping]
+        import_history = ImportHistory.where(:survey_id => "1", :survey_response_id => "1").first
+        import_history.should_not be nil
+        import_history.sync_errors.should be_blank
+      end
+
+    end
+
     it 'should return if already synced' do
       Salesforce::Base.should_not_receive(:where)
       mapping = {'Monitoring_Visit__c' => {:School__c => 'School'}}
@@ -133,7 +185,7 @@ describe EpiSurveyor::SurveyResponse do
       response.should_receive(:synced?).and_return(true)
       response.sync!(mapping)
     end
-    
+
     it 'should dump errors into import histories if there is any' do
       response = EpiSurveyor::SurveyResponse.new
       sf_object = ''

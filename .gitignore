@@ -12,3 +12,4 @@ acceptance/info.log
 acceptance/bin/info.log
 dump.rdb
 screenshots
+.powrc

@@ -26,7 +26,7 @@ module EpiSurveyor
       body = auth.merge(:surveyid => survey.id)
       survey_data = post('/api/surveydata', :body => body, :headers => headers)
       return [] if survey_data.nil? || survey_data['SurveyDataList'].nil? || survey_data['SurveyDataList']['SurveyData'].nil?
-    
+
       survey_data_hashes = survey_data['SurveyDataList']['SurveyData']
       survey_data_hashes = [] << survey_data_hashes unless survey_data_hashes.is_a?(Array)
     
@@ -47,22 +47,28 @@ module EpiSurveyor
     def sync! object_mappings
       return if synced?
       
-      import_history = ImportHistory.new(:survey_id => survey.id, :survey_response_id => self.id)
+      import_history = @import_history || ImportHistory.new(:survey_id => survey.id, :survey_response_id => self.id)
 
+      sync_success = true
       object_mappings.each do |object_mapping|
         begin
           import_history.object_histories << salesforce_object(object_mapping).sync!
         rescue SyncException => sync_exception
           import_history.sync_errors << sync_exception.sync_error
+          sync_success = false
         end
       end
-
+      if sync_success
+        SyncError.where(:import_history_id => import_history.id).collect{|sync_error| sync_error.destroy}
+        import_history.sync_errors = []
+      end
       import_history.save!
       import_history
     end
     
     def synced?
-      ImportHistory.exists?(:survey_id => survey.id, :survey_response_id => self.id)
+      @import_history = ImportHistory.where(:survey_id => survey.id, :survey_response_id => self.id).first if ImportHistory.exists?(:survey_id => survey.id, :survey_response_id => self.id)
+      @import_history.nil? ? false : @import_history.sync_errors.blank?
     end
     
     def salesforce_object object_mapping
