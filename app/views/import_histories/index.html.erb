@@ -130,7 +130,7 @@ function listenDeleteSelected()
 		</td>
 		
         <td><%= import_history.survey_response_id %></td>
-        <td><%= time import_history.created_at %></td>
+        <td><%= time import_history.updated_at || import_history.created_at %></td>
 
         <td><%= import_history.status %></td>
         <td><%= link_to 'Show', import_history %></td>
