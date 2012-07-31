@@ -62,6 +62,7 @@ module EpiSurveyor
         SyncError.where(:import_history_id => import_history.id).collect{|sync_error| sync_error.destroy}
         import_history.sync_errors = []
       end
+      import_history.updated_at = Time.now
       import_history.save!
       import_history
     end
