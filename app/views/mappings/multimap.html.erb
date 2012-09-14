@@ -19,6 +19,10 @@
             return false;
         });
 
+        $("#cloneAllButton").click(function() {
+            $('#selected_surveys option').attr('selected', 'selected')
+        });
+
         function moveSelectedSurveys(sourceBoxId, targetBoxId){
             //Refer to this for jQuery help on select lists:
             // http://www.myphpetc.com/2009/03/jquery-select-elements-tips-and-tricks.html
@@ -72,7 +76,7 @@
           </tr>
 
           <tr>
-                <td colspan="3" align="right"> <%= submit_tag 'Clone to ALL', :confirm => "Begin clone operation for all selected surveys?"%> </td>
+                <td colspan="3" align="right"> <%= submit_tag 'Clone to ALL', :id => "cloneAllButton", :confirm => "Begin clone operation for all selected surveys?"%> </td>
           </tr>
 
         </table>
