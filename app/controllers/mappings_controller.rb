@@ -20,6 +20,18 @@ class MappingsController < AuthenticatedController
     add_crumb 'Clone from Another Survey'
   end
 
+  def multimap
+    @base_survey = EpiSurveyor::Survey.find(params[:survey_id])
+    @target_surveys = @base_survey.find_potential_list_of_target_surveys_for_cloning_mappings_into
+    add_crumb 'Surveys', surveys_path
+    add_crumb 'Mappings', survey_mappings_path(@base_survey)
+    add_crumb 'Clone Mapping Into Multiple Surveys'
+  end
+
+  def multiclone
+    # To add logic for multi clone
+  end
+
   def clone
     begin
       source_survey = EpiSurveyor::Survey.find(params[:source_survey_id])

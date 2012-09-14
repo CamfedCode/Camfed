@@ -24,8 +24,11 @@ Camfed::Application.routes.draw do
     resources :questions
     resources :mappings do
       collection do
-        post 'clone'
         get 'source'
+        post 'clone'
+
+        get 'multimap'
+        post 'multiclone'
       end
     end
     resources :object_mappings do

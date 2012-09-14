@@ -10,6 +10,10 @@ module EpiSurveyor
     attr_accessible :id, :notification_email
     attr_accessor :responses
 
+    def find_potential_list_of_target_surveys_for_cloning_mappings_into
+      Survey.all.reject{|survey| survey == self}.sort_by(&:name)
+    end
+
     def responses
       @responses ||= SurveyResponse.find_all_by_survey(self)
     end

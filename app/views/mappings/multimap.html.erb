@@ -1,0 +1,64 @@
+<% content_for :javascripts do %>
+    <%= javascript_include_tag \
+	'https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js',
+    'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js',
+    'jquery.rails',
+    'jquery.purr',
+     %>
+
+    <script type="text/javascript">
+        $("#moveRight").click(function() {
+            alert("Handler for .click() called.");
+            return false;
+        });
+    </script>
+
+<% end %>
+
+
+<%= title "Select the Target Surveys into which the mappings of #{@base_survey.name} will be cloned", true %>
+
+<br/>
+
+<%= form_tag multiclone_survey_mappings_path do %>
+        
+        <table>
+
+          <tr>
+                <th>Surveys</th>
+                <th>&nbsp;</th>
+                <th>Clone Into</th>
+          </tr>
+
+          <tr>
+                <td>
+                <%= select_tag "selected_surveys", options_from_collection_for_select(@target_surveys, "name", "name") , {:multiple => true, :size => 25}  %>
+                </td>
+
+                <td>
+                  <input type="button" id="moveRight" value=">>" title="Move to Right"/>
+                  <br/>
+                  <input type="button" id="moveLeft" value="<<" title="Move to Left"/>
+                </td>
+
+                <td>
+                <%= select_tag "selected_surveys", "" , {:multiple => true, :size => 25, :style => "width:400px"}  %>
+                </td>
+          </tr>
+
+          <tr>
+                <td colspan="3" align="right"> <%= submit_tag 'Clone to ALL', :confirm => "Begin clone operation for all selected surveys?"%> </td>
+          </tr>
+
+        </table>
+
+        <p>
+
+
+
+
+        </p>
+
+
+  <%end%>
+
