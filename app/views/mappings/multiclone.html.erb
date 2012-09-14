@@ -1,14 +1,25 @@
-<%= title "Cloning Report", true %>
+<%= title "Mapping Cloning Report (Base Survey: #{@base_survey.name} ) ", true %>
 
-    <table border="1">
+    <table class="report" border="1">
       <tr>
+        <th> Survey </th>
+        <th> Status </th>
         <th> Message</th>
       </tr>
 
 
-      <% @messages.each do |message| %>
+      <% @status_messages.each do |status| %>
           <tr>
-            <td><%= message %></td>
+     
+            <td><%= status.name %></td>
+            
+            <% if status.error_status %>
+                <td><div class="error"> FAILED </div></td>
+            <% else %>
+                <td><div class="notice"> PASS </div></td>
+          <% end %>
+            
+            <td><%= status.message %></td>
           </tr>
       <% end %>
 

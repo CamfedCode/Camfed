@@ -29,26 +29,30 @@ class MappingsController < AuthenticatedController
   end
 
   def multiclone
-    base_survey = EpiSurveyor::Survey.find(params[:survey_id])
+    @base_survey = EpiSurveyor::Survey.find(params[:survey_id])
     target_surveys = EpiSurveyor::Survey.find(params[:selected_surveys])
 
-    @messages = []
+    @status_messages = []
+    some_error_occurred = false
 
     target_surveys.each do |survey|
       begin
-        survey.clone_mappings_from! base_survey
-        @messages << "#{survey.name}: Success."
+        survey.clone_mappings_from! @base_survey
+        @status_messages << Status.new(survey.name, false, "-")
       rescue MappingCloneException => mapping_clone_error
-        @messages << "#{survey.name}: Mapping Error due to missing question: #{mapping_clone_error.message}"
+        @status_messages << Status.new(survey.name, true, "Missing questions: #{mapping_clone_error.message}")
+        some_error_occurred=true
       rescue Exception => error
-        @messages << "#{survey.name}: Mapping Error: #{error.message}"
+        @status_messages << Status.new(survey.name, true, error.message)
+        some_error_occurred=true
       end
     end
 
-    flash[:notice] = "Cloned operation completed successfully." unless @messages.present?
-    flash[:error] = "Cloned operation had some failures." if @messages.present?
-
-    #redirect_to multimap_survey_mappings_path(params[:survey_id])
+    if some_error_occurred
+      flash[:error] = "Cloned operation had some failures."
+    else
+      flash[:notice] = "Cloned operation completed successfully."
+    end
 
   end
 

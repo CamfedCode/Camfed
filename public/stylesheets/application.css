@@ -246,6 +246,25 @@ table.import_histories tr.incomplete{
 	background-color: #FFFF99;
 }
 
+table.report{
+    width: 80%;
+    border-collapse: collapse;
+}
+
+table.report td, table.report th{
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+table.report td{
+    border-bottom: 1px solid black;
+}
+
+table.report th{
+    font-weight: bold;
+    text-align: left;
+}
+
 table.dictionaries tr.even{
     background-color: #DFD7C8;
 }
