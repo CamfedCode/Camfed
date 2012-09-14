@@ -32,22 +32,23 @@ class MappingsController < AuthenticatedController
     base_survey = EpiSurveyor::Survey.find(params[:survey_id])
     target_surveys = EpiSurveyor::Survey.find(params[:selected_surveys])
 
-    @errors = []
+    @messages = []
 
     target_surveys.each do |survey|
       begin
         survey.clone_mappings_from! base_survey
+        @messages << "#{survey.name}: Success."
       rescue MappingCloneException => mapping_clone_error
-        @errors << "#{survey.name}: Mapping Error due to missing question: #{mapping_clone_error.message}"
+        @messages << "#{survey.name}: Mapping Error due to missing question: #{mapping_clone_error.message}"
       rescue Exception => error
-        @errors << "#{survey.name}: Mapping Error: #{error.message}"
+        @messages << "#{survey.name}: Mapping Error: #{error.message}"
       end
     end
 
-    flash[:notice] = "Cloned operation completed." unless @errors.present?
-    flash[:error] = "Cloned operation completed with Errors." if @errors.present?
+    flash[:notice] = "Cloned operation completed successfully." unless @messages.present?
+    flash[:error] = "Cloned operation had some failures." if @messages.present?
 
-    redirect_to multimap_survey_mappings_path(params[:survey_id])
+    #redirect_to multimap_survey_mappings_path(params[:survey_id])
 
   end
 

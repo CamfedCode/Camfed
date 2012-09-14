@@ -1,0 +1,15 @@
+<%= title "Cloning Report", true %>
+
+    <table border="1">
+      <tr>
+        <th> Message</th>
+      </tr>
+
+
+      <% @messages.each do |message| %>
+          <tr>
+            <td><%= message %></td>
+          </tr>
+      <% end %>
+
+    </table>
