@@ -32,7 +32,7 @@
 
           <tr>
                 <td>
-                <%= select_tag "selected_surveys", options_from_collection_for_select(@target_surveys, "name", "name") , {:multiple => true, :size => 25}  %>
+                <%= select_tag "available_surveys", options_from_collection_for_select(@target_surveys, :id, :name) , {:multiple => true, :size => 25}  %>
                 </td>
 
                 <td>
@@ -42,7 +42,7 @@
                 </td>
 
                 <td>
-                <%= select_tag "selected_surveys", "" , {:multiple => true, :size => 25, :style => "width:400px"}  %>
+                <%= select_tag "selected_surveys", options_for_select([["MV-Dist-School-Burs",5926], ["Demo", 6042]]), {:multiple => true, :size => 25, :style => "width:400px"}  %>
                 </td>
           </tr>
 

@@ -29,7 +29,26 @@ class MappingsController < AuthenticatedController
   end
 
   def multiclone
-    # To add logic for multi clone
+    base_survey = EpiSurveyor::Survey.find(params[:survey_id])
+    target_surveys = EpiSurveyor::Survey.find(params[:selected_surveys])
+
+    @errors = []
+
+    target_surveys.each do |survey|
+      begin
+        survey.clone_mappings_from! base_survey
+      rescue MappingCloneException => mapping_clone_error
+        @errors << "#{survey.name}: Mapping Error due to missing question: #{mapping_clone_error.message}"
+      rescue Exception => error
+        @errors << "#{survey.name}: Mapping Error: #{error.message}"
+      end
+    end
+
+    flash[:notice] = "Cloned operation completed." unless @errors.present?
+    flash[:error] = "Cloned operation completed with Errors." if @errors.present?
+
+    redirect_to multimap_survey_mappings_path(params[:survey_id])
+
   end
 
   def clone
