@@ -54,6 +54,9 @@ class MappingsController < AuthenticatedController
       flash[:notice] = "Cloned operation completed successfully."
     end
 
+    add_crumb 'Surveys', surveys_path
+    add_crumb 'Mappings', survey_mappings_path(@base_survey)
+
   end
 
   def clone
