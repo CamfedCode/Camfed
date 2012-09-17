@@ -8,20 +8,25 @@
 
     <script type="text/javascript">
 
-        $("#moveRight").click(function() {
-            moveSelectedSurveys("available_surveys", "selected_surveys");
-            return false;
-        });
+        $(document).ready(function () {
+
+            $("#moveRight").click(function() {
+                moveSelectedSurveys("available_surveys", "selected_surveys");
+                return false;
+            });
 
 
-        $("#moveLeft").click(function() {
-            moveSelectedSurveys("selected_surveys", "available_surveys");
-            return false;
+            $("#moveLeft").click(function() {
+                moveSelectedSurveys("selected_surveys", "available_surveys");
+                return false;
+            });
+
+            $("#cloneAllButton").click(function() {
+                $('#selected_surveys option').attr('selected', 'selected')
+            });
+
         });
 
-        $("#cloneAllButton").click(function() {
-            $('#selected_surveys option').attr('selected', 'selected')
-        });
 
         function moveSelectedSurveys(sourceBoxId, targetBoxId){
             //Refer to this for jQuery help on select lists:
