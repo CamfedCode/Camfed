@@ -4,6 +4,14 @@
   <title>
     <%= yield_or_render :title, 'Camfed' %>
   </title>
+
+  <% if content_for? :javascripts %>
+      <%= yield :javascripts %>
+  <% else %>
+      <%= javascript_include_tag :defaults %>
+  <% end %>
+
+
   <% if content_for? :stylesheets %>
       <%= yield :stylesheets %>
   <% else %>
@@ -61,15 +69,6 @@
     <%= yield %>
   </div>
 </div>
-
-
-<!--Including Javascript at end to ensure all elements are ready-->
-<% if content_for? :javascripts %>
-    <%= yield :javascripts %>
-<% else %>
-    <%= javascript_include_tag :defaults %>
-<% end %>
-
 
 </body>
 </html>
