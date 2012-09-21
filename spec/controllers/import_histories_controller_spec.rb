@@ -17,14 +17,16 @@ describe ImportHistoriesController do
       assigns(:import_histories).should eq([mock_import_history])
     end
     
-    it 'should return all import histories when no filter criteria is specified' do
-      ImportHistory.should_receive(:get_by_filter).with(nil, "All", nil, nil).and_return([mock_import_history])
+    it 'should import histories for pat 45 days when no filter criteria is specified' do
+      today = Date.today
+      forty_five_days_ago = today - 45
+      ImportHistory.should_receive(:get_by_filter).with(nil, "All", forty_five_days_ago, today).and_return([mock_import_history])
       get :index, :survey_id => nil, :status => "All", :start_date => "", :end_date => ""
       assigns(:import_histories).should eq([mock_import_history])
     end
 
     it 'should set end date to now if the start date is specified but the end date is not' do
-      ImportHistory.should_receive(:get_by_filter).with(nil, "All", "2011/07/20", an_instance_of(Time)).and_return([mock_import_history])
+      ImportHistory.should_receive(:get_by_filter).with(nil, "All", "2011/07/20", Date.today).and_return([mock_import_history])
       get :index, :survey_id => nil, :status => "All", :start_date => "2011/07/20", :end_date => ""
       assigns(:import_histories).should eq([mock_import_history])
     end
