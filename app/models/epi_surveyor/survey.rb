@@ -4,6 +4,7 @@ module EpiSurveyor
     base_uri Configuration.instance.epi_surveyor_url
     extend EpiSurveyor::Dependencies::ClassMethods
 
+    self.per_page = 20
     has_many :object_mappings, :dependent => :destroy
     has_many :import_histories, :dependent => :destroy
 

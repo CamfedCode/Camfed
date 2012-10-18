@@ -43,8 +43,8 @@
 </div>
 <% end %>
 
+<div><%= will_paginate @surveys %></div></br>
 <%= form_tag  do %>
-
 	<%= render :partial => 'select_and_import' %>
 	
 	<span class="sync_with_epi_surveyor">
@@ -74,3 +74,4 @@
 	</ol>
 	<%= render :partial => 'select_and_import' %>
 <% end %>
+</br><div><%= will_paginate @surveys %></div>

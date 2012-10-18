@@ -8,9 +8,9 @@ class SurveysController < AuthenticatedController
     
     if !start_date.nil? and !end_date.nil?
       end_date = end_date.to_time.advance(:days => 1).to_date
-      @surveys = EpiSurveyor::Survey.where("surveys.mapping_last_modified_at between ? AND ?", start_date, end_date)
+      @surveys = EpiSurveyor::Survey.where("surveys.mapping_last_modified_at between ? AND ?", start_date, end_date).paginate(:page => params[:page]).order('name ASC')
     else
-      @surveys = EpiSurveyor::Survey.all
+      @surveys = EpiSurveyor::Survey.paginate(:page => params[:page]).order('name ASC')
     end
     add_crumb 'Surveys'
   end

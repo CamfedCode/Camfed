@@ -7,6 +7,7 @@ gem 'devise', '~> 1.1.7'
 gem 'httparty'
 gem 'crummy'
 gem 'redis'
+gem 'will_paginate', '~>3.0.0'
 
 gem 'heroku'
 gem 'best_in_place', :path => 'vendor/gems/best_in_place-0.2.3'
