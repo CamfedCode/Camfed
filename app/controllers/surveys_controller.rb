@@ -65,7 +65,7 @@ class SurveysController < AuthenticatedController
   end
   
   def search
-    @surveys = EpiSurveyor::Survey.where("LOWER(surveys.name) LIKE ?", "%#{params[:query].downcase}%")
+    @surveys = EpiSurveyor::Survey.where("LOWER(surveys.name) LIKE ?", "%#{params[:query].downcase}%").paginate(:page => params[:page]).order('name ASC')
     add_crumb 'Surveys', surveys_path
     add_crumb "Search results for: #{params[:query]}"
     render :index
