@@ -5,12 +5,12 @@ class SurveysController < AuthenticatedController
     end_date=params[:end_date]
     start_date=nil if start_date.nil? or start_date.empty?
     end_date=nil if end_date.nil? or end_date.empty?
-    
+
     if !start_date.nil? and !end_date.nil?
       end_date = end_date.to_time.advance(:days => 1).to_date
-      @surveys = EpiSurveyor::Survey.where("surveys.mapping_last_modified_at between ? AND ?", start_date, end_date)
+      @surveys = EpiSurveyor::Survey.ordered.modified_between(start_date, end_date).page(params[:page])
     else
-      @surveys = EpiSurveyor::Survey.all
+        @surveys = EpiSurveyor::Survey.ordered.page(params[:page])
     end
     add_crumb 'Surveys'
   end
@@ -65,7 +65,7 @@ class SurveysController < AuthenticatedController
   end
   
   def search
-    @surveys = EpiSurveyor::Survey.where("LOWER(surveys.name) LIKE ?", "%#{params[:query].downcase}%")
+    @surveys = EpiSurveyor::Survey.where("LOWER(surveys.name) LIKE ?", "%#{params[:query].downcase}%").page(params[:page]).ordered
     add_crumb 'Surveys', surveys_path
     add_crumb "Search results for: #{params[:query]}"
     render :index

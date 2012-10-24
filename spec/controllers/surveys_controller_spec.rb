@@ -7,28 +7,39 @@ describe SurveysController do
   end
   
   describe "GET 'index'" do
-    it "should get all surveys" do
+    it "should get the first page of all surveys if no page attribute is specified" do
       surveys = []
-      EpiSurveyor::Survey.should_receive(:all).and_return(surveys)
+      EpiSurveyor::Survey.stub_chain(:ordered, :page).with(nil).and_return(surveys)
       get 'index'      
       response.should be_success
       assigns[:surveys].should == surveys
     end
     
-    it "should get all surveys whose mapping was modified between the specified start and end dates" do
+    it "should get the first page of all surveys whose mapping was modified between the specified start and end dates" do
+      @relation = mock(ActiveRecord::Relation)
       surveys = []
       start_date = "2011/07/01"
       end_date = "2011/07/15".to_time.advance(:days => 1).to_date
-      EpiSurveyor::Survey.should_receive(:where).with("surveys.mapping_last_modified_at between ? AND ?", start_date, end_date).and_return([])
+      EpiSurveyor::Survey.stub_chain(:ordered, :modified_between).with(start_date, end_date).and_return(@relation)
+      @relation.should_receive(:page).with(nil).and_return(surveys)
       get 'index', :start_date => '2011/07/01', :end_date => '2011/07/15'     
       response.should be_success
       assigns[:surveys].should == surveys
     end
     
-    it "should get all surveys if only the start date is specified for the mapping last modified date filter" do
+    it "should get first page of all surveys if only the start date is specified for the mapping last modified date filter" do
       surveys = []
-      EpiSurveyor::Survey.should_receive(:all).and_return(surveys)
+      EpiSurveyor::Survey.stub_chain(:ordered, :page).with(nil).and_return(surveys)
       get 'index', :start_date => '2011/07/01', :end_date => ""    
+      response.should be_success
+      assigns[:surveys].should == surveys
+    end
+
+    it "should get the appropriate page of all surveys if page attribute is specified" do
+      @page = 2
+      surveys = []
+      EpiSurveyor::Survey.stub_chain(:ordered, :page).with(@page).and_return(surveys)
+      get 'index', :page => 2
       response.should be_success
       assigns[:surveys].should == surveys
     end
@@ -85,7 +96,10 @@ describe SurveysController do
   
   describe 'Get Search' do
     it 'should render index with @surveys' do
-      EpiSurveyor::Survey.should_receive(:where).with("LOWER(surveys.name) LIKE ?", "%query%").and_return([])
+      @relation = mock(ActiveRecord::Relation)
+      EpiSurveyor::Survey.should_receive(:where).with("LOWER(surveys.name) LIKE ?", "%query%").and_return(@relation)
+      @relation.should_receive(:page).with(nil).and_return(@relation)
+      @relation.should_receive(:ordered).and_return([])
       get 'search', :query => 'QUERY'
       response.should render_template :index
       assigns[:surveys].should == []
