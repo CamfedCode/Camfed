@@ -43,8 +43,8 @@
 </div>
 <% end %>
 
+<div><%= will_paginate @surveys %></div></br>
 <%= form_tag  do %>
-
 	<%= render :partial => 'select_and_import' %>
 	
 	<span class="sync_with_epi_surveyor">
@@ -52,7 +52,7 @@
 	</span>
 	
 	<ol class="surveys">
-	<% @surveys.sort_by{|survey| survey.name}.each do |survey|%>
+	<% @surveys.each do |survey|%>
 		<li>
 			<div class="survey">
 				<div class="survey_name">
@@ -74,3 +74,4 @@
 	</ol>
 	<%= render :partial => 'select_and_import' %>
 <% end %>
+</br><div><%= will_paginate @surveys %></div>
