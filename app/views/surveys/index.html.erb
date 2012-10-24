@@ -52,7 +52,7 @@
 	</span>
 	
 	<ol class="surveys">
-	<% @surveys.sort_by{|survey| survey.name}.each do |survey|%>
+	<% @surveys.each do |survey|%>
 		<li>
 			<div class="survey">
 				<div class="survey_name">

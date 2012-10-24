@@ -11,6 +11,12 @@ module EpiSurveyor
     attr_accessible :id, :notification_email
     attr_accessor :responses
 
+    scope :ordered, order('name ASC')
+
+    scope :page, lambda { |page| paginate(:page => page) }
+
+    scope :modified_between, lambda { |start_date, end_date| where("surveys.mapping_last_modified_at between ? AND ?", start_date, end_date)}
+
     def find_potential_list_of_target_surveys_for_cloning_mappings_into
       Survey.all.reject{|survey| survey == self}.sort_by(&:name)
     end
