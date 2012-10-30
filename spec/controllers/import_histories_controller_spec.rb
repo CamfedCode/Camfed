@@ -19,8 +19,8 @@ describe ImportHistoriesController do
     
     it 'should import histories for pat 45 days when no filter criteria is specified' do
       today = Date.today
-      forty_five_days_ago = today - 45
-      ImportHistory.should_receive(:get_by_filter).with(nil, "All", forty_five_days_ago, today).and_return([mock_import_history])
+      thirty_days_ago = today - 30
+      ImportHistory.should_receive(:get_by_filter).with(nil, "All", thirty_days_ago, today).and_return([mock_import_history])
       get :index, :survey_id => nil, :status => "All", :start_date => "", :end_date => ""
       assigns(:import_histories).should eq([mock_import_history])
     end

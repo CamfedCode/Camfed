@@ -3,7 +3,7 @@ class ImportHistoriesController < AuthenticatedController
   def index
     today = Date.today
     start_date = params[:start_date]
-    start_date = (today - 45) if start_date.nil? or start_date.empty?
+    start_date = (today - 30) if start_date.nil? or start_date.empty?
     end_date = params[:end_date]
     end_date = nil if end_date.nil? or end_date.empty?
     end_date = today if end_date.nil? and !start_date.nil?
