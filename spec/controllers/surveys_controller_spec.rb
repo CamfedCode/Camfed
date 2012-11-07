@@ -43,6 +43,16 @@ describe SurveysController do
       response.should be_success
       assigns[:surveys].should == surveys
     end
+
+    it "should get the first page of surveys starting with the specified alphabet" do
+      @relation = mock(ActiveRecord::Relation)
+      surveys = []
+      EpiSurveyor::Survey.stub_chain(:ordered, :starting_with).with('A').and_return(@relation)
+      @relation.should_receive(:page).with(nil).and_return(surveys)
+      get 'index', :start_with => 'A'
+      response.should be_success
+      assigns[:surveys].should == surveys
+    end
   end
   
   describe "GET 'edit'" do

@@ -43,6 +43,12 @@
 </div>
 <% end %>
 
+</br><div>
+<% ("A".."Z").each do |l| %>
+	<%= link_to l, surveys_path(:start_with => l) %>
+<% end %>
+</div></br>
+
 <div><%= will_paginate @surveys %></div></br>
 <%= form_tag  do %>
 	<%= render :partial => 'select_and_import' %>

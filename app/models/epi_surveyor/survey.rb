@@ -17,6 +17,8 @@ module EpiSurveyor
 
     scope :modified_between, lambda { |start_date, end_date| where("surveys.mapping_last_modified_at between ? AND ?", start_date, end_date)}
 
+    scope :starting_with, lambda { |starting_char| where("UPPER(surveys.name) like ?", starting_char + '%') }
+
     def find_potential_list_of_target_surveys_for_cloning_mappings_into
       Survey.all.reject{|survey| survey == self}.sort_by(&:name)
     end
