@@ -5,10 +5,11 @@ describe "CSV data extractor" do
   describe "parse CSV" do
   it "should return the hash for the parsed CSV file" do
     translation_hash = parse_csv(csv_file)
-    translation_hash.keys.length.should == 11
+    translation_hash.keys.length.should == 12
     translation_hash["Shule ya Msingi" ].should == "Primary"
     translation_hash["Maendeleo ya Mtoto" ].should == "Child Development"
     translation_hash["Muhula wa 1" ].should == "Term 1"
+    translation_hash['language'].should == "Swahili"
   end
 
    def csv_file

@@ -6,6 +6,7 @@ describe DictionariesController do
   before(:each) do
     sign_on
     @file = fixture_file_upload("/files/test_translations.csv",'text/csv')
+    @other_language_file = fixture_file_upload("/files/test_translations_other_language.csv",'text/csv')
     @non_csv_file = fixture_file_upload("/notifier/sync_email",'text/csv')
   end
 
@@ -17,7 +18,7 @@ describe DictionariesController do
                         "Malezi na Ushauri Nasaha"=>"Guidance and COunselling", "Ulinzi wa Mtoto"=>"Child Protection",
                         "Uhamasishaji wa Jamii"=>"Community Mobilisation", "Afya ya Uzazi"=>"Reproducitve Health",
                         "Maendeleo ya Mtoto"=>"Child Development", "Mengineyo"=>"Other", "blank value"=>""}
-    Dictionary.should_receive(:save).with(translation_hash)
+    Dictionary.should_receive(:save).with(translation_hash, 'Swahili')
     post :upload , :file =>@file
     flash[:notice].should == "Translations uploaded successfully"
   end
@@ -30,6 +31,11 @@ describe DictionariesController do
   it 'should flash error if uploaded file is not in CSV format' do
     post :upload, :file => @non_csv_file
     flash[:error].should == "Upload a valid CSV file"
+  end
+
+  it 'should flash error if uploaded language is not one of the supported languages' do
+    post :upload, :file => @other_language_file
+    flash[:error].should == "Dictionary not supported for the uploaded language - Tamil"
   end
   end
 

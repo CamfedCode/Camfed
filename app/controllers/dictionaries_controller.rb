@@ -1,8 +1,11 @@
 class DictionariesController < AuthenticatedController
   include CSVDataExtractor
 
+  @@default_language = 'Swahili'
   def index
-    @all_translations = Dictionary.get_all_translations
+    @language = (params[:language].nil?) ? @@default_language : params[:language]
+    @all_translations = Dictionary.get_all_translations(@language)
+    @languages = Configuration.supported_languages
     respond_to do|format|
       format.html do
         add_crumb "Dictionary"
@@ -26,13 +29,19 @@ class DictionariesController < AuthenticatedController
       redirect_to dictionaries_path
       return
     end
+
     csv_file = params[:file].read
     translation_hash = parse_csv(csv_file)
-    Dictionary.save(translation_hash)
-    add_crumb "Dictionary"
-    flash[:notice] = "Translations uploaded successfully"
-    redirect_to dictionaries_path
-
+    language = translation_hash.delete('language')
+    if is_language_valid?(language)
+      Dictionary.save(translation_hash, language)
+      add_crumb "Dictionary"
+      flash[:notice] = "Translations uploaded successfully"
+      redirect_to dictionaries_path(:language => language)
+    else
+      flash[:error] = "Dictionary not supported for the uploaded language - " + language
+      redirect_to dictionaries_path(:language => @@default_language)
+    end
   end
 
   def sample_download
@@ -45,9 +54,13 @@ class DictionariesController < AuthenticatedController
     filename.blank? ? false : (filename.original_filename.split(".").last == "csv")
   end
 
+  def is_language_valid?(language)
+    Configuration.supported_languages.include?(language.strip)
+  end
+
   def generate_csv
     CSV.generate do |csv|
-      csv << ["English", "Swahili"]
+      csv << ["English", @language]
       @all_translations.map { |row| csv << [row[1],row[0]] }
     end
   end
