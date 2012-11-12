@@ -32,14 +32,20 @@ class DictionariesController < AuthenticatedController
 
     csv_file = params[:file].read
     translation_hash = parse_csv(csv_file)
-    language = translation_hash.delete('language')
-    if is_language_valid?(language)
-      Dictionary.save(translation_hash, language)
+    invalid_languages = Array.new
+    translation_hash.each_key do |language|
+      invalid_languages.push(language)  if !is_language_valid?(language)
+    end
+
+    if invalid_languages.empty?
+      translation_hash.each_pair do |language, language_hash|
+        Dictionary.save(language_hash, language)
+      end
       add_crumb "Dictionary"
       flash[:notice] = "Translations uploaded successfully"
-      redirect_to dictionaries_path(:language => language)
+      redirect_to dictionaries_path(:language => translation_hash.keys.first)
     else
-      flash[:error] = "Dictionary not supported for the uploaded language - " + language
+      flash[:error] = "Dictionary not supported for the uploaded language(s) - " + invalid_languages.to_s
       redirect_to dictionaries_path(:language => @@default_language)
     end
   end

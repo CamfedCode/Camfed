@@ -35,7 +35,7 @@ describe DictionariesController do
 
   it 'should flash error if uploaded language is not one of the supported languages' do
     post :upload, :file => @other_language_file
-    flash[:error].should == "Dictionary not supported for the uploaded language - Tamil"
+    flash[:error].should == "Dictionary not supported for the uploaded language(s) - [\"Tamil\"]"
   end
   end
 
