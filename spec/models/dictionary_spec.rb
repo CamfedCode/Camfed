@@ -9,7 +9,7 @@ describe Dictionary do
   describe "save translations" do
   it "should save translation hash to redis database" do
     Dictionary.save(@translations)
-    REDIS.keys.count.should == @translations.keys.length
+    REDIS.keys.count.should == @translations.keys.length + 1
     REDIS.get("Shule ya Msingi").should == @translations["Shule ya Msingi"]
   end
   end
