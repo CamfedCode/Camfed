@@ -125,7 +125,7 @@ module EpiSurveyor
     end
 
     def self.delete_old_surveys mapping_last_modified_at
-      # querying Survey to get mappings last modified > n years and de;ete them
+      # querying Survey to get mappings last modified > n years and delete them
       surveys = EpiSurveyor::Survey.where("mapping_last_modified_at < ?", (mapping_last_modified_at.years.ago).utc)
       surveys.all.each do |survey|
         survey.destroy
