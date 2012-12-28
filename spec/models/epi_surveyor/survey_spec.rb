@@ -209,8 +209,26 @@ describe EpiSurveyor::Survey do
       sync_email_2.should_receive(:deliver)      
       EpiSurveyor::Survey.sync_and_notify!.should == [1, 1]
     end
+  end
 
-    
+  describe 'delete_old_surveys' do
+    it 'should delete surveys with mapping > 3 years' do
+    surveys = [EpiSurveyor::Survey.new, EpiSurveyor::Survey.new]
+      surveys.each do |survey| 
+        survey.name = 'test'
+        survey.mapping_last_modified_at = 5.years.ago
+        survey.save
+        p "param value in 1: #{survey.name}"
+        p "param value in 1: #{survey.mapping_last_modified_at}"
+      end 
+
+      new_survey = EpiSurveyor::Survey.new
+      new_survey.name = 'new_survey'
+      new_survey.mapping_last_modified_at = Time.now
+      new_survey.save
+      EpiSurveyor::Survey.delete_old_surveys(3)
+      EpiSurveyor::Survey.count.should == 1
+    end   
   end
   
 end
