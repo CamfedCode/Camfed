@@ -77,6 +77,9 @@ module EpiSurveyor
       object_mapping.field_mappings.each do |field_mapping|
         sf_object[field_mapping.field_name] = value_for(field_mapping)
       end
+      sf_object_fields = sf_object.salesforce_fields.collect(&:name)
+      sf_object[APP_CONSTANTS['SALES_FORCE_FIELDS']['FORM_ID']] = survey.id if sf_object_fields.include?(APP_CONSTANTS['SALES_FORCE_FIELDS']['FORM_ID'])
+      sf_object[APP_CONSTANTS['SALES_FORCE_FIELDS']['USER_ID']] = self[APP_CONSTANTS['SURVEY_FORM_FIELDS']['USER_ID']]  if sf_object_fields.include?(APP_CONSTANTS['SALES_FORCE_FIELDS']['USER_ID'])
       sf_object
     end
     
