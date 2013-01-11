@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '~> 3.0.4'
+gem 'rails', '~> 3.0.19'
 
 gem 'rforce'
 gem 'devise', '~> 1.1.7'
