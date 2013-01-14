@@ -1,5 +1,5 @@
 ## Build Status
-![Current Build Status](http://travis-ci.org/CamfedCode/Camfed.png)
+[![Current Build Status](http://travis-ci.org/CamfedCode/Camfed.png)
 
 ## Environment Setup
 
@@ -24,3 +24,8 @@ Seed database (settings + initial account)
     rake db:seed
 
 Accept the rvmrc file
+
+## License
+Apache License, Version 2.0
+Copyright (c) Camfed 2010-2013
+http://www.camfed.org
