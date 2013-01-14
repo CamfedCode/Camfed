@@ -77,12 +77,20 @@ module EpiSurveyor
       object_mapping.field_mappings.each do |field_mapping|
         sf_object[field_mapping.field_name] = value_for(field_mapping)
       end
+      sf_object = map_formID_and_userID_fields(sf_object)
+    end
+
+    def map_formID_and_userID_fields  sf_object
+      form_id_attribute = APP_CONSTANTS['SALES_FORCE_FIELDS']['FORM_ID']
+      user_id_attribute = APP_CONSTANTS['SALES_FORCE_FIELDS']['USER_ID']
+      survey_user_id_attribute = APP_CONSTANTS['SURVEY_FORM_FIELDS']['USER_ID']
+
       sf_object_fields = sf_object.salesforce_fields.collect(&:name)
-      sf_object[APP_CONSTANTS['SALES_FORCE_FIELDS']['FORM_ID']] = survey.id if sf_object_fields.include?(APP_CONSTANTS['SALES_FORCE_FIELDS']['FORM_ID'])
-      sf_object[APP_CONSTANTS['SALES_FORCE_FIELDS']['USER_ID']] = self[APP_CONSTANTS['SURVEY_FORM_FIELDS']['USER_ID']]  if sf_object_fields.include?(APP_CONSTANTS['SALES_FORCE_FIELDS']['USER_ID'])
+      sf_object[form_id_attribute] = survey.id if sf_object_fields.include?(form_id_attribute)
+      sf_object[user_id_attribute] = self[survey_user_id_attribute]  if sf_object_fields.include?(user_id_attribute)
       sf_object
     end
-    
+
     def value_for field_mapping
       return field_mapping.predefined_value if field_mapping.predefined_value?
       return lookup(field_mapping) if field_mapping.lookup?      
