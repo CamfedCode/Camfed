@@ -107,6 +107,7 @@ describe EpiSurveyor::SurveyResponse do
         @mapping = ObjectMapping.new
         @mapping.salesforce_object_name = 'Monitoring_Visit__c'
         @mapping.field_mappings.build(:field_name => 'School__c', :question_name => 'School')
+        @mv_salesforce_object.should_receive(:salesforce_fields).and_return([Salesforce::Field.new('some_field')])
       end
     
       it "should call sync! of Monitoring Visit" do
@@ -161,6 +162,7 @@ describe EpiSurveyor::SurveyResponse do
         mv_salesforce_object = Salesforce::Base.new
         mv_salesforce_object.should_receive(:sync!).exactly(2).times.and_return(object_history)
         Salesforce::Base.should_receive(:where).exactly(2).times.with(:name => 'School_Termly_Update__c').and_return([mv_salesforce_object])
+        mv_salesforce_object.should_receive(:salesforce_fields).exactly(2).and_return([Salesforce::Field.new('some_field')])
 
         @survey_response.sync! [@object_mapping]
         import_history = ImportHistory.where(:survey_id => "1", :survey_response_id => "1").first
@@ -204,6 +206,54 @@ describe EpiSurveyor::SurveyResponse do
 
       import_history = response.sync!(['mapping', 'mapping 2'])
       import_history.sync_errors.should have(2).things
+    end
+
+    describe 'include user_id & form_id' do
+      before(:each) do
+        survey = EpiSurveyor::Survey.new
+        survey.id = 1
+        survey.name = 'Mv-Dist-Info'
+
+
+        @response = EpiSurveyor::SurveyResponse.new
+        @response['Name'] = "test user"
+        @response['School'] = "school a"
+        @response['UserId'] = 'some@email.com'
+        @response.id = "2"
+        @response.survey = survey
+        @response.should_receive(:synced?).and_return(false)
+        @mv_salesforce_object = Salesforce::Base.new
+
+        object_history = Salesforce::ObjectHistory.new(:salesforce_id => '1', :salesforce_object => 'AnObject')
+        @mv_salesforce_object.should_receive(:sync!).and_return(object_history)
+
+        Salesforce::Base.should_receive(:where).with(:name => 'Monitoring_Visit__c').and_return([@mv_salesforce_object])
+
+        @mapping = ObjectMapping.new
+        @mapping.salesforce_object_name = 'Monitoring_Visit__c'
+        @mapping.field_mappings.build(:field_name => 'School__c', :question_name => 'School')
+      end
+
+      it 'should include user_id & form_id when they are defined fields in the salesforce object' do
+        @mv_salesforce_object.should_receive(:salesforce_fields).and_return([Salesforce::Field.new('Form_ID__c'), Salesforce::Field.new('User_ID__c')])
+
+        @response.sync!([@mapping])
+
+        @mv_salesforce_object['School__c'].should == 'school a'
+        @mv_salesforce_object['Form_ID__c'].should == 1
+        @mv_salesforce_object['User_ID__c'].should == 'some@email.com'
+      end
+
+      it 'should not include user_id & form_id when they are not defined fields in the salesforce object' do
+        @mv_salesforce_object.should_receive(:salesforce_fields).and_return([Salesforce::Field.new('some element')])
+
+        @response.sync!([@mapping])
+
+        @mv_salesforce_object['School__c'].should == 'school a'
+        @mv_salesforce_object['Form_ID__c'].should be_nil
+        @mv_salesforce_object['User_ID__c'].should be_nil
+      end
+
     end
   end
   
