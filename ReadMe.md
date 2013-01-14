@@ -1,5 +1,5 @@
 ## Build Status
-[![Current Build Status](http://travis-ci.org/CamfedCode/Camfed.png)
+[![Build Status](https://travis-ci.org/CamfedCode/Camfed.png)](https://travis-ci.org/CamfedCode/Camfed)
 
 ## Environment Setup
 
