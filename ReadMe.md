@@ -26,6 +26,8 @@ Seed database (settings + initial account)
 Accept the rvmrc file
 
 ## License
+
 Apache License, Version 2.0
+
 Copyright (c) Camfed 2010-2013
 http://www.camfed.org
