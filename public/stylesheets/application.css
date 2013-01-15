@@ -105,6 +105,7 @@ li.object_mapping div.object_name h3, li.salesforce_object div.salesforce_object
 li.object_mapping div.object_name div.actions, li.salesforce_object div.salesforce_object div.actions, li.dictionary div.dictionary div.actions{
 	float: right;
 	padding-right: 5px;
+    padding-top: 10px;
 }
 
 ol.object_mappings, ol.field_mappings, ol.salesforce_objects, ol.dictionaries{
