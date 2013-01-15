@@ -29,5 +29,5 @@ Accept the rvmrc file
 
 Apache License, Version 2.0
 
-Copyright (c) Camfed 2010-2013
+Copyright (c) Camfed International 2011-2013
 http://www.camfed.org
