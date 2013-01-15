@@ -4,7 +4,7 @@
    =========================================================================
 
    Camfed Episurveyor to SalesForce Data Migration Tool
-   Copyright 2010-2013 Camfed.
+   Copyright 2011-2013 Camfed International.
 
    This product includes software developed at
    Camfed (http://www.camfed.org/).
