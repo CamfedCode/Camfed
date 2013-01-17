@@ -5,7 +5,7 @@ describe EpiSurveyor::SurveyResponse do
   describe 'find_all_by_survey' do
     before(:each) do
       @survey = EpiSurveyor::Survey.new
-      @survey.id = 1
+      @survey.id = "1"
       @survey.name = 'Mv-Dist-Info'
       # configuration = Configuration.new
       # Configuration.stub!(:instance).and_return(configuration)
@@ -240,7 +240,7 @@ describe EpiSurveyor::SurveyResponse do
         @response.sync!([@mapping])
 
         @mv_salesforce_object['School__c'].should == 'school a'
-        @mv_salesforce_object['Form_ID__c'].should == 1
+        @mv_salesforce_object['Form_ID__c'].should == "1"
         @mv_salesforce_object['User_ID__c'].should == 'some@email.com'
       end
 

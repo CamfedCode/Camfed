@@ -86,7 +86,7 @@ module EpiSurveyor
       survey_user_id_attribute = APP_CONSTANTS['SURVEY_FORM_FIELDS']['USER_ID']
 
       sf_object_fields = sf_object.salesforce_fields.collect(&:name)
-      sf_object[form_id_attribute] = survey.id if sf_object_fields.include?(form_id_attribute)
+      sf_object[form_id_attribute] = survey.id.to_s if sf_object_fields.include?(form_id_attribute)
       sf_object[user_id_attribute] = self[survey_user_id_attribute]  if sf_object_fields.include?(user_id_attribute)
       sf_object
     end
