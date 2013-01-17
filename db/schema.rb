@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121102085123) do
+ActiveRecord::Schema.define(:version => 20130114124504) do
 
   create_table "add_default_value_to_field_mapppings", :force => true do |t|
     t.datetime "created_at"
@@ -80,6 +80,7 @@ ActiveRecord::Schema.define(:version => 20121102085123) do
     t.datetime "updated_at"
     t.string   "notification_email"
     t.datetime "mapping_last_modified_at"
+    t.string   "mapping_status",           :default => ""
   end
 
   create_table "sync_errors", :force => true do |t|

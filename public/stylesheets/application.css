@@ -410,3 +410,23 @@ span.survey_last_modified{
   height: 25px;
   text-indent: -9999px;
 }
+
+div.mapping_details{
+  padding-top: 15px;
+}
+
+div.unmapped_fields{
+    padding-top: 15px;
+}
+
+span.unmapped{
+  color: red;
+}
+
+span.mapped{
+  color: green;
+}
+
+span.partial{
+  color: blue;
+}

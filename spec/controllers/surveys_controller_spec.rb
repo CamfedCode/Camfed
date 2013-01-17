@@ -115,4 +115,14 @@ describe SurveysController do
       assigns[:surveys].should == []
     end
   end
+
+  describe 'update_mapping_status' do
+    it 'should update mapping_status' do
+      survey = EpiSurveyor::Survey.create(:id => 1)
+      post 'update_mapping_status', :id => 1, :mapping_status => 'Mapped'
+      survey.reload
+      survey.mapping_status.should == 'Mapped'
+      response.should redirect_to survey_mappings_path(survey)
+    end
+  end
 end

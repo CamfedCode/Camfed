@@ -63,11 +63,12 @@
 			<div class="survey">
 				<div class="survey_name">
 					<%= check_box_tag 'survey_ids[]', survey.id %>
-					<span><%= survey.name %></span> | 
-					<%= "Imported #{distance_of_time_in_words(Time.now, survey.last_imported_at)} ago" if survey.last_imported_at%> | 
+					<span><%= survey.name %></span> |
+					<%= "Imported #{distance_of_time_in_words(Time.now, survey.last_imported_at)} ago" if survey.last_imported_at%> |
 					<span class="survey_last_modified"><%= "Mapping changed #{distance_of_time_in_words(Time.now, survey.mapping_last_modified_at)} ago" if survey.mapping_last_modified_at%></span>
 				</div>
-				<div class="actions">					
+				<div class="actions">
+          <span class="<%= survey.mapping_status.underscore %>"><%= survey.mapping_status %></span>|
 					<%= link_to 'Mappings', survey_mappings_path(survey.id) %> |
 					<%= link_to 'History', survey_import_histories_path(survey.id) %> |
 					<%= link_to 'Questions', survey_questions_path(survey.id) %> |

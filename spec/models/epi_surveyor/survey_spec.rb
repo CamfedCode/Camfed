@@ -230,5 +230,80 @@ describe EpiSurveyor::Survey do
       EpiSurveyor::Survey.count.should == 1
     end   
   end
+
+  describe "unmapped_questions" do
+    it "should return all questions list if object_mapping is not present" do
+      survey = EpiSurveyor::Survey.new
+      questions = [EpiSurveyor::Question.new, EpiSurveyor::Question.new]
+      survey.should_receive(:questions).and_return(questions)
+
+      survey.unmapped_questions.should == questions
+    end
+
+    it "should exclude questions which are mapped directly as questions" do
+      survey = EpiSurveyor::Survey.new
+      question1 = EpiSurveyor::Question.new
+      question1.name = 'question1'
+      question2 = EpiSurveyor::Question.new
+      question2.name = 'question2'
+      survey.object_mappings << ObjectMapping.new
+      survey.object_mappings.first.field_mappings << FieldMapping.new(:question_name => 'question2')
+      survey.should_receive(:questions).and_return([question1, question2])
+
+      result = survey.unmapped_questions
+
+      result.size.should == 1
+      result.first.name.should == 'question1'
+    end
+
+    it "should exclude questions which are mapped through lookup_condition" do
+      survey = EpiSurveyor::Survey.new
+      question1 = EpiSurveyor::Question.new
+      question1.name = 'question1'
+      question2 = EpiSurveyor::Question.new
+      question2.name = 'question2'
+      survey.object_mappings << ObjectMapping.new
+      survey.object_mappings.first.field_mappings << FieldMapping.new(:lookup_condition => "School WHERE District__c='a1AT0000000x5UL' AND Name=<question2>")
+      survey.should_receive(:questions).and_return([question1, question2])
+
+      result = survey.unmapped_questions
+
+      result.size.should == 1
+      result.first.name.should == 'question1'
+    end
+  end
+
+  describe "update_mapping_status" do
+    it "should update mapping status as Unmapped if all questions are unmapped" do
+      survey = EpiSurveyor::Survey.create
+      questions = [EpiSurveyor::Question.new, EpiSurveyor::Question.new]
+      survey.should_receive(:questions).and_return(questions)
+      survey.should_receive(:unmapped_questions).and_return(questions)
+
+      survey.update_mapping_status
+      survey.reload
+      survey.mapping_status.should == EpiSurveyor::Survey::MAPPING_STATUS::UNMAPPED
+    end
+
+    it "should update mapping status as Unmapped if some questions are mapped" do
+      survey = EpiSurveyor::Survey.create
+      question1 = EpiSurveyor::Question.new
+      question2 = EpiSurveyor::Question.new
+      survey.should_receive(:questions).and_return([question1, question2])
+      survey.should_receive(:unmapped_questions).and_return([question2])
+
+      survey.update_mapping_status
+      survey.reload
+      survey.mapping_status.should == EpiSurveyor::Survey::MAPPING_STATUS::PARTIAL
+    end
+
+    it "should update not update mapping status if mapping_status is Mapped" do
+      survey = EpiSurveyor::Survey.create(:mapping_status => EpiSurveyor::Survey::MAPPING_STATUS::MAPPED)
+
+      survey.update_mapping_status
+      survey.reload
+      survey.mapping_status.should == EpiSurveyor::Survey::MAPPING_STATUS::MAPPED
+    end
+  end
   
 end

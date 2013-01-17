@@ -8,7 +8,7 @@ module EpiSurveyor
     has_many :object_mappings, :dependent => :destroy
     has_many :import_histories, :dependent => :destroy
 
-    attr_accessible :id, :notification_email
+    attr_accessible :id, :notification_email, :mapping_status
     attr_accessor :responses
 
     scope :ordered, order('name ASC')
@@ -18,6 +18,13 @@ module EpiSurveyor
     scope :modified_between, lambda { |start_date, end_date| where("surveys.mapping_last_modified_at between ? AND ?", start_date, end_date)}
 
     scope :starting_with, lambda { |starting_char| where("UPPER(surveys.name) like ?", starting_char + '%') }
+
+    module MAPPING_STATUS
+      MAPPED = 'Mapped'
+      PARTIAL = 'Partial'
+      UNMAPPED = 'Unmapped'
+      ALL = [MAPPED, PARTIAL, UNMAPPED]
+    end
 
     def find_potential_list_of_target_surveys_for_cloning_mappings_into
       Survey.all.reject{|survey| survey == self}.sort_by(&:name)
@@ -131,7 +138,19 @@ module EpiSurveyor
         survey.destroy
       end  
 
-    end 
+    end
+
+    def update_mapping_status
+      update_attributes!(:mapping_status => ((unmapped_questions.count == questions.count) ? MAPPING_STATUS::UNMAPPED : MAPPING_STATUS::PARTIAL)) if mapping_status != MAPPING_STATUS::MAPPED
+    end
+
+    def unmapped_questions
+      return questions unless object_mappings.present?
+      questions.reject do |question|
+        filed_mappings = object_mappings.collect(&:field_mappings).flatten
+        filed_mappings.collect(&:question_name).index{ |x| x =~/#{question.name}/ }.present? || filed_mappings.collect(&:lookup_condition).index{ |x| x =~/<#{question.name}>/ }.present?
+      end
+    end
 
   end
 

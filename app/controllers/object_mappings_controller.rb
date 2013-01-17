@@ -29,6 +29,7 @@ class ObjectMappingsController < AuthenticatedController
   def update
     @object_mapping = ObjectMapping.find(params[:id])
     if @object_mapping.update_attributes(sanitized_params)
+      @object_mapping.survey.update_mapping_status
       flash[:notice] = "Successfully saved the mappings."
     else
       flash[:error] = "The mapping was not saved. Please check log file for more."

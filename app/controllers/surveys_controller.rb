@@ -76,6 +76,13 @@ class SurveysController < AuthenticatedController
     add_crumb "Search results for: #{params[:query]}"
     render :index
   end
+
+  def update_mapping_status
+    survey = EpiSurveyor::Survey.find params[:id]
+    survey.update_attributes!(:mapping_status => params[:mapping_status])
+    flash[:notice] = "Mapping status updated"
+    redirect_to survey_mappings_path(survey)
+  end
   
   private
   def errors_count import_histories
