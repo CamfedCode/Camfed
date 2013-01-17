@@ -14,6 +14,7 @@
 
 <div class="mapping_details">
   <%= form_tag update_mapping_status_survey_path(@survey), :method => :post do %>
+    <b>Unmapped Questions:</b> <%= select_tag("unmapped_questions", options_for_select(@survey.unmapped_questions.collect(&:name))) %> |
     <b>Mapping Status:</b> <span class="<%= @survey.mapping_status.underscore %>"><%= @survey.mapping_status %></span> |
     <b>Update Status:</b> <%= select_tag("mapping_status", options_for_select(EpiSurveyor::Survey::MAPPING_STATUS::ALL, EpiSurveyor::Survey::MAPPING_STATUS::MAPPED)) %>
     <%= submit_tag 'Update' %>
