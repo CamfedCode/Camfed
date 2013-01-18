@@ -13,6 +13,7 @@ Camfed::Application.routes.draw do
     member do
       get 'edit'
       put 'update'
+      post 'update_mapping_status'
     end
     
     resources :import_histories do

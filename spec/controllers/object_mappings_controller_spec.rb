@@ -58,8 +58,11 @@ describe ObjectMappingsController do
                                       }
                                     }
                 }
-
+      survey = EpiSurveyor::Survey.new(:id => 1)
+      EpiSurveyor::Survey.stub(:find).with(1, anything).and_return(survey)
+      survey.should_receive(:update_mapping_status)
       mapping = ObjectMapping.create(:survey_id => 1, :salesforce_object_name => 'AnObject')
+
       put :update, :id => mapping.id, :object_mapping => params[:object_mapping]
       mapping.reload
       mapping.field_mappings.first.field_name.should == 'a_field'
