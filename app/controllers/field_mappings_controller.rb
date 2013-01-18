@@ -5,6 +5,7 @@ class FieldMappingsController < AuthenticatedController
     @object_mapping.build_unmapped_field_mappings
     @questions = @object_mapping.survey.questions
     @questions_for_select = @questions.map {|question| [question.name, question.name]}
+    @unmapped_questions = @object_mapping.survey.unmapped_questions.collect(&:name)
     @salesforce_objects = Salesforce::Base.where(:enabled => true)
     add_crumb 'Surveys', surveys_path
     add_crumb 'Mappings', survey_mappings_path(@object_mapping.survey_id)

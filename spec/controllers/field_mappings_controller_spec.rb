@@ -14,6 +14,7 @@ describe FieldMappingsController do
     it 'should populate object mapping and questions' do
       ObjectMapping.should_receive(:find).with(2).and_return object_mapping
       object_mapping.should_receive :build_unmapped_field_mappings
+      survey.should_receive(:unmapped_questions).and_return [question]
 
       get :new, :object_mapping_id => 2
 
@@ -21,6 +22,7 @@ describe FieldMappingsController do
       assigns[:object_mapping].should == object_mapping
       assigns[:questions].should == [question]
       assigns[:questions_for_select].should == [['name', 'name']]
+      assigns[:unmapped_questions].should == ['name']
     end
   end
 

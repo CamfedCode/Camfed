@@ -81,6 +81,10 @@
 
 <%= render :partial => 'help' %>
 
+<div class="unmapped_fields">
+  <b>Unmapped Questions:</b> <%= select_tag("unmapped_questions", options_for_select(@unmapped_questions)) %>
+</div>
+
 <%= form_for @object_mapping do |object_mapping_form| %>
 	<div class="field_mapping_form">
 		<div class="field_mappings">
