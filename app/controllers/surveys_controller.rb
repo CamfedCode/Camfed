@@ -1,23 +1,7 @@
 class SurveysController < AuthenticatedController
   
   def index
-    start_date=params[:start_date]
-    end_date=params[:end_date]
-    start_date=nil if start_date.nil? or start_date.empty?
-    end_date=nil if end_date.nil? or end_date.empty?
-    starts_with = params[:start_with]
-    starts_with = nil if starts_with.nil? or starts_with.empty?
-
-    if !start_date.nil? and !end_date.nil?
-      end_date = end_date.to_time.advance(:days => 1).to_date
-      @surveys = EpiSurveyor::Survey.ordered.modified_between(start_date, end_date).page(params[:page])
-    else
-      if !starts_with.nil?
-        @surveys = EpiSurveyor::Survey.ordered.starting_with(starts_with).page(params[:page])
-      else
-        @surveys = EpiSurveyor::Survey.ordered.page(params[:page])
-      end
-    end
+    @surveys = EpiSurveyor::Survey.ordered.having_mapping_status(params[:mapping_status]).starting_with(params[:start_with]).modified_between(params[:start_date], params[:end_date]).page(params[:page])
     add_crumb 'Surveys'
   end
   
@@ -103,6 +87,6 @@ class SurveysController < AuthenticatedController
     end
     
   end
-  
+
 
 end

@@ -30,6 +30,8 @@
 	<td>Mapping Last modified date:</td>
 	<td><%= text_field_tag("start_date") %></td>
 	<td><%= text_field_tag("end_date") %></td>
+  <td>Mapping status:</td>
+  <td><%= select_tag(:mapping_status, options_for_select([['Any','']] + EpiSurveyor::Survey::MAPPING_STATUS::ALL, params[:mapping_status])) %></td>
 	<td><%= submit_tag("Filter") %></td>
 </tr><tr>
 		<td></td>

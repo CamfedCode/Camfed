@@ -15,9 +15,11 @@ module EpiSurveyor
 
     scope :page, lambda { |page| paginate(:page => page) }
 
-    scope :modified_between, lambda { |start_date, end_date| where("surveys.mapping_last_modified_at between ? AND ?", start_date, end_date)}
+    scope :modified_between, lambda { |start_date, end_date| where("surveys.mapping_last_modified_at between ? AND ?", start_date, (end_date.to_date + 1.day)) if start_date.present? && end_date.present? }
 
-    scope :starting_with, lambda { |starting_char| where("UPPER(surveys.name) like ?", starting_char + '%') }
+    scope :starting_with, lambda { |starting_char| where("UPPER(surveys.name) like ?", starting_char + '%') if starting_char.present? }
+
+    scope :having_mapping_status, lambda { |requested_status| where("surveys.mapping_status = ?", requested_status) if requested_status.present? }
 
     module MAPPING_STATUS
       MAPPED = 'Mapped'

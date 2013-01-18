@@ -305,5 +305,79 @@ describe EpiSurveyor::Survey do
       survey.mapping_status.should == EpiSurveyor::Survey::MAPPING_STATUS::MAPPED
     end
   end
-  
+
+  describe "having_mapping_status" do
+    before :each do
+      @survey1 = EpiSurveyor::Survey.create(:mapping_status => EpiSurveyor::Survey::MAPPING_STATUS::MAPPED)
+      @survey2 = EpiSurveyor::Survey.create(:mapping_status => EpiSurveyor::Survey::MAPPING_STATUS::UNMAPPED)
+    end
+
+    it "should return all records if having_mapping_status is scoped but no mapping_status is requested" do
+      surveys = EpiSurveyor::Survey.having_mapping_status(nil)
+      surveys.size.should == 2
+      surveys.include?(@survey1).should be_true
+      surveys.include?(@survey2).should be_true
+    end
+
+    it "should return records with requested mapping_status" do
+      surveys = EpiSurveyor::Survey.having_mapping_status(EpiSurveyor::Survey::MAPPING_STATUS::MAPPED)
+      surveys.size.should == 1
+      surveys.include?(@survey1).should be_true
+      surveys.include?(@survey2).should be_false
+    end
+  end
+
+  describe "modified_between" do
+    before :each do
+      @survey1 = EpiSurveyor::Survey.create
+      @survey2 = EpiSurveyor::Survey.create
+      @survey1.update_attribute(:mapping_last_modified_at, Time.now - 2.days)
+      @survey2.update_attribute(:mapping_last_modified_at, Time.now - 1.days)
+    end
+
+    it "should return all records if modified_between is scoped but no start_date, end_date is requested" do
+      surveys = EpiSurveyor::Survey.modified_between(nil,'')
+      surveys.size.should == 2
+      surveys.include?(@survey1).should be_true
+      surveys.include?(@survey2).should be_true
+    end
+
+    it "should return all records if modified_between is scoped and start_date is provided but no end_date is requested" do
+      surveys = EpiSurveyor::Survey.modified_between(Date.today - 2.days, nil)
+      surveys.size.should == 2
+      surveys.include?(@survey1).should be_true
+      surveys.include?(@survey2).should be_true
+    end
+
+    it "should return records within requested dates" do
+      surveys = EpiSurveyor::Survey.modified_between(Date.today - 3.days, Date.today - 2.days)
+      surveys.size.should == 1
+      surveys.include?(@survey1).should be_true
+      surveys.include?(@survey2).should be_false
+    end
+  end
+
+  describe "starting_with" do
+    before :each do
+      @survey1 = EpiSurveyor::Survey.create
+      @survey2 = EpiSurveyor::Survey.create
+      @survey1.update_attribute(:name, 'Abc')
+      @survey2.update_attribute(:name, 'Def')
+    end
+
+    it "should return all records if starting_with is scoped but start_with is requested" do
+      surveys = EpiSurveyor::Survey.starting_with(nil)
+      surveys.size.should == 2
+      surveys.include?(@survey1).should be_true
+      surveys.include?(@survey2).should be_true
+    end
+
+    it "should return records with requested start_with" do
+      surveys = EpiSurveyor::Survey.starting_with('A')
+      surveys.size.should == 1
+      surveys.include?(@survey1).should be_true
+      surveys.include?(@survey2).should be_false
+    end
+  end
+
 end
