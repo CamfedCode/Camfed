@@ -80,7 +80,7 @@ ActiveRecord::Schema.define(:version => 20130114124504) do
     t.datetime "updated_at"
     t.string   "notification_email"
     t.datetime "mapping_last_modified_at"
-    t.string   "mapping_status",           :default => ""
+    t.string   "mapping_status",           :default => "Unmapped"
   end
 
   create_table "sync_errors", :force => true do |t|

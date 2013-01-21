@@ -1,6 +1,6 @@
 class AddMappingStatusToSurveys < ActiveRecord::Migration
   def self.up
-    add_column :surveys, :mapping_status, :string, :default => ''
+    add_column :surveys, :mapping_status, :string, :default => EpiSurveyor::Survey::MAPPING_STATUS::UNMAPPED
 
     EpiSurveyor::Survey.all.each do |survey|
       survey.update_mapping_status
