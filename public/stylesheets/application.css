@@ -105,6 +105,7 @@ li.object_mapping div.object_name h3, li.salesforce_object div.salesforce_object
 li.object_mapping div.object_name div.actions, li.salesforce_object div.salesforce_object div.actions, li.dictionary div.dictionary div.actions{
 	float: right;
 	padding-right: 5px;
+    padding-top: 10px;
 }
 
 ol.object_mappings, ol.field_mappings, ol.salesforce_objects, ol.dictionaries{
@@ -244,6 +245,25 @@ table.import_histories tr.failed{
 
 table.import_histories tr.incomplete{
 	background-color: #FFFF99;
+}
+
+table.report{
+    width: 80%;
+    border-collapse: collapse;
+}
+
+table.report td, table.report th{
+    border-collapse: collapse;
+    padding: 5px;
+}
+
+table.report td{
+    border-bottom: 1px solid black;
+}
+
+table.report th{
+    font-weight: bold;
+    text-align: left;
 }
 
 table.dictionaries tr.even{
@@ -389,4 +409,24 @@ span.survey_last_modified{
   width: 25px;
   height: 25px;
   text-indent: -9999px;
+}
+
+div.mapping_details{
+  padding-top: 15px;
+}
+
+div.unmapped_fields{
+    padding-top: 15px;
+}
+
+span.unmapped{
+  color: red;
+}
+
+span.mapped{
+  color: green;
+}
+
+span.partial{
+  color: blue;
 }

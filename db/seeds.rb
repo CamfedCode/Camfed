@@ -7,6 +7,7 @@
 #   Mayor.create(:name => 'Daley', :city => cities.first)
 
 if Configuration.count == 0
+  Configuration.reset_column_information
   Configuration.create!({
       :epi_surveyor_url => 'https://www.episurveyor.org', 
       :epi_surveyor_user => 'Camfedtest@gmail.com',

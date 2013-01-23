@@ -1,17 +1,7 @@
 class SurveysController < AuthenticatedController
   
   def index
-    start_date=params[:start_date]
-    end_date=params[:end_date]
-    start_date=nil if start_date.nil? or start_date.empty?
-    end_date=nil if end_date.nil? or end_date.empty?
-    
-    if !start_date.nil? and !end_date.nil?
-      end_date = end_date.to_time.advance(:days => 1).to_date
-      @surveys = EpiSurveyor::Survey.where("surveys.mapping_last_modified_at between ? AND ?", start_date, end_date)
-    else
-      @surveys = EpiSurveyor::Survey.all
-    end
+    @surveys = EpiSurveyor::Survey.ordered.having_mapping_status(params[:mapping_status]).starting_with(params[:start_with]).modified_between(params[:start_date], params[:end_date]).page(params[:page])
     add_crumb 'Surveys'
   end
   
@@ -65,10 +55,17 @@ class SurveysController < AuthenticatedController
   end
   
   def search
-    @surveys = EpiSurveyor::Survey.where("LOWER(surveys.name) LIKE ?", "%#{params[:query].downcase}%")
+    @surveys = EpiSurveyor::Survey.where("LOWER(surveys.name) LIKE ?", "%#{params[:query].downcase}%").page(params[:page]).ordered
     add_crumb 'Surveys', surveys_path
     add_crumb "Search results for: #{params[:query]}"
     render :index
+  end
+
+  def update_mapping_status
+    survey = EpiSurveyor::Survey.find params[:id]
+    survey.update_attributes!(:mapping_status => params[:mapping_status])
+    flash[:notice] = "Mapping status updated"
+    redirect_to survey_mappings_path(survey)
   end
   
   private
@@ -90,6 +87,6 @@ class SurveysController < AuthenticatedController
     end
     
   end
-  
+
 
 end

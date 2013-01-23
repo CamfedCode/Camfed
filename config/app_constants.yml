@@ -1,0 +1,5 @@
+SALES_FORCE_FIELDS:
+  FORM_ID: 'Form_ID__c'
+  USER_ID: 'User_ID__c'
+SURVEY_FORM_FIELDS:
+  USER_ID: 'UserId'

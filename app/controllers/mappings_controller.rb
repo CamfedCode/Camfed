@@ -20,6 +20,45 @@ class MappingsController < AuthenticatedController
     add_crumb 'Clone from Another Survey'
   end
 
+  def multimap
+    @base_survey = EpiSurveyor::Survey.find(params[:survey_id])
+    @target_surveys = @base_survey.find_potential_list_of_target_surveys_for_cloning_mappings_into
+    add_crumb 'Surveys', surveys_path
+    add_crumb 'Mappings', survey_mappings_path(@base_survey)
+    add_crumb 'Clone Mapping Into Multiple Surveys'
+  end
+
+  def multiclone
+    @base_survey = EpiSurveyor::Survey.find(params[:survey_id])
+    target_surveys = EpiSurveyor::Survey.find(params[:selected_surveys])
+
+    @status_messages = []
+    some_error_occurred = false
+
+    target_surveys.each do |survey|
+      begin
+        survey.clone_mappings_from! @base_survey
+        @status_messages << Status.new(survey.name, false, "-")
+      rescue MappingCloneException => mapping_clone_error
+        @status_messages << Status.new(survey.name, true, "Missing questions: #{mapping_clone_error.message}")
+        some_error_occurred=true
+      rescue Exception => error
+        @status_messages << Status.new(survey.name, true, error.message)
+        some_error_occurred=true
+      end
+    end
+
+    if some_error_occurred
+      flash[:error] = "Cloned operation had some failures."
+    else
+      flash[:notice] = "Cloned operation completed successfully."
+    end
+
+    add_crumb 'Surveys', surveys_path
+    add_crumb 'Mappings', survey_mappings_path(@base_survey)
+
+  end
+
   def clone
     begin
       source_survey = EpiSurveyor::Survey.find(params[:source_survey_id])

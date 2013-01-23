@@ -12,6 +12,15 @@
 
 <%= render :partial => 'edit_links' %>
 
+<div class="mapping_details">
+  <%= form_tag update_mapping_status_survey_path(@survey), :method => :post do %>
+    <b>Unmapped Questions:</b> <%= select_tag("unmapped_questions", options_for_select(@survey.unmapped_questions.collect(&:name))) %> |
+    <b>Mapping Status:</b> <span class="<%= @survey.mapping_status.underscore %>"><%= @survey.mapping_status %></span> |
+    <b>Update Status:</b> <%= select_tag("mapping_status", options_for_select(EpiSurveyor::Survey::MAPPING_STATUS::ALL, EpiSurveyor::Survey::MAPPING_STATUS::MAPPED)) %>
+    <%= submit_tag 'Update' %>
+  <% end %>
+</div>
+
 <ol class="object_mappings">
 <% @survey.object_mappings.each do |object_mapping|%>
 	<li class="object_mapping">
@@ -21,7 +30,8 @@
 				Changed <%= distance_of_time_in_words(Time.now, object_mapping.updated_at) %> ago
 			</h3>
 			<div class="actions"><%= link_to 'Delete', object_mapping_path(object_mapping), :confirm => 'Are you sure you want to delete this one?', :method => :delete %></div>
-			<div class="clear"></div>
+      <div class="actions"><%= link_to 'Modify Mapping', new_object_mapping_field_mapping_path(object_mapping) %></div>
+      <div class="clear"></div>
 		</div>
 		<div class="field_mapping_form">
 			<div class="field_mappings">

@@ -1,0 +1,60 @@
+#!/usr/bin/env ruby
+
+$: << File.dirname(__FILE__)+'/../lib'
+
+if ARGV.count < 3
+  puts 'usage: import_surveys <environment> <svy file> <csv file>'
+  puts '  eg. import_surveys local sample.svy surveys.csv'
+  exit 1
+end
+
+ENVIRONMENT = ARGV.shift.to_sym
+svy_path = ARGV.shift
+csv_path = ARGV.shift
+
+raise "You need to create a configuration file named '#{ENVIRONMENT}.yml' under lib/config" unless File.exists? "#{File.dirname(__FILE__)}/../lib/config/#{ENVIRONMENT}.yml"
+
+raise "Could not locate survey file '#{svy_path}'" unless File.exists? svy_path
+raise "Could not locate csv file '#{csv_path}'" unless File.exists? csv_path
+
+require 'watir-webdriver'
+require 'watir-webdriver/extensions/alerts'
+require 'page-object'
+require 'epi_surveyor'
+require 'page-object/page_factory'
+require 'env_config'
+require 'pages'
+
+driver = (ENV['WEB_DRIVER'] || :firefox).to_sym
+client = Selenium::WebDriver::Remote::Http::Default.new
+
+@browser = Watir::Browser.new driver, :http_client => client
+
+include PageObject::PageFactory
+
+visit EpiSurveyorHomePage do |page|
+  page.login_to_epi
+end
+
+File.readlines(csv_path).each do |line|
+  survey_name = line.chomp
+  on EpiSurveyorDashboardPage do |page|
+    File.open("info.log", "a+") do |f|
+      unless page.surveys.include?(survey_name)
+        page.upload_file(EpiSurveyor::create_survey_file(survey_name, svy_path))
+        if page.surveys.include? survey_name
+          puts "Created survey: '#{survey_name}'"
+          f.puts "Created survey: '#{survey_name}'"
+        else
+          puts "Didn't create survey: '#{survey_name}' because of error message: '#{page.error_message}'"
+          f.puts "Didn't create survey: '#{survey_name}' because of error message: '#{page.error_message}'"
+        end
+      else
+        puts "Skipping survey: '#{survey_name}' as it already exists!"
+        f.puts "Skipping survey: '#{survey_name}' as it already exists!"
+      end
+    end
+  end
+end
+
+@browser.close

@@ -30,6 +30,8 @@
 	<td>Mapping Last modified date:</td>
 	<td><%= text_field_tag("start_date") %></td>
 	<td><%= text_field_tag("end_date") %></td>
+  <td>Mapping status:</td>
+  <td><%= select_tag(:mapping_status, options_for_select([['Any','']] + EpiSurveyor::Survey::MAPPING_STATUS::ALL, params[:mapping_status])) %></td>
 	<td><%= submit_tag("Filter") %></td>
 </tr><tr>
 		<td></td>
@@ -43,8 +45,14 @@
 </div>
 <% end %>
 
-<%= form_tag  do %>
+</br><div>
+<% ("A".."Z").each do |l| %>
+	<%= link_to l, surveys_path(:start_with => l) %>
+<% end %>
+</div></br>
 
+<div><%= will_paginate @surveys %></div></br>
+<%= form_tag  do %>
 	<%= render :partial => 'select_and_import' %>
 	
 	<span class="sync_with_epi_surveyor">
@@ -52,16 +60,17 @@
 	</span>
 	
 	<ol class="surveys">
-	<% @surveys.sort_by{|survey| survey.name}.each do |survey|%>
+	<% @surveys.each do |survey|%>
 		<li>
 			<div class="survey">
 				<div class="survey_name">
 					<%= check_box_tag 'survey_ids[]', survey.id %>
-					<span><%= survey.name %></span> | 
-					<%= "Imported #{distance_of_time_in_words(Time.now, survey.last_imported_at)} ago" if survey.last_imported_at%> | 
+					<span><%= survey.name %></span> |
+					<%= "Imported #{distance_of_time_in_words(Time.now, survey.last_imported_at)} ago" if survey.last_imported_at%> |
 					<span class="survey_last_modified"><%= "Mapping changed #{distance_of_time_in_words(Time.now, survey.mapping_last_modified_at)} ago" if survey.mapping_last_modified_at%></span>
 				</div>
-				<div class="actions">					
+				<div class="actions">
+          <span class="<%= survey.mapping_status.underscore %>"><%= survey.mapping_status %></span>|
 					<%= link_to 'Mappings', survey_mappings_path(survey.id) %> |
 					<%= link_to 'History', survey_import_histories_path(survey.id) %> |
 					<%= link_to 'Questions', survey_questions_path(survey.id) %> |
@@ -74,3 +83,4 @@
 	</ol>
 	<%= render :partial => 'select_and_import' %>
 <% end %>
+</br><div><%= will_paginate @surveys %></div>

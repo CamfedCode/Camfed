@@ -13,6 +13,7 @@ Camfed::Application.routes.draw do
     member do
       get 'edit'
       put 'update'
+      post 'update_mapping_status'
     end
     
     resources :import_histories do
@@ -24,8 +25,11 @@ Camfed::Application.routes.draw do
     resources :questions
     resources :mappings do
       collection do
-        post 'clone'
         get 'source'
+        post 'clone'
+
+        get 'multimap'
+        post 'multiclone'
       end
     end
     resources :object_mappings do

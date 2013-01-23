@@ -1,0 +1,91 @@
+<% content_for :javascripts do %>
+    <%= javascript_include_tag \
+	'https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js',
+    'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js',
+    'jquery.rails',
+    'jquery.purr',
+     %>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#moveRight").click(function() {
+                moveSelectedSurveys("available_surveys", "selected_surveys");
+                return false;
+            });
+
+
+            $("#moveLeft").click(function() {
+                moveSelectedSurveys("selected_surveys", "available_surveys");
+                return false;
+            });
+
+            $("#cloneAllButton").click(function() {
+                $('#selected_surveys option').attr('selected', 'selected')
+            });
+
+        });
+
+
+        function moveSelectedSurveys(sourceBoxId, targetBoxId){
+            //Refer to this for jQuery help on select lists:
+            // http://www.myphpetc.com/2009/03/jquery-select-elements-tips-and-tricks.html
+
+            // Get the value of the selected item
+            var selectedSurveyIDs = $.map($("#" + sourceBoxId + " option:selected"), function(e){return $(e).val();});
+            var selectedSurveyNames = $.map($("#" + sourceBoxId + " option:selected"), function(e){return $(e).text();});
+
+            // Add options to the target survey list
+            for (var index in selectedSurveyIDs) {
+                $("#" + targetBoxId).append("<option value='" + selectedSurveyIDs[index] + "'>" + selectedSurveyNames[index] + "</option>");
+            }
+
+            // Remove options to the target survey list
+            $("#" + sourceBoxId + " option:selected").remove();
+        }
+
+    </script>
+
+<% end %>
+
+
+<%= title "Select the Target Surveys into which the mappings of #{@base_survey.name} will be cloned", true %>
+
+<br/>
+
+<%= form_tag multiclone_survey_mappings_path do %>
+        
+        <table>
+
+          <tr>
+                <th>Surveys</th>
+                <th>&nbsp;</th>
+                <th>Clone Into</th>
+          </tr>
+
+          <tr>
+                <td>
+                <%= select_tag "available_surveys", options_from_collection_for_select(@target_surveys, :id, :name) , {:multiple => true, :size => 25, :style => "width:400px"}  %>
+                </td>
+
+                <td>
+                  <input type="button" id="moveRight" value=">>" title="Move to Right"/>
+                  <br/>
+                  <input type="button" id="moveLeft" value="<<" title="Move to Left"/>
+                </td>
+
+                <td>
+                <%= select_tag "selected_surveys", "", {:multiple => true, :size => 25, :style => "width:400px"}  %>
+                </td>
+          </tr>
+
+          <tr>
+                <td colspan="3" align="right"> <%= submit_tag 'Clone to ALL', :id => "cloneAllButton", :confirm => "Begin clone operation for all selected surveys?"%> </td>
+          </tr>
+
+        </table>
+
+  <%end%>
+
+
