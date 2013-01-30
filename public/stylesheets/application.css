@@ -300,6 +300,9 @@ div.configuration_form{
 	max-width: 700px;
 	width: 80%;
 }
+#test_sms input,#test_sms textarea{
+    display: block;
+}
 ol.surveys li:nth-child(2n+1),
 	ol.field_mappings li:nth-child(2n+1),
 	div.field_mappings div.field_mapping:nth-child(2n+1), 

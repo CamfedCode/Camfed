@@ -33,6 +33,19 @@ module Admin
       end
       
     end
+
+    def send_sms
+      begin
+        sms = Moonshado::Sms.new(params[:number], params[:message])
+        deliver_sms = sms.deliver_sms
+        logger.info("SMS gateway response was #{deliver_sms}")
+        flash[:notice] = 'Successfully sent the sms'
+      rescue Exception => error
+        logger.error "Error: '#{error}' encountered while trying to send sms with number: #{params[:number]} and message: #{params[:message]}"
+        flash[:error] = 'Error sending SMS'
+      end
+      redirect_to edit_admin_configuration_path
+    end
     
     
   end
