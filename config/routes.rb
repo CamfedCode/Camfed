@@ -51,7 +51,9 @@ Camfed::Application.routes.draw do
   resources :field_mappings
   
   namespace 'admin' do
-    resource :configuration
+    resource :configuration do
+      post 'send_sms'
+    end
     resources :users do
       member do
         put :activate

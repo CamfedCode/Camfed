@@ -61,3 +61,10 @@
 	
 	</div>
 <%end%>
+
+<h2>Test Moonshado Sms Service</h2>
+<%= form_tag(send_sms_admin_configuration_path, :method => :post, :id => 'test_sms') do %>
+    <input type="text" name="number" placeholder="Number" size="20"/>
+    <textarea rows="4" cols="50" name="message" placeholder="Message"></textarea>
+    <%= submit_tag "Send Test SMS" %>
+<% end %>
