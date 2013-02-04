@@ -42,7 +42,7 @@ module Admin
         flash[:notice] = 'Successfully sent the sms'
       rescue Exception => error
         logger.error "Error: '#{error}' encountered while trying to send sms with number: #{params[:number]} and message: #{params[:message]}"
-        flash[:error] = 'Error sending SMS'
+        flash[:error] = "Error sending SMS: #{error} "
       end
       redirect_to edit_admin_configuration_path
     end

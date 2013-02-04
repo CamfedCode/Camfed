@@ -55,13 +55,13 @@ describe Admin::ConfigurationsController do
 
     it("should fail to send the message when message length ") do
       post 'send_sms' , :number => "1-555-5556471", :message => "The length of this message is more than 163 characters and so this should easily fail. Lets try it out.Adding another line to increase te count. The number of characters is increasing now"
-      flash[:error].should == 'Error sending SMS'
+      flash[:error].should == 'Error sending SMS: Invalid message '
       response.should redirect_to(edit_admin_configuration_path)
     end
 
     it("should fail to send the message when using invalid ") do
       post 'send_sms' , :number => "invalid number", :message => "Test"
-      flash[:error].should == 'Error sending SMS'
+      flash[:error].should == 'Error sending SMS: Phone number (invalid number) is not formatted correctly '
       response.should redirect_to(edit_admin_configuration_path)
     end
   end
