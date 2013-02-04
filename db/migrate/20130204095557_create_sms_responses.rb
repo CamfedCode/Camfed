@@ -12,3 +12,4 @@ class CreateSmsResponses < ActiveRecord::Migration
     drop_table :sms_responses
   end
 end
+
