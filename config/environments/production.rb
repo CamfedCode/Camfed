@@ -56,4 +56,10 @@ Camfed::Application.configure do
     :password             => ENV['CAMFED_NOTIFICATION_PASSWORD'],
     :authentication       => 'plain',
     :enable_starttls_auto => true  }
+
+  config.after_initialize do
+    Moonshado::Sms.configure do |config|
+      config.api_key = ENV['MOONSHADOSMS_URL']
+    end
+  end
 end

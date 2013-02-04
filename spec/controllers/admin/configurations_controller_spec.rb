@@ -42,6 +42,29 @@ describe Admin::ConfigurationsController do
       flash[:notice].should == 'Successfully created the configuration changes'
     end
   end
+
+  describe "POST send_sms" do
+    it("should send sms using Moonshado") do
+      mock_sms = ""
+      Moonshado::Sms.should_receive(:new).with("1-555-5556471","Test sms").and_return(mock_sms)
+      mock_sms.should_receive(:deliver_sms)
+      post 'send_sms' , :number => "1-555-5556471", :message => "Test sms"
+      flash[:notice].should == 'Successfully sent the sms'
+      response.should redirect_to(edit_admin_configuration_path)
+    end
+
+    it("should fail to send the message when message length ") do
+      post 'send_sms' , :number => "1-555-5556471", :message => "The length of this message is more than 163 characters and so this should easily fail. Lets try it out.Adding another line to increase te count. The number of characters is increasing now"
+      flash[:error].should == 'Error sending SMS'
+      response.should redirect_to(edit_admin_configuration_path)
+    end
+
+    it("should fail to send the message when using invalid ") do
+      post 'send_sms' , :number => "invalid number", :message => "Test"
+      flash[:error].should == 'Error sending SMS'
+      response.should redirect_to(edit_admin_configuration_path)
+    end
+  end
   
   after(:each) do
     Configuration.rspec_reset
