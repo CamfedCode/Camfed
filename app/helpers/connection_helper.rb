@@ -3,9 +3,15 @@ module ConnectionHelper
 
     base_uri = url+"/api/surveys"
     headers = {'Content-Type' => 'application/x-www-form-urlencoded'}
-    response = HTTParty.post(base_uri, :body => auth_credentials, :headers => headers)
 
-    if(response.nil? or response['error'].present?)
+    begin
+      response = HTTParty.post(base_uri, :body => auth_credentials, :headers => headers)
+    rescue => e
+      Rails.logger.info ("Exception occurred. Error message: "+ e.message)
+      return "NOT OK"
+    end
+
+    if(response.nil? or response.has_key?("error"))
       Rails.logger.info ("Test connection with EPI failed. Response: "+ response.to_s)
       return "NOT OK"
     else
