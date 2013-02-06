@@ -46,7 +46,18 @@ module Admin
       end
       redirect_to edit_admin_configuration_path
     end
-    
-    
+
+
+    def testEpiConnection
+      auth = {:username => params[:epiUser],
+              :accesstoken => params[:epiToken]}
+
+      status = ConnectionHelper.check_connection_with_epi(params[:epiURL], auth)
+      render :json => {status:status}
+    end
+
+
+
+
   end
 end

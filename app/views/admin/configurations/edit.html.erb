@@ -1,6 +1,56 @@
+<% content_for :javascripts do %>
+    <%= javascript_include_tag \
+	'https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js',
+    'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js',
+    'jquery.rails',
+    'jquery.purr',
+    %>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#TestEPI").click(function () {
+
+                $("#progress-image").show();
+
+                //Make an AJAX Submit
+                $.ajax({
+                    url: $(this).attr('href'),
+                    data: {
+                             epiURL:   $("#configuration_epi_surveyor_url").val(),
+                             epiUser:  $("#configuration_epi_surveyor_user").val(),
+                             epiToken: $("#configuration_epi_surveyor_token").val()
+                        },
+                    dataType: "json"
+                }).success(displayEPIStatus);
+                return false; // Disallow normal link traversal.
+            });
+
+
+        });
+
+
+        function displayEPIStatus (jsonResponse) {
+            $("#progress-image").hide();
+            var status = jsonResponse.status;
+            if(status === "OK")
+                alert("EPI/Magpi Connection Successful :) ");
+            else
+                alert("EPI/Magpi Connection Error!!");
+        }
+
+
+    </script>
+
+<% end %>
+
+
+
 <%= title "Settings" %>
 
 <% method = @configuration.new_record? ? :post : :put%>
+
 
 <%= form_for @configuration, :url => admin_configuration_path, :method => method do |f|%>
 	<div class="configuration_form">
@@ -25,6 +75,9 @@
           <div class="input"><%= f.text_field :epi_surveyor_token, :size => 60 %></div>
           <div class="clear"></div>
         </div>
+
+        <div id="progress-image" style="display: none;"><img src="/images/progress-circle.gif" alt="Progress..." /></div>
+        <%= link_to "Test Connection", {:action => "testEpiConnection"}, :id=>"TestEPI"%>
 
       </fieldset>
 
