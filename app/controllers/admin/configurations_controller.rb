@@ -56,6 +56,12 @@ module Admin
       render :json => {status:status}
     end
 
+    def testSFConnection
+      logger.info("testSFConnection called")
+      status = ConnectionHelper.check_connection_with_salesforce(params[:sfURL], params[:sfUser], params[:sfToken])
+      render :json => {status:status}
+    end
+
 
 
 

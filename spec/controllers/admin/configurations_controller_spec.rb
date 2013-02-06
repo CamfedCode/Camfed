@@ -101,6 +101,45 @@ describe Admin::ConfigurationsController do
 
   end
 
+  describe "GET testSFConnection" do
+    it("should fail salesforce connection check") do
+
+      sfURL = "https://test.salesforce.com/services/Soap/u/20.0"
+      sfUser = "test@gmail.com"
+      sfToken = "dummyToken"
+
+      mock_binding = ""
+      RForce::Binding.should_receive(:new).and_return(mock_binding)
+      mock_binding.should_receive(:login).with(sfUser, sfToken).and_raise("Login failed exception")
+
+      get 'testSFConnection', :sfURL => sfURL, :sfUser => sfUser,:sfToken => sfToken
+
+      @expected = {
+          :status  => "NOT OK",
+      }.to_json
+      response.body.should == @expected
+    end
+
+    it("should pass salesforce connection check") do
+
+      sfURL = "https://test.salesforce.com/services/Soap/u/20.0"
+      sfUser = "test@gmail.com"
+      sfToken = "dummyToken"
+
+      mock_binding = ""
+      RForce::Binding.should_receive(:new).and_return(mock_binding)
+      mock_binding.should_receive(:login).with(sfUser, sfToken)
+
+      get 'testSFConnection', :sfURL => sfURL, :sfUser => sfUser,:sfToken => sfToken
+
+      @expected = {
+          :status  => "OK",
+      }.to_json
+      response.body.should == @expected
+    end
+
+  end
+
   after(:each) do
     Configuration.rspec_reset
   end

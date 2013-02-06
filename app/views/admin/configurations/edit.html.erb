@@ -10,6 +10,9 @@
 
         $(document).ready(function () {
 
+
+
+            <!-- Code for EpiSurveyor Test Connection -->
             $("#TestEPI").click(function () {
 
                 $("#progress-image").show();
@@ -28,6 +31,25 @@
             });
 
 
+
+            <!-- Code for SalesForce Test Connection -->
+            $("#TestSF").click(function () {
+
+                $("#progress-image-SF").show();
+
+                //Make an AJAX Submit
+                $.ajax({
+                    url:$(this).attr('href'),
+                    data:{
+                        sfURL:$("#configuration_salesforce_url").val(),
+                        sfUser:$("#configuration_salesforce_user").val(),
+                        sfToken:$("#configuration_salesforce_token").val()
+                    },
+                    dataType:"json"
+                }).success(displaySFStatus);
+                return false; // Disallow normal link traversal.
+            });
+
         });
 
 
@@ -38,6 +60,17 @@
                 alert("EPI/Magpi Connection Successful :) ");
             else
                 alert("EPI/Magpi Connection Error!!");
+        }
+
+
+
+        function displaySFStatus(jsonResponse) {
+            $("#progress-image-SF").hide();
+            var status = jsonResponse.status;
+            if (status === "OK")
+                alert("Salesforce Connection Successful :) ");
+            else
+                alert("Salesforce Connection Error!!");
         }
 
 
@@ -111,6 +144,9 @@
           <div class="input"><%= f.text_field :salesforce_token, :size => 60 %></div>
           <div class="clear"></div>
         </div>
+
+        <div id="progress-image-SF" style="display: none;"><img src="/images/progress-circle.gif" alt="Progress..." /></div>
+        <%= link_to "Test Connection", {:action => "testSFConnection"}, :id=>"TestSF"%>
 
       </fieldset>
 

@@ -20,4 +20,20 @@ module ConnectionHelper
     end
   end
 
+
+
+  def self.check_connection_with_salesforce (sf_url, user_name, sf_token)
+
+    binding = RForce::Binding.new sf_url
+
+    begin
+      binding.login user_name, sf_token
+      return "OK"
+    rescue Exception=> e
+      Rails.logger.error "Could not log in with #{user_name} and #{sf_token}"
+    end
+
+    return "NOT OK"
+  end
+
 end

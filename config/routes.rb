@@ -54,6 +54,7 @@ Camfed::Application.routes.draw do
     resource :configuration do
       post 'send_sms'
       get 'testEpiConnection'
+      get 'testSFConnection'
     end
     resources :users do
       member do
