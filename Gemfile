@@ -12,6 +12,7 @@ gem 'will_paginate', '~>3.0.0'
 gem 'heroku'
 gem 'best_in_place', :path => 'vendor/gems/best_in_place-0.2.3'
 gem "moonshado-sms"
+gem "twilio-ruby"
 
 group :test, :development do
   gem 'sqlite3-ruby', :require => 'sqlite3'

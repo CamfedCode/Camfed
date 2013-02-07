@@ -44,24 +44,43 @@ describe Admin::ConfigurationsController do
   end
 
   describe "POST send_sms" do
-    it("should send sms using Moonshado") do
+    def create_mock_twilio_message
+      mock_client = ""
+      mock_account = ""
       mock_sms = ""
-      Moonshado::Sms.should_receive(:new).with("1-555-5556471","Test sms").and_return(mock_sms)
-      mock_sms.should_receive(:deliver_sms)
-      post 'send_sms' , :number => "1-555-5556471", :message => "Test sms"
+      mock_messages = ""
+      Twilio::REST::Client.should_receive(:new).and_return(mock_client)
+      mock_client.should_receive(:account).and_return(mock_account)
+      mock_account.should_receive(:sms).and_return(mock_sms)
+      mock_sms.should_receive(:messages).and_return(mock_messages)
+      mock_messages
+    end
+
+    it("should send sms using Twilio") do
+      from_number = TWILIO_CONFIG[Rails.env]["from_number"]
+      request_params = {:number => "+1234567890", :message => "SMS text"}
+      mock_messages = create_mock_twilio_message()
+      mock_messages.should_receive(:create).with({:from => from_number, :to => request_params[:number], :body => request_params[:message]})
+
+      post 'send_sms' , request_params
+
+      flash[:error].should include "Error" unless flash[:error].nil? #Additional check to ensure that on failure for better reporting.
       flash[:notice].should == 'Successfully sent the sms'
       response.should redirect_to(edit_admin_configuration_path)
     end
 
-    it("should fail to send the message when message length ") do
-      post 'send_sms' , :number => "1-555-5556471", :message => "The length of this message is more than 163 characters and so this should easily fail. Lets try it out.Adding another line to increase te count. The number of characters is increasing now"
-      flash[:error].should == 'Error sending SMS: Invalid message '
-      response.should redirect_to(edit_admin_configuration_path)
-    end
+    it("should fail to send the message when message length is greater than 160") do
+      expected_error_message = "Some exception occurred"
 
-    it("should fail to send the message when using invalid ") do
-      post 'send_sms' , :number => "invalid number", :message => "Test"
-      flash[:error].should == 'Error sending SMS: Phone number (invalid number) is not formatted correctly '
+      from_number = TWILIO_CONFIG[Rails.env]["from_number"]
+      request_params = {:number => "+1234567890", :message => "SMS text"}
+      mock_messages = create_mock_twilio_message()
+      mock_messages.should_receive(:create).with({:from => from_number, :to => request_params[:number], :body => request_params[:message]}).and_raise(expected_error_message)
+
+      post 'send_sms' , request_params
+
+      flash[:error].should include(expected_error_message)
+
       response.should redirect_to(edit_admin_configuration_path)
     end
   end

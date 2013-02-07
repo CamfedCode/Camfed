@@ -22,7 +22,7 @@ module Admin
     
     def create
       @configuration = Configuration.new(params[:configuration])
-      
+
       if @configuration.save
         flash[:notice] = 'Successfully created the configuration changes'
         redirect_to root_path
@@ -36,9 +36,12 @@ module Admin
 
     def send_sms
       begin
-        sms = Moonshado::Sms.new(params[:number], params[:message])
-        deliver_sms = sms.deliver_sms
-        logger.info("SMS gateway response was #{deliver_sms}")
+        account_sid = TWILIO_CONFIG[Rails.env]["account_sid"]
+        auth_token = TWILIO_CONFIG[Rails.env]["auth_token"]
+        from_number = TWILIO_CONFIG[Rails.env]["from_number"]
+        client = Twilio::REST::Client.new account_sid, auth_token
+
+        client.account.sms.messages.create({:from => from_number, :to => params[:number], :body => params[:message]})
         flash[:notice] = 'Successfully sent the sms'
       rescue Exception => error
         logger.error "Error: '#{error}' encountered while trying to send sms with number: #{params[:number]} and message: #{params[:message]}"

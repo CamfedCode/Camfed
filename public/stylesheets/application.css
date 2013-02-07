@@ -300,6 +300,13 @@ div.configuration_form{
 	max-width: 700px;
 	width: 80%;
 }
+.edit_configuration{
+    float: left;
+    width: 53%;
+}
+.send_test_sms{
+    float: left;
+}
 #test_sms input,#test_sms textarea{
     display: block;
 }
