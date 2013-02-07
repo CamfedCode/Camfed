@@ -1,0 +1,15 @@
+development:
+  account_sid: AC62d733aee558cc0aac63aa7807d5a4af
+  auth_token: 23f3f81cac67bcdf6b0a23d5abd84cc8
+  from_number: +15005550006
+
+test:
+  account_sid: AC62d733aee558cc0aac63aa7807d5a4af
+  auth_token: 23f3f81cac67bcdf6b0a23d5abd84cc8
+  from_number: +15005550006
+
+production:
+  account_sid: ENV['TWILIO_ACCOUNT_SID']
+  auth_token: ENV['TWILIO_AUTH_TOKEN']
+  from_number: ENV['TWILIO_FROM_NUMBER']
+
