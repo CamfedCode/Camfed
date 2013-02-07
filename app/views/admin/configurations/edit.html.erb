@@ -1,62 +1,175 @@
+<% content_for :javascripts do %>
+    <%= javascript_include_tag \
+	'https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js',
+    'https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.15/jquery-ui.min.js',
+    'jquery.rails',
+    'jquery.purr',
+    %>
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+
+            <!-- Code for EpiSurveyor Test Connection -->
+            $("#TestEPI").click(function () {
+
+                $("#progress-image").show();
+
+                //Make an AJAX Submit
+                $.ajax({
+                    url: $(this).attr('href'),
+                    data: {
+                             epiURL:   $("#configuration_epi_surveyor_url").val(),
+                             epiUser:  $("#configuration_epi_surveyor_user").val(),
+                             epiToken: $("#configuration_epi_surveyor_token").val()
+                        },
+                    dataType: "json"
+                }).success(displayEPIStatus);
+                return false; // Disallow normal link traversal.
+            });
+
+
+
+            <!-- Code for SalesForce Test Connection -->
+            $("#TestSF").click(function () {
+
+                $("#progress-image-SF").show();
+
+                //Make an AJAX Submit
+                $.ajax({
+                    url:$(this).attr('href'),
+                    data:{
+                        sfURL:$("#configuration_salesforce_url").val(),
+                        sfUser:$("#configuration_salesforce_user").val(),
+                        sfToken:$("#configuration_salesforce_token").val()
+                    },
+                    dataType:"json"
+                }).success(displaySFStatus);
+                return false; // Disallow normal link traversal.
+            });
+
+        });
+
+
+        function displayEPIStatus (jsonResponse) {
+            $("#progress-image").hide();
+            var status = jsonResponse.status;
+            if(status === "OK")
+                alert("EPI/Magpi Connection Successful :) ");
+            else
+                alert("EPI/Magpi Connection Error!!");
+        }
+
+
+
+        function displaySFStatus(jsonResponse) {
+            $("#progress-image-SF").hide();
+            var status = jsonResponse.status;
+            if (status === "OK")
+                alert("Salesforce Connection Successful :) ");
+            else
+                alert("Salesforce Connection Error!!");
+        }
+
+
+    </script>
+
+<% end %>
+
+
+
 <%= title "Settings" %>
 
 <% method = @configuration.new_record? ? :post : :put%>
 
+
 <%= form_for @configuration, :url => admin_configuration_path, :method => method do |f|%>
 	<div class="configuration_form">
 
-	  <div class="field">
-			<div class="label"><%= f.label :epi_surveyor_url %></div>
-	    <div class="input"><%= f.text_field :epi_surveyor_url, :size => 60 %></div>
-			<div class="clear"></div>
-	  </div>
+      <fieldset>
+        <legend>EpiSurveyor / Magpi Connection Details</legend>
 
-	  <div class="field">
-	    <div class="label"><%= f.label :epi_surveyor_user %></div> 
-	    <div class="input"><%= f.text_field :epi_surveyor_user, :size => 60 %></div>
-			<div class="clear"></div>
-	  </div>
+        <div class="field">
+          <div class="label"><%= f.label :epi_surveyor_url %></div>
+          <div class="input"><%= f.text_field :epi_surveyor_url, :size => 60 %></div>
+          <div class="clear"></div>
+        </div>
 
-	  <div class="field">
-	    <div class="label"><%= f.label :epi_surveyor_token %></div>
-	    <div class="input"><%= f.text_field :epi_surveyor_token, :size => 60 %></div>
-			<div class="clear"></div>
-	  </div>
+        <div class="field">
+          <div class="label"><%= f.label :epi_surveyor_user %></div>
+          <div class="input"><%= f.text_field :epi_surveyor_user, :size => 60 %></div>
+          <div class="clear"></div>
+        </div>
 
-	  <div class="field">
-	    <div class="label"><%= f.label :salesforce_url %></div>
-	    <div class="input"><%= f.text_field :salesforce_url, :size => 60 %></div>
-			<div class="clear"></div>
-	  </div>
+        <div class="field">
+          <div class="label"><%= f.label :epi_surveyor_token %></div>
+          <div class="input"><%= f.text_field :epi_surveyor_token, :size => 60 %></div>
+          <div class="clear"></div>
+        </div>
 
-	  <div class="field">
-	    <div class="label"><%= f.label :salesforce_browse_url %></div>
-	    <div class="input"><%= f.text_field :salesforce_browse_url, :size => 60 %></div>
-			<div class="clear"></div>
-	  </div>
+        <div id="progress-image" style="display: none;"><img src="/images/progress-circle.gif" alt="Progress..." /></div>
+        <%= link_to "Test Connection", {:action => "testEpiConnection"}, :id=>"TestEPI"%>
 
-	  <div class="field">
-	    <div class="label"><%= f.label :salesforce_user %></div>
-	    <div class="input"><%= f.text_field :salesforce_user, :size => 60 %></div>
-			<div class="clear"></div>
-	  </div>
+      </fieldset>
 
-	  <div class="field">
-	    <div class="label"><%= f.label :salesforce_token %></div>
-	    <div class="input"><%= f.text_field :salesforce_token, :size => 60 %></div>
-			<div class="clear"></div>
-	  </div>
+      <br/>
+      <br/>
 
-	  <div class="field">
-	    <div class="label"><%= f.label :supported_languages %></div>
-	    <div class="input"><%= f.text_field :supported_languages, :size => 60 %></div>
-			<div class="clear"></div>
-	  </div>
-	
-	  <div class="actions">
+
+      <fieldset>
+        <legend>Salesforce Connection Details</legend>
+
+        <div class="field">
+          <div class="label"><%= f.label :salesforce_url %></div>
+          <div class="input"><%= f.text_field :salesforce_url, :size => 60 %></div>
+          <div class="clear"></div>
+        </div>
+
+        <div class="field">
+          <div class="label"><%= f.label :salesforce_browse_url %></div>
+          <div class="input"><%= f.text_field :salesforce_browse_url, :size => 60 %></div>
+          <div class="clear"></div>
+        </div>
+
+        <div class="field">
+          <div class="label"><%= f.label :salesforce_user %></div>
+          <div class="input"><%= f.text_field :salesforce_user, :size => 60 %></div>
+          <div class="clear"></div>
+        </div>
+
+        <div class="field">
+          <div class="label"><%= f.label :salesforce_token %></div>
+          <div class="input"><%= f.text_field :salesforce_token, :size => 60 %></div>
+          <div class="clear"></div>
+        </div>
+
+        <div id="progress-image-SF" style="display: none;"><img src="/images/progress-circle.gif" alt="Progress..." /></div>
+        <%= link_to "Test Connection", {:action => "testSFConnection"}, :id=>"TestSF"%>
+
+      </fieldset>
+
+
+      <br/>
+      <br/>
+
+      <fieldset>
+        <legend>Advanced Settings</legend>
+
+        <div class="field">
+          <div class="label"><%= f.label :supported_languages %></div>
+          <div class="input"><%= f.text_field :supported_languages, :size => 60 %></div>
+          <div class="clear"></div>
+        </div>
+      </fieldset>
+
+      <br/>
+      <br/>
+
+      <div class="actions">
 	    <%=link_to 'Back to Home', root_path%>
-			<%= f.submit %>
-			
+	    <%= f.submit %>
 	  </div>
 	
 	</div>
