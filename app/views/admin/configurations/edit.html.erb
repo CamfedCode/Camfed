@@ -168,18 +168,21 @@
       <br/>
 
       <div class="actions">
-	    <%=link_to 'Back to Home', root_path%>
-	    <%= f.submit %>
+        <%= f.submit %>
+        <%=link_to 'Back to Home', root_path%>
 	  </div>
 	
 	</div>
 <%end%>
+<div class="send_test_sms">
+  <fieldset>
+    <legend>Test sms using Twilio</legend>
+    <%= form_tag(send_sms_admin_configuration_path, :method => :post, :id => 'test_sms') do %>
+        <input type="text" name="number" placeholder="Number" size="20"/>
+        <textarea rows="4" cols="50" name="message" placeholder="Message (max 160 characters)"></textarea>
+        <%= submit_tag "Send Test SMS" %>
+    <% end %>
+  </fieldset>
 
-<br/>
-<br/>
-<h2>Test sms using Twilio</h2>
-<%= form_tag(send_sms_admin_configuration_path, :method => :post, :id => 'test_sms') do %>
-    <input type="text" name="number" placeholder="Number" size="20"/>
-    <textarea rows="4" cols="50" name="message" placeholder="Message"></textarea>
-    <%= submit_tag "Send Test SMS" %>
-<% end %>
+</div>
+
