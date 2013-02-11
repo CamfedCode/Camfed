@@ -145,13 +145,17 @@ module EpiSurveyor
     def self.send_sms(mobile_number,histories)
       begin
         message = "Import Summary. Total surveys imported:#{histories.length}. Success:#{histories.count {|history| history.status=='Success'}}. Incomplete:#{histories.count {|history| history.status=='Incomplete'}}. Failed:#{histories.count {|history| history.status=='Failed'}}"
-        sms = Moonshado::Sms.new(mobile_number, message)
-        sms_delivery = sms.deliver_sms
-        sms_response = SmsResponse.new(:sms_id => sms_delivery.delete(:id), :properties => sms_delivery)
+        account_sid = TWILIO_CONFIG[Rails.env]["account_sid"]
+        auth_token = TWILIO_CONFIG[Rails.env]["auth_token"]
+        from_number = TWILIO_CONFIG[Rails.env]["from_number"]
+        client = Twilio::REST::Client.new account_sid, auth_token
+
+        twilio_response = client.account.sms.messages.create({:from => from_number, :to => mobile_number, :body => message})
+
+        sms_response = SmsResponse.new(:sms_id => twilio_response.sms_id, :date_sent => twilio_response.date_sent, :message_body => twilio_response.message_body, :sent_to => twilio_response.sent_to, :price => twilio_response.price)
         sms_response.save
       rescue Exception => error
-        properties = {:error => error.message, :mobile_number => mobile_number}
-        sms_response = SmsResponse.new(:sms_id => "invalid", :properties => properties)
+        sms_response = SmsResponse.new(:sms_id => "invalid", :message_body => "Error {#{error}} while sending message {#{message}}", :sent_to => mobile_number)
         sms_response.save
         logger.error "Sending SMS failed with error #{error}"
       end
