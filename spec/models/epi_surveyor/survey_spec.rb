@@ -183,16 +183,15 @@ describe EpiSurveyor::Survey do
       surveys = [EpiSurveyor::Survey.new, EpiSurveyor::Survey.new]
       surveys.each do |survey| 
         survey.should_receive(:sync!).and_return([import_history])
-        survey.notification_email = 'admin@example.com'
+        survey.notification_email = 'gh0123456789@example.com'
       end
       EpiSurveyor::Survey.should_receive(:all).and_return(surveys)
       sync_email = ''
-      Notifier.should_receive(:sync_email).with(import_histories, "admin@example.com").and_return(sync_email)
+      Notifier.should_receive(:sync_email).with(import_histories, "gh0123456789@example.com").and_return(sync_email)
       sync_email.should_receive(:deliver)
-      mock_sms = ""
-      mock_sms_response = {:stat=>"ok", :id=>"e3debdc7f4719ec0", :credit => 500}
-      Moonshado::Sms.should_receive(:new).and_return(mock_sms)
-      mock_sms.should_receive(:deliver_sms).and_return(mock_sms_response)
+
+      EpiSurveyor::Survey.should_receive(:send_sms).with("233123456789",import_histories)
+
       EpiSurveyor::Survey.sync_and_notify!.should == import_histories
     end
 
@@ -203,8 +202,8 @@ describe EpiSurveyor::Survey do
 
       survey_1 = EpiSurveyor::Survey.new
       survey_2 = EpiSurveyor::Survey.new
-      survey_1.notification_email = 'survey1@example.com'
-      survey_2.notification_email = 'survey2@example.com'
+      survey_1.notification_email = 'gh0123456789@example.com'
+      survey_2.notification_email = 'gh0987654321@example.com'
       
       surveys = [survey_1, survey_2]
       surveys.each do |survey| 
@@ -214,20 +213,29 @@ describe EpiSurveyor::Survey do
       EpiSurveyor::Survey.should_receive(:all).and_return(surveys)
       sync_email_1 = ''
       sync_email_2 = ''      
-      Notifier.should_receive(:sync_email).with([import_history], "survey1@example.com").and_return(sync_email_1)
-      Notifier.should_receive(:sync_email).with([import_history], "survey2@example.com").and_return(sync_email_2)
+      Notifier.should_receive(:sync_email).with([import_history], "gh0123456789@example.com").and_return(sync_email_1)
+      Notifier.should_receive(:sync_email).with([import_history], "gh0987654321@example.com").and_return(sync_email_2)
       sync_email_1.should_receive(:deliver)
       sync_email_2.should_receive(:deliver)      
-      mock_sms = ""
-      mock_sms_response = {:stat=>"ok", :id=>"e3debdc7f4719ec0", :credit => 500}
-      Moonshado::Sms.should_receive(:new).exactly(2).times().and_return(mock_sms)
-      mock_sms.should_receive(:deliver_sms).exactly(2).times().and_return(mock_sms_response)
+      EpiSurveyor::Survey.should_receive(:send_sms).exactly(2).times
 
       EpiSurveyor::Survey.sync_and_notify!.should == import_histories
-      sms_response = SmsResponse.where(:sms_id => "e3debdc7f4719ec0").first
-      sms_response.properties.should == {:stat=>"ok", :credit => 500}
     end
   end
+
+  describe 'send sms for sync_and_notify' do
+
+    def create_mock_twilio_message
+      mock_client = ""
+      mock_account = ""
+      mock_sms = ""
+      mock_messages = ""
+      Twilio::REST::Client.should_receive(:new).and_return(mock_client)
+      mock_client.should_receive(:account).and_return(mock_account)
+      mock_account.should_receive(:sms).and_return(mock_sms)
+      mock_sms.should_receive(:messages).and_return(mock_messages)
+      mock_messages
+    end
 
     it "should extract phone number from email" do
       EpiSurveyor::Survey.extract_mobile_number("gh0542208979@gmail.com<").should == "233542208979"
@@ -237,21 +245,47 @@ describe EpiSurveyor::Survey do
       EpiSurveyor::Survey.extract_mobile_number("abcde1!@$ads@gmail.com<").should be_nil
     end
 
-    it "should fail and log the sms response if the mobile number is not valid" do
-      EpiSurveyor::Survey.send_sms("invalid_mobile_number",{})
-      sms_response = SmsResponse.where(:sms_id => "invalid").first
-      sms_response.properties[:error].should == "Phone number (invalid_mobile_number) is not formatted correctly"
-      sms_response.properties[:mobile_number].should == "invalid_mobile_number"
-    end
-    it "should be able to send sms" do
+    it "should fail and log the sms response if error occurs while trying to send sms" do
       import_histories = import_histories_mock_data
       mobile_number = "233542208979"
       message = "Import Summary. Total surveys imported:3. Success:1. Incomplete:0. Failed:2"
-      sms_instance = ""
-      Moonshado::Sms.should_receive(:new).with(mobile_number,message).and_return(sms_instance)
-      sms_instance.should_receive(:deliver_sms)
+      from_number = TWILIO_CONFIG[Rails.env]["from_number"]
+      mock_twilio_message = create_mock_twilio_message()
+      expected_error_message = "Some exception occurred"
+      mock_twilio_message.should_receive(:create).with({:from => from_number, :to => mobile_number, :body => message}).and_raise(expected_error_message)
+
       EpiSurveyor::Survey.send_sms(mobile_number,import_histories)
+
+      sms_response = SmsResponse.where(:sms_id => "invalid").first
+      sms_response.message_body.should == "Error {Some exception occurred} while sending message {#{message}}"
+      sms_response.sent_to.should == mobile_number
     end
+
+    it "should be able to send sms with import histories" do
+      import_histories = import_histories_mock_data
+      mobile_number = "233542208979"
+      message = "Import Summary. Total surveys imported:3. Success:1. Incomplete:0. Failed:2"
+      from_number = TWILIO_CONFIG[Rails.env]["from_number"]
+      mock_twilio_message = create_mock_twilio_message()
+      mock_response = ""
+      mock_response.stub(:sms_id) {"valid test sms id"}
+      mock_response.stub(:date_sent) {"some date"}
+      mock_response.stub(:message_body) {"test message body"}
+      mock_response.stub(:sent_to) {"to number"}
+      mock_response.stub(:price) {"some price"}
+      mock_twilio_message.should_receive(:create).with({:from => from_number, :to => mobile_number, :body => message}).and_return(mock_response)
+
+      EpiSurveyor::Survey.send_sms(mobile_number,import_histories)
+
+      sms_response = SmsResponse.where(:sms_id => "valid test sms id").first
+      sms_response.should_not be_nil
+      sms_response.date_sent.should == "some date"
+      sms_response.message_body.should == "test message body"
+      sms_response.sent_to.should == "to number"
+      sms_response.price.should == "some price"
+    end
+  end
+
   describe 'delete_old_surveys' do
     it 'should delete surveys with mapping > 3 years' do
     surveys = [EpiSurveyor::Survey.new, EpiSurveyor::Survey.new]
