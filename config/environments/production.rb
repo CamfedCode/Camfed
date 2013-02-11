@@ -57,9 +57,4 @@ Camfed::Application.configure do
     :authentication       => 'plain',
     :enable_starttls_auto => true  }
 
-  config.after_initialize do
-    Moonshado::Sms.configure do |config|
-      config.api_key = ENV['MOONSHADOSMS_URL']
-    end
-  end
 end

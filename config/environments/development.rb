@@ -40,11 +40,5 @@ Camfed::Application.configure do
   #redis
   ENV["REDISTOGO_URL"] = 'redis://localhost:6379'
 
-  config.after_initialize do
-    Moonshado::Sms.configure do |config|
-      config.production_environment = false
-    end
-  end
-
 end
 
