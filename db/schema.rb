@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130114124504) do
+ActiveRecord::Schema.define(:version => 20130204095557) do
 
   create_table "add_default_value_to_field_mapppings", :force => true do |t|
     t.datetime "created_at"
@@ -32,15 +32,15 @@ ActiveRecord::Schema.define(:version => 20130114124504) do
   end
 
   create_table "field_mappings", :force => true do |t|
-    t.integer   "object_mapping_id"
-    t.string    "field_name"
-    t.string    "question_name"
-    t.string    "lookup_object_name"
-    t.string    "lookup_condition"
-    t.string    "predefined_value"
-    t.string    "lookup_type"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.integer  "object_mapping_id"
+    t.string   "field_name"
+    t.string   "question_name"
+    t.string   "lookup_object_name"
+    t.string   "lookup_condition"
+    t.string   "predefined_value"
+    t.string   "lookup_type"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "import_histories", :force => true do |t|
@@ -59,10 +59,10 @@ ActiveRecord::Schema.define(:version => 20130114124504) do
   end
 
   create_table "object_mappings", :force => true do |t|
-    t.integer   "survey_id"
-    t.string    "salesforce_object_name"
-    t.timestamp "created_at"
-    t.timestamp "updated_at"
+    t.integer  "survey_id"
+    t.string   "salesforce_object_name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "salesforce_objects", :force => true do |t|
@@ -75,7 +75,10 @@ ActiveRecord::Schema.define(:version => 20130114124504) do
 
   create_table "sms_responses", :force => true do |t|
     t.string   "sms_id"
-    t.text     "properties"
+    t.string   "date_sent"
+    t.string   "message_body"
+    t.string   "sent_to"
+    t.string   "price"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
