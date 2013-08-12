@@ -39,7 +39,7 @@ describe EpiSurveyor::Survey do
     it 'should destroy surveys that have been deleted' do
       old_survey = stub 'old_survey', id: 4
       existing_survey = stub 'existing_survey', id: 5
-      EpiSurveyor::Survey.should_receive(:all).and_return [old_survey, existing_survey]
+      EpiSurveyor::Survey.stub(:find_each).and_yield(old_survey).and_yield(existing_survey)
       EpiSurveyor::Survey.stub!(:post).and_return({
         "Surveys" => {
           "Survey" => [{"SurveyId" => 5, "SurveyName" => "existing_survey"}]
@@ -185,7 +185,7 @@ describe EpiSurveyor::Survey do
         survey.should_receive(:sync!).and_return([import_history])
         survey.notification_email = 'gh0123456789@example.com'
       end
-      EpiSurveyor::Survey.should_receive(:all).and_return(surveys)
+      EpiSurveyor::Survey.stub(:find_each).and_yield(surveys[0]).and_yield(surveys[1])
       sync_email = ''
       Notifier.should_receive(:sync_email).with(import_histories, "gh0123456789@example.com").and_return(sync_email)
       sync_email.should_receive(:deliver)
@@ -210,7 +210,7 @@ describe EpiSurveyor::Survey do
         survey.should_receive(:sync!).and_return([import_history])
       end
       
-      EpiSurveyor::Survey.should_receive(:all).and_return(surveys)
+      EpiSurveyor::Survey.stub(:find_each).and_yield(survey_1).and_yield(survey_2)
       sync_email_1 = ''
       sync_email_2 = ''      
       Notifier.should_receive(:sync_email).with([import_history], "gh0123456789@example.com").and_return(sync_email_1)

@@ -55,7 +55,7 @@ module EpiSurveyor
         surveys << survey
       end
 
-      Survey.all.each do |survey|
+      Survey.find_each(batch_size: 100) do |survey|
         survey.destroy unless surveys.any? {|s| s.id == survey.id }
       end
 
@@ -119,8 +119,8 @@ module EpiSurveyor
     def self.sync_and_notify!
       all_histories = []
       recipient_histories = {}
-      
-      all.each do |survey|
+
+      Survey.find_each(batch_size: 100) do |survey|
         sync_results = survey.sync!
         all_histories += sync_results
         recipient_histories[survey.notification_email] ||= []
