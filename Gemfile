@@ -13,6 +13,8 @@ gem 'heroku'
 gem 'best_in_place', :path => 'vendor/gems/best_in_place-0.2.3'
 gem "twilio-ruby"
 
+gem 'newrelic_rpm'
+
 group :test, :development do
   gem 'sqlite3-ruby', :require => 'sqlite3'
   gem 'rspec-rails', '~> 2.4'

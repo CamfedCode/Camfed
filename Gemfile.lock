@@ -80,6 +80,7 @@ GEM
     multi_json (1.3.4)
     multi_xml (0.4.4)
     netrc (0.7.1)
+    newrelic_rpm (3.6.6.147)
     oauth (0.4.6)
     ocra (1.3.0)
     page-object (0.6.6)
@@ -176,6 +177,7 @@ DEPENDENCIES
   devise (~> 1.1.7)
   heroku
   httparty
+  newrelic_rpm
   ocra
   page-object
   pg
