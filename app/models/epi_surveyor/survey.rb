@@ -1,3 +1,5 @@
+require 'newrelic_rpm'
+
 module EpiSurveyor
   class Survey < ActiveRecord::Base
     COUNTRY_CODES = {"gh" => "233"}
@@ -133,6 +135,12 @@ module EpiSurveyor
       end
 
       all_histories
+    end
+
+    ## Adding New Relic instrumentation for "Background Task" (scheduler)
+    class << self
+      include ::NewRelic::Agent::Instrumentation::ControllerInstrumentation
+      add_transaction_tracer :sync_and_notify!, :category => :task
     end
 
     def self.extract_mobile_number(email)
