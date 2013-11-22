@@ -68,8 +68,8 @@ module EpiSurveyor
     end
     
     def synced?
-      @import_history = ImportHistory.where(:survey_id => survey.id, :survey_response_id => self.id).first if ImportHistory.exists?(:survey_id => survey.id, :survey_response_id => self.id)
-      @import_history.nil? ? false : @import_history.sync_errors.blank?
+      @import_history = ImportHistory.where(:survey_id => survey.id, :survey_response_id => self.id).first
+      @import_history ? @import_history.sync_errors.blank? : false
     end
     
     def salesforce_object object_mapping
