@@ -348,7 +348,7 @@ describe EpiSurveyor::Survey do
 
   describe "update_mapping_status" do
     it "should update mapping status as Unmapped if all questions are unmapped" do
-      survey = EpiSurveyor::Survey.create
+      survey = EpiSurveyor::Survey.create(:name=>"testSurvey")
       questions = [EpiSurveyor::Question.new, EpiSurveyor::Question.new]
       survey.should_receive(:questions).and_return(questions)
       survey.should_receive(:unmapped_questions).and_return(questions)
@@ -359,7 +359,7 @@ describe EpiSurveyor::Survey do
     end
 
     it "should update mapping status as Unmapped if some questions are mapped" do
-      survey = EpiSurveyor::Survey.create
+      survey = EpiSurveyor::Survey.create(:name=>'testSurvey')
       question1 = EpiSurveyor::Question.new
       question2 = EpiSurveyor::Question.new
       survey.should_receive(:questions).and_return([question1, question2])
@@ -371,7 +371,7 @@ describe EpiSurveyor::Survey do
     end
 
     it "should update not update mapping status if mapping_status is Mapped" do
-      survey = EpiSurveyor::Survey.create(:mapping_status => EpiSurveyor::Survey::MAPPING_STATUS::MAPPED)
+      survey = EpiSurveyor::Survey.create(:mapping_status => EpiSurveyor::Survey::MAPPING_STATUS::MAPPED, :name=>'testSurvey')
 
       survey.update_mapping_status
       survey.reload
@@ -381,8 +381,8 @@ describe EpiSurveyor::Survey do
 
   describe "having_mapping_status" do
     before :each do
-      @survey1 = EpiSurveyor::Survey.create(:mapping_status => EpiSurveyor::Survey::MAPPING_STATUS::MAPPED)
-      @survey2 = EpiSurveyor::Survey.create(:mapping_status => EpiSurveyor::Survey::MAPPING_STATUS::UNMAPPED)
+      @survey1 = EpiSurveyor::Survey.create(:mapping_status => EpiSurveyor::Survey::MAPPING_STATUS::MAPPED, :name=>'testSurvey1')
+      @survey2 = EpiSurveyor::Survey.create(:mapping_status => EpiSurveyor::Survey::MAPPING_STATUS::UNMAPPED, :name=>'testSurvey2')
     end
 
     it "should return all records if having_mapping_status is scoped but no mapping_status is requested" do
@@ -402,8 +402,8 @@ describe EpiSurveyor::Survey do
 
   describe "modified_between" do
     before :each do
-      @survey1 = EpiSurveyor::Survey.create
-      @survey2 = EpiSurveyor::Survey.create
+      @survey1 = EpiSurveyor::Survey.create(:name=>'testSurvey1')
+      @survey2 = EpiSurveyor::Survey.create(:name=>'testSurvey2')
       @survey1.update_attribute(:mapping_last_modified_at, Time.now - 2.days)
       @survey2.update_attribute(:mapping_last_modified_at, Time.now - 1.days)
     end
@@ -432,8 +432,8 @@ describe EpiSurveyor::Survey do
 
   describe "starting_with" do
     before :each do
-      @survey1 = EpiSurveyor::Survey.create
-      @survey2 = EpiSurveyor::Survey.create
+      @survey1 = EpiSurveyor::Survey.create(:name=>'testSurvey1')
+      @survey2 = EpiSurveyor::Survey.create(:name=>'testSurvey2')
       @survey1.update_attribute(:name, 'Abc')
       @survey2.update_attribute(:name, 'Def')
     end

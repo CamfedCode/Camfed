@@ -11,7 +11,7 @@ module EpiSurveyor
     has_many :object_mappings, :dependent => :destroy
     has_many :import_histories, :dependent => :destroy
 
-    attr_accessible :id, :notification_email, :mapping_status
+    attr_accessible :id, :notification_email, :mapping_status, :name
     attr_accessor :responses
 
     scope :ordered, order('name ASC')

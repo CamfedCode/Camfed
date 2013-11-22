@@ -78,7 +78,7 @@ describe SurveysController do
 
   describe "PUT 'update'" do
     it "should update a survey" do
-      survey = EpiSurveyor::Survey.new
+      survey = EpiSurveyor::Survey.new(:name=>"Test Survey")
       EpiSurveyor::Survey.should_receive(:find).with(1).and_return(survey)
       put 'update', :id => 1, :epi_surveyor_survey => {:notification_email => 'hello@example.com'}
       assigns[:survey].notification_email.should == 'hello@example.com'      
@@ -128,7 +128,7 @@ describe SurveysController do
 
   describe 'update_mapping_status' do
     it 'should update mapping_status' do
-      survey = EpiSurveyor::Survey.create(:id => 1)
+      survey = EpiSurveyor::Survey.create(:name => 'Test Survey', :id => 1)
       post 'update_mapping_status', :id => 1, :mapping_status => 'Mapped'
       survey.reload
       survey.mapping_status.should == 'Mapped'
