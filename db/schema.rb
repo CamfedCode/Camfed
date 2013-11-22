@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130204095557) do
+ActiveRecord::Schema.define(:version => 20131122084534) do
 
   create_table "add_default_value_to_field_mapppings", :force => true do |t|
     t.datetime "created_at"
@@ -84,7 +84,7 @@ ActiveRecord::Schema.define(:version => 20130204095557) do
   end
 
   create_table "surveys", :force => true do |t|
-    t.string   "name"
+    t.string   "name",                                             :null => false
     t.datetime "last_imported_at"
     t.datetime "created_at"
     t.datetime "updated_at"
